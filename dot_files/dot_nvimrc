@@ -1,0 +1,297 @@
+mapclear
+let mapleader = ","
+inoremap kj <esc>
+vnoremap kj <esc>
+nnoremap <tab><tab> <c-w>w
+tnoremap <c-l> <C-\><C-n><c-l>
+
+set t_Co=256
+set autochdir
+
+" quick repeat, qq to start
+nnoremap <leader>. @q
+
+" map space to jump to end of the line
+nnoremap <space> $
+vnoremap <space> $
+
+" toggle spell
+set spell spelllang=en_us
+
+" hi SpellBad cterm=underline ctermfg=black ctermbg=219
+nnoremap <leader><leader>s :set spell!<CR>
+nnoremap <leader><leader>p :set paste!<CR>
+nnoremap <leader>p "+p
+" start with no spell
+set nospell
+
+" Use <leader>i to toggle display of whitespace
+nmap <leader>i :set list!<CR>
+" Starting with no list
+nmap <leader>i :set list!<CR>
+set nolist
+"set lcs=trail:♪,tab:☂⚡
+set lcs=trail:+,tab:+-
+
+" set background light or dark
+if strftime("%H") < 17 && strftime("%H") > 6
+   set background=light
+else
+   set background=dark
+endif
+
+" OR just set it to dark
+set background=dark
+
+
+" dein Scripts-----------------------------
+" Follow https://github.com/Shougo/dein.vim to install
+" curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
+" sh ./installer.sh ~/.cache/dein
+
+if &compatible
+  set nocompatible               " Be iMproved
+endif
+
+" Required:
+set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
+
+" Required:
+if dein#load_state('~/.cache/dein')
+  call dein#begin('~/.cache/dein')
+
+  " Let dein manage dein
+  " Required:
+  call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
+  call dein#add('~/.vim/bundle/myBundle')
+  call dein#add('~/.vim/bundle/totl')
+  call dein#add('vim-airline/vim-airline')
+  call dein#add('vim-airline/vim-airline-themes')
+  call dein#add('altercation/vim-colors-solarized')
+  call dein#add('Vigemus/iron.nvim')
+  call dein#add('Vigemus/trex.nvim')
+  " -- python dev
+  call dein#add('python-mode/python-mode')
+  call dein#add('davidhalter/jedi-vim')
+  call dein#add('Konfekt/FastFold')
+  call dein#add('tpope/vim-fugitive')
+  call dein#add('airblade/vim-gitgutter')
+
+  call dein#add('christoomey/vim-tmux-navigator')
+  call dein#add('epeli/slimux')
+
+  call dein#add('vim-scripts/YankRing.vim')
+  call dein#add('ctrlpvim/ctrlP.vim')
+  call dein#add('SirVer/ultisnips')
+  call dein#add('honza/vim-snippets')
+  call dein#add('scrooloose/nerdcommenter')
+
+  call dein#add('vimoutliner/vimoutliner')
+  call dein#add('vimwiki/vimwiki')
+  call dein#add('tbabej/taskwiki')
+  call dein#add('farseer90718/vim-taskwarrior')
+  "call dein#add('chrisbra/Recover.vim')
+
+
+  " Required:
+  call dein#end()
+  call dein#save_state()
+endif
+
+" Required:
+filetype plugin indent on
+syntax enable
+
+colorscheme solarized
+
+" If you want to install not installed plugins on startup.
+"if dein#check_install()
+"  call dein#install()
+"endif
+
+"End dein Scripts-------------------------
+"
+
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#hunks#enabled = 0
+let g:airline_theme = 'powerlineish'
+
+
+" -- Line Num toggle --
+if v:version >= 400
+  function! RelativeNumberToggle()
+    if (&number == 1 && &relativenumber == 1)
+      set number
+      set norelativenumber
+    elseif (&number == 0 && &relativenumber == 1)
+      set norelativenumber
+      set number number?
+    elseif (&number == 1 && &relativenumber == 0)
+      set norelativenumber
+      set nonumber number?
+    else
+      set number
+      set relativenumber relativenumber?
+    endif
+  endfunc
+else
+  function! RelativeNumberToggle()
+    if (&relativenumber == 1)
+      set number number?
+    elseif (&number == 1)
+      set nonumber number?
+    else
+      set relativenumber relativenumber?
+    endif
+  endfunc
+  nnoremap <silent> <space> :set number!<CR>
+endif
+nnoremap <silent><leader>n :call RelativeNumberToggle()<CR>
+
+au FocusLost * :set number
+au FocusGained * :set relativenumber
+autocmd InsertEnter * :set number
+autocmd InsertLeave * :set relativenumber
+
+" -- fastfold
+"  prevents pymode folding from being very slow, works with version d2dead6
+"  cd ~/.vim/bundle/python-mode/
+"  git checkout d2dead6     (git checkout tags/snappy)
+
+nmap zuz <Plug>(FastFoldUpdate)
+let g:fastfold_savehook = 1
+let g:fastfold_force = 1
+" let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
+" let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
+" -- to be faster, set the fastfold update commands to blank
+let g:fastfold_fold_command_suffixes =  []  
+let g:fastfold_fold_movement_commands = []
+
+
+" ====  set pymode ====
+filetype off
+filetype plugin indent on
+syntax on
+
+" <leader>, list functions
+" <leager>g go to definition
+"
+" au FileType python set omnifunc=pythoncomplete#Complete
+let g:SuperTabDefaultCompletionType = "context"
+
+" let g:pymode_python = 'python3'
+let g:pymode_folding = 1
+
+" Load rope plugin
+let g:pymode_rope = 0
+
+" Documentation
+let g:pymode_doc = 1
+let g:pymode_doc_key = 'K'
+
+" Map keys for autocompletion
+let g:pymode_rope_autocomplete_map = '<C-K>'
+
+let g:pymode_run = 1
+
+" Key for run python code
+let g:pymode_run_key = 'R'
+
+"Linting
+let g:pymode_lint = 1
+" let g:pymode_lint_checker = "pyflakes, pep8"
+let g:pymode_lint_checker = "pep8"
+" Auto check on save
+let g:pymode_lint_write = 1
+
+" syntax highlighting
+let g:pymode_syntax = 1
+let g:pymode_syntax_all = 1
+let g:pymode_syntax_indent_errors = g:pymode_syntax_all
+let g:pymode_syntax_space_errors = g:pymode_syntax_all
+
+"-----------------set jedi-------------------
+
+let g:jedi#goto_assignments_command = "<leader>g"
+let g:jedi#goto_definitions_command = "<leader>d"
+let g:jedi#documentation_command = "K"
+let g:jedi#usages_command = "<leader>n"
+let g:jedi#completions_command = "<C-Space>"
+let g:jedi#rename_command = "<leader>r"
+let g:jedi#show_call_signatures = "1"
+" let g:jedi#force_py_version = 3 " (default: 'auto')
+" let g:jedi#popup_select_first = 0 " (default: 1)
+" let g:jedi#popup_on_dot = 0 " (default: 1)
+
+" ------- snippet -------------
+
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsSnippetsDir="~/.vim/bundle/myBundle/UltiSnips"
+let g:UltiSnipsListSnippets="<c-tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+
+" -- slimux setup
+map <Leader>s :SlimuxREPLSendLine<CR>
+vmap <Leader>s :SlimuxREPLSendSelection<CR>
+map <Leader>a :SlimuxShellLast<CR>
+map <Leader>k :SlimuxSendKeysLast<CR>
+
+" -  yankring 
+map <Leader><space> :YRShow <CR>
+let g:yankring_replace_n_pkey="<leader> p"
+
+" - map ctrl-p back to ctrl-p
+let g:ctrlp_map = '<c-p>'
+"let g:ctrlp_cmd = 'CtrlPMixed'
+let g:ctrlp_cmd = 'CtrlPBuffer'
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|(\.(swp|ico|git|svn|pyc))'
+
+
+" - vimwiki
+autocmd FileType wiki,vimwiki set expandtab
+autocmd FileType wiki,vimwiki set tabstop=4
+nnoremap <leader>wa :VimwikiAll2HTML<CR>
+
+let g:vimwiki_list = [
+            \{'path': '~/vimwiki/text/work',
+            \ 'path_html': '~/vimwiki/html/work',
+            \'syntax': 'markdown',
+            \'ext': '.md',
+            \ 'auto_toc': '1',
+            \ 'index': 'index',
+            \ 'template_path': '~/vimwiki/templates/',
+            \ 'template_default': 'def_template',
+            \ 'template_ext': '.html'},
+            \{'path': '~/vimwiki/text/fin',
+            \ 'path_html': '~/vimwiki/html/fin',
+            \'syntax': 'default',
+            \'ext': '.md',
+            \ 'auto_toc': '1',
+            \ 'index': 'index',
+            \ 'template_path': '~/vimwiki/templates/',
+            \ 'template_default': 'def_template',
+            \ 'template_ext': '.html'},
+            \{'path': '~/vimwiki/text/general',
+            \ 'path_html': '~/vimwiki/html/general',
+            \'syntax': 'default',
+            \'ext': '.wiki',
+            \ 'auto_toc': '1',
+            \ 'index': 'index',
+            \ 'template_path': '~/vimwiki/templates/',
+            \ 'template_default': 'def_template',
+            \ 'template_ext': '.html'},
+            \{'path': '~/vimwiki/text/arc_2015',
+            \ 'ext': '.wiki',
+            \ 'path_html': '~/vimwiki/html/arc_2015',
+            \ 'auto_toc': '1',
+            \ 'template_path': '~/vimwiki/templates/',
+            \ 'template_default': 'def_template',
+            \ 'template_ext': '.html'}
+            \]
+
+nnoremap <silent> <F3> :redir @a<CR>:g//<CR>:redir END<CR>:new<CR>:put! a<CR>

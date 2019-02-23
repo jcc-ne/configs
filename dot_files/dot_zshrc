@@ -1,0 +1,166 @@
+# Path to your oh-my-zsh installation.
+export ZSH=$HOME/.oh-my-zsh
+source $HOME/.bashrc
+
+# Set name of the theme to load.
+# Look in ~/.oh-my-zsh/themes/
+# Optionally, if you set this to "random", it'll load a random theme each
+# time that oh-my-zsh is loaded.
+ZSH_THEME="robbyrussell"
+ZSH_THEME="random"
+
+# manually load themes
+function theme_geo
+{
+   source $ZSH/fav_themes/geometry/geometry.zsh-theme
+}
+function theme_geomy
+{
+   source $ZSH/fav_themes/mygeo/geometry.zsh-theme
+}
+function theme_ago
+{
+    source $ZSH/fav_themes/agnoster.zsh-theme
+}
+function theme_random
+{
+  themes=($ZSH/themes/*zsh-theme)
+  N=${#themes[@]}
+  ((N=(RANDOM%N)+1))
+  RANDOM_THEME=${themes[$N]}
+  source "$RANDOM_THEME"
+  echo "[oh-my-zsh] my Random theme '$RANDOM_THEME' loaded..."
+  export THEME="$RANDOM_THEME"
+}
+
+function theme_time
+{
+  themes=($ZSH/themes_time/*zsh-theme)
+  N=${#themes[@]}
+  ((N=(RANDOM%N)+1))
+  RANDOM_THEME=${themes[$N]}
+  source "$RANDOM_THEME"
+  echo "[oh-my-zsh] my Random theme '$RANDOM_THEME' loaded..."
+  export THEME="$RANDOM_THEME"
+}
+
+function theme_add2fav
+{
+  cp $THEME $ZSH/fav_themes/
+}
+
+function theme_fav
+{
+  themes=($ZSH/fav_themes/*zsh-theme)
+  themes+=$ZSH/fav_themes/geometry/geometry.zsh-theme
+  themes+=$ZSH/fav_themes/mygeo/geometry.zsh-theme
+  N=${#themes[@]}
+  ((N=(RANDOM%N)+1))
+  RANDOM_THEME=${themes[$N]}
+  source "$RANDOM_THEME"
+  echo "[oh-my-zsh] my Random theme '$RANDOM_THEME' loaded..."
+}
+
+GEOMETRY_PROMPT_PLUGINS=(docker_machine exec_time git virtualenv)
+
+# Example aliases
+alias zshconfig="vim ~/.zshrc"
+alias ohmyzsh="vim ~/.oh-my-zsh"
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to disable bi-weekly auto-update checks.
+# DISABLE_AUTO_UPDATE="true"
+
+# Uncomment the following line to change how often to auto-update (in days).
+# export UPDATE_ZSH_DAYS=13
+
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to disable command auto-correction.
+# DISABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+plugins=(z git tmux osx emotty docker docker-compose aws taskwarrior history macports web-search)
+
+source $ZSH/oh-my-zsh.sh
+
+# source ~/.zpreztorc
+
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
+
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
+
+# ssh
+# export SSH_KEY_PATH="~/.ssh/dsa_id"
+#
+# export LC_ALL=en_US.utf8
+# export LANG=en_US.utf8
+export CLICOLOR=1
+export LSCOLORS=ExFxCxDxBxegedabagacad
+export TERM="xterm-256color"
+
+# bindkeys to vi
+bindkey -v
+bindkey -M vicmd 'k' history-beginning-search-backward
+bindkey -M vicmd 'j' history-beginning-search-forward
+bindkey -M viins 'kj' vi-cmd-mode
+bindkey '\e[A' history-beginning-search-backward
+bindkey '\e[B' history-beginning-search-forward
+
+alias -g l='|less'
+alias -g m='|more'
+alias ll='ls -lth |less'
+alias ls='ls -F'
+# export KEYTIMEOUT=1
+
+# alias rvm-prompt=$HOME/.rvm/bin/rvm-prompt
+# [[ -s "$HOME/.rvm/scripts/rvm" ]] &amp; &amp; source "$HOME/.rvm/scripts/rvm"
+
+function zle-line-init zle-keymap-select {
+    VIM_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]% %{$reset_color%}"
+    RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
+    zle reset-prompt
+}
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/janine/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/janine/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/janine/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/janine/google-cloud-sdk/completion.zsh.inc'; fi
