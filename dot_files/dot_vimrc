@@ -1,0 +1,489 @@
+" let g:python2_host_prog = '~/anaconda2/bin/python'
+cnoremap !python !py3<Space>
+
+set nocompatible
+syn on
+set autochdir
+set foldmethod=manual
+set foldlevelstart=1
+let javaScript_fold=2
+
+if $TERM == "xterm-256color" || $TERM == "screen-256color" || $COLORTERM == "gnome-terminal"
+      set t_Co=256
+endif
+
+" fix screen problem
+set term=screen-256color
+
+mapclear
+let mapleader = ","
+inoremap kj <esc>
+vnoremap kj <esc>
+nnoremap <tab><tab> <c-w>w
+
+" quick repeat, qq to start
+nnoremap <leader>. @q
+
+colorscheme solarized
+" set background
+" set background to dark after 17"
+if strftime("%H") < 17 && strftime("%H") > 6
+   " colorscheme default
+   set background=light
+"    echo strftime("%H")
+else
+   set background=dark
+endif
+
+set background=dark
+
+" toggle spell
+set spell spelllang=en_us
+
+" hi SpellBad cterm=underline ctermfg=black ctermbg=219
+nnoremap <leader><leader>s :set spell!<CR>
+nnoremap <leader><leader>p :set paste!<CR>
+nnoremap <leader>p "+p
+" start with no spell
+set nospell
+
+" highlight search
+"set hlsearch
+"hi Search cterm=NONE ctermfg=black ctermbg=darkYellow
+
+" Press to turn off highlighting and clear any message already
+" displayed.
+nnoremap <silent> <leader>h :nohlsearch<Bar>:echo<CR>
+
+" map space to jump to end of the line
+nnoremap <space> $
+vnoremap <space> $
+
+"set backspace
+set backspace=indent
+
+" ====  set pymode ====
+filetype off
+filetype plugin indent on
+syntax on
+
+" <leader>, list functions
+" <leager>g go to definition
+"
+" au FileType python set omnifunc=pythoncomplete#Complete
+let g:SuperTabDefaultCompletionType = "context"
+
+"let g:pymode_python = 'python3'
+let g:pymode_folding = 1
+
+" Load rope plugin
+let g:pymode_rope = 0
+
+" Documentation
+let g:pymode_doc = 1
+let g:pymode_doc_key = 'K'
+
+" Map keys for autocompletion
+let g:pymode_rope_autocomplete_map = '<C-K>'
+
+let g:pymode_run = 1
+
+" Key for run python code
+let g:pymode_run_key = 'R'
+
+"Linting
+let g:pymode_lint = 1
+" let g:pymode_lint_checker = "pyflakes, pep8"
+let g:pymode_lint_checker = "pep8"
+" Auto check on save
+let g:pymode_lint_write = 1
+
+" syntax highlighting
+let g:pymode_syntax = 1
+let g:pymode_syntax_all = 1
+let g:pymode_syntax_indent_errors = g:pymode_syntax_all
+let g:pymode_syntax_space_errors = g:pymode_syntax_all
+
+"-----------------set jedi-------------------
+
+let g:jedi#goto_assignments_command = "<leader>g"
+let g:jedi#goto_definitions_command = "<leader>d"
+let g:jedi#documentation_command = "K"
+let g:jedi#usages_command = "<leader>n"
+let g:jedi#completions_command = "<C-Space>"
+let g:jedi#rename_command = "<leader>r"
+let g:jedi#show_call_signatures = "1"
+" let g:jedi#force_py_version = 3 " (default: 'auto')
+" let g:jedi#popup_select_first = 0 " (default: 1)
+" let g:jedi#popup_on_dot = 0 " (default: 1)
+
+" ------- snippet -------------
+
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsSnippetsDir="~/.vim/bundle/myBundle/UltiSnips"
+let g:UltiSnipsListSnippets="<c-tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+
+
+" --- vundle setup
+set rtp+=~/.vim/bundle/vundle/
+set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.vim/bundle/myBundle/
+ call vundle#rc()
+ Bundle 'myBundle'
+ Bundle 'totl'
+ Bundle 'gmarik/vundle'
+ Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+ Bundle 'scrooloose/nerdtree'
+ " Bundle 'python-mode/python-mode'
+ " Bundle 'davidhalter/jedi-vim'
+ " Plugin 'Konfekt/FastFold'
+ Bundle 'vim-latex/vim-latex'
+ Bundle 'christoomey/vim-tmux-navigator'
+ Bundle 'altercation/vim-colors-solarized'
+ Bundle 'vim-scripts/YankRing.vim'
+ Bundle 'vimwiki/vimwiki'
+ Bundle 'mattn/calendar-vim'
+ Bundle 'vimoutliner/vimoutliner'
+ Bundle 'michaeljsmith/vim-indent-object'
+ Bundle "ap/vim-css-color"
+Bundle "vim-voom/VOoM"
+Plugin 'ctrlpvim/ctrlP.vim'
+Plugin 'epeli/slimux'
+Plugin 'tpope/vim-markdown'
+Plugin 'chrisbra/Recover.vim'
+"Plugin 'Valloric/YouCompleteMe'
+Plugin 'marijnh/tern_for_vim'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'gregsexton/MatchTag'
+
+" Track the engine.
+Plugin 'SirVer/ultisnips'
+
+" Snippets are separated from the engine. Add this if you want them:
+Plugin 'honza/vim-snippets'
+Plugin 'tbabej/taskwiki'
+Plugin 'farseer90718/vim-taskwarrior'
+Plugin 'majutsushi/tagbar'
+Plugin 'jceb/vim-orgmode'
+
+
+"let Vundle manage Vundle
+" required!
+"
+" The bundles you install will be listed here
+  filetype plugin indent on
+
+ map <F2> :NERDTreeToggle<CR>
+
+" Powerlinesetup
+ " set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h12
+ set laststatus=2
+ set encoding=utf-8
+ let g:Powerline_symbols = 'fancy'
+
+" Show trailing white space as error
+" match ErrorMsg '\s\+$'
+" Remove trailing white space
+nnoremap <leader>rtw :%s/\s\+$//e<CR>
+" Use <leader>l to toggle display of whitespace
+nmap <leader>i :set list!<CR>
+" Starting with no list
+set nolist
+" Andset some nice chars to do it with  (ctrl-k + 2-digit code from :dig)★
+"set listchars=tab:☂⚡,eol:¬,trail:☁
+"set list listchars=tab:162,trail:163
+
+" set listchars=trail:♪,tab:☂⚡
+set lcs=trail:+,tab:+-
+
+" automatically change window's cwd to file's dir
+set autochdir
+
+" I'd prefer spaces to tabs
+set softtabstop=4
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
+" more subtle popup colors
+if has ('gui_running')
+    highlight Pmenu guibg=#cccccc gui=bold
+endif
+
+augroup vimrc_autocmds_python
+   autocmd!
+    " highlight characters past column 120
+   autocmd FileType python highlight Excess ctermbg=DarkGrey guibg=DarkGrey
+   autocmd FileType python match Excess /\%80v.*/
+   autocmd FileType python set nowrap
+   " find main() and copy the block to be pasted in ipython
+   autocmd FileType python nnoremap <leader>m /def main<CR>/^def.*(\\|^class.*(<CR>BBB<C-v>?main()<CR>j$
+augroup END
+
+" Commenting blocks of code.
+" autocmd FileType c,cpp,java,scala let b:comment_leader = '// '
+" autocmd FileType sh,ruby,python  let b:comment_leader = '# '
+" autocmd FileType conf,fstab      let b:comment_leader = '# '
+" autocmd FileType tex             let b:comment_leader = '% '
+" autocmd FileType mail            let b:comment_leader = '> '
+" autocmd FileType vim             let b:comment_leader = '" '
+" noremap <silent> ,cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
+" noremap <silent> ,cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
+
+" auto reload
+augroup reload_vimrc " {
+    autocmd!
+    autocmd BufWritePost $MYVIMRC source $MYVIMRC
+augroup END " }
+"set number
+set showbreak=↪
+
+hi LineNr ctermfg=grey guifg=grey
+
+" -- line toggle --
+nnoremap <leader>1 :call RelativeNumberToggle()<CR>
+
+
+" -- important hotkeys --
+"  * search same word
+"  [{ to go back to {
+"  gd (in C) to go to definition
+"  C-n to auto complete
+" :abbr Lunix Linux
+" map <leader>tn :tabnew %<cr>
+" map <leader>th :tabprevious<cr>  # gT
+" map <leader>tl :tabnext<cr>  # gt
+map <leader>tc :tabclose<cr>
+map <leader>tm :tabmove
+
+" --- indent guides
+let g:indent_guides_guide_size=1
+
+" ----------Latex-Suitesetup--------------------------------------------
+"  --- re-map some keys
+map <leader>5 <F5>
+map <leader>7 <F7>
+map <leader>9 <F9>
+let g:Tex_Leader=','
+let g:Tex_Leader2='.'
+
+autocmd FileType tex set backspace=start,indent
+syntax on
+set ruler
+" REQUIRED. This makes vim invoke Latex-Suite when you open a tex file.
+filetype plugin indent on
+
+" IMPORTANT: win32 users will need to have 'shellslash'set so that latex
+" can be called correctly.
+set shellslash
+
+" IMPORTANT: grep will sometimes skip displaying the file name if you
+" search in a singe file. This will confuse Latex-Suite. Set your grep
+" program to always generate a file-name.
+set grepprg=grep\ -nH\ $*
+
+" OPTIONAL: This enables automatic indentation as you type.
+
+" OPTIONAL: Starting with Vim 7, the filetype of empty .tex files defaults to
+" 'plaintex' instead of 'tex', which results in vim-latex not being loaded.
+" The following changes the default filetype back to 'tex':
+let g:tex_flavor='latex'
+
+" this is mostly a matter of taste. but LaTeX looks good with just a bit
+" " of indentation.
+set sw=3
+" " TIP: if you write your \label's as \label{fig:something}, then if you
+" " type in \ref{fig: and press <C-n> you will automatically cycle through
+" " all the figure labels. Very useful!
+set iskeyword+=:
+
+let g:Tex_MultipleCompileFormat = 'pdf,aux'
+let g:Tex_TreatMacViewerAsUNIX = 0
+let g:Tex_DefaultTargetFormat = 'pdf'
+let g:Tex_CompileRule_pdf = 'pdflatex -synctex=1 --interaction=errorstopmode $*'
+let g:Tex_ViewRule_pdf = 'Skim'
+
+" Command-R will write, compile, and forward
+" search--thanks to
+"     "
+"     http://reference-man.blogspot.com/2011/09/fully-integrated-latex-in-macvim.html
+"         " preview, switch back to main window
+map Q :w<cr><leader>ll<leader>ls
+imap <D-r> <ESC><D-r>
+let g:Tex_IgnoreLevel = 5
+let g:Tex_IgnoredWarnings ='
+          \"Underfull\n".
+          \"Overfull\n".
+          \"specifier changed to\n".
+          \"You have requested\n".
+          \"Missing number, treated as zero.\n".
+          \"There were undefined references\n".
+          \"Citation %.%# undefined\n".
+          \"Marginpar on page %.%# moved\n".
+          \"\oval, \circle, or \line size unavailable\n"'
+
+let g:Tex_GotoError = 1
+
+hi LineNr ctermfg=grey guifg=grey
+
+" --- remap scroll up and down
+
+set langmenu=en_US.UTF-8    " sets the language of the menu (gvim)
+" lang English
+
+
+ " --- split windows
+ nmap <F3> ^W_^W\|
+ nmap <F4> <C-w>=
+
+ nmap <leader>` ysiw`
+
+ " --- vimwiki
+autocmd FileType wiki,vimwiki set expandtab
+autocmd FileType wiki,vimwiki set tabstop=3
+nnoremap <leader>wa :VimwikiAll2HTML<CR>
+
+ let g:vimwiki_list = [
+            \{'path': '~/vimwiki/text/datum',
+            \ 'path_html': '~/vimwiki/html/datum',
+            \'syntax': 'markdown',
+            \'ext': '.md',
+            \ 'auto_toc': '1',
+            \ 'index': 'index',
+            \ 'template_path': '~/vimwiki/templates/',
+            \ 'template_default': 'def_template',
+            \ 'template_ext': '.html'},
+            \{'path': '~/vimwiki/text/fin',
+            \ 'path_html': '~/vimwiki/html/fin',
+            \'syntax': 'default',
+            \'ext': '.md',
+            \ 'auto_toc': '1',
+            \ 'index': 'index',
+            \ 'template_path': '~/vimwiki/templates/',
+            \ 'template_default': 'def_template',
+            \ 'template_ext': '.html'},
+            \{'path': '~/vimwiki/text/general',
+            \ 'path_html': '~/vimwiki/html/general',
+            \'syntax': 'default',
+            \'ext': '.wiki',
+            \ 'auto_toc': '1',
+            \ 'index': 'index',
+            \ 'template_path': '~/vimwiki/templates/',
+            \ 'template_default': 'def_template',
+            \ 'template_ext': '.html'},
+            \{'path': '~/vimwiki/text/tech',
+            \ 'ext': '.wiki',
+            \ 'path_html': '~/vimwiki/html/tech',
+            \ 'auto_toc': '1',
+            \ 'template_path': '~/vimwiki/templates/',
+            \ 'template_default': 'def_template',
+            \ 'template_ext': '.html'}
+            \]
+
+let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+nmap Z d$o<Esc>p
+nmap <leader>o o<Esc>d0x
+
+
+" -- quick key to open general taskwarrior.totl
+nnoremap <leader><leader>t :e ~/vimwiki/otl/taskwarrior.totl<cr>
+
+nnoremap <leader><leader>cs :vsp<space>~/vimwiki/templates/css_color_v2.css<cr>:vertical<space>resize<space>40<cr>:set<space>nowrap<cr>
+
+let g:BASH_Ctrl_j = 'off'
+let g:ZSH_Ctrl_j = 'off'
+"nnoremap <c-j> <c-w>j
+"nnoremap <c-k> <c-w>k
+"nnoremap <c-h> <c-w>h
+"nnoremap <c-l> <c-w>l
+
+" -- slimux
+let   g:slimux_select_from_current_window = 1
+
+" slimux setup
+map <Leader>s :SlimuxREPLSendLine<CR>
+vmap <Leader>s :SlimuxREPLSendSelection<CR>
+map <Leader>a :SlimuxShellLast<CR>
+map <Leader>k :SlimuxSendKeysLast<CR>
+
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+
+"-  yankring 
+map <Leader><space> :YRShow <CR>
+
+let g:ycm_filetype_blacklist = {
+      \ 'python' : 1,
+      \ 'py' : 1,
+      \ 'markdown' : 1,
+      \ 'text' : 1,
+      \ 'vimwiki' : 1,
+      \ 'pandoc' : 1,
+      \ 'infolog' : 1,
+      \ 'mail' : 1
+      \}
+
+" --- git-gutter
+let g:gitgutter_realtime = 0
+let g:gitgutter_eager = 0
+
+" --- tern
+let g:tern_map_keys = 1
+" let g:tern_map_prefix = "<leader><leader>"
+"
+" --- vim-markdown
+let g:vim_markdown_folding_style_pythonic = 1
+let g:vim_markdown_folding_level = 6
+function! MarkdownLevel() 
+   let h = matchstr(getline(v:lnum), '^#\+') 
+   if empty(h) return "=" 
+   else 
+      return ">" . len(h) 
+   endif 
+endfunction
+
+" ---- commenter config
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
+
+" Use compact syntax for prettified multi-line comments
+let g:NERDCompactSexyComs = 1
+
+" Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDDefaultAlign = 'left'
+
+" Set a language to use its alternate delimiters by default
+let g:NERDAltDelims_java = 1
+
+" Add your own custom formats or override the defaults
+let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }
+
+" Allow commenting and inverting empty lines (useful when commenting a region)
+let g:NERDCommentEmptyLines = 1
+
+" Enable trimming of trailing whitespace when uncommenting
+let g:NERDTrimTrailingWhitespace = 1
+
+" -- vim-taskwarrior
+let g:task_rc_override = 'rc.defaultwidth=0'
+
+" -- fastfold
+"  prevents pymode folding from being very slow, works with version d2dead6
+"  cd ~/.vim/bundle/python-mode/
+"  git checkout d2dead6     (git checkout tags/snappy)
+
+nmap zuz <Plug>(FastFoldUpdate)
+let g:fastfold_savehook = 1
+let g:fastfold_force = 1
+" let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
+" let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
+" -- to be faster, set the fastfold update commands to blank
+let g:fastfold_fold_command_suffixes =  []  
+let g:fastfold_fold_movement_commands = []
+

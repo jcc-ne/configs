@@ -1,15 +1,25 @@
 mapclear
 let mapleader = ","
+set guioptions=M
 inoremap kj <esc>
 vnoremap kj <esc>
 nnoremap <tab><tab> <c-w>w
+
+" quick repeat, qq to start
+nnoremap <leader>. @q
+
+" -- leave terminal mode
 tnoremap <c-l> <C-\><C-n><c-l>
 
 set t_Co=256
 set autochdir
 
-" quick repeat, qq to start
-nnoremap <leader>. @q
+" -- I'd prefer spaces to tabs
+set softtabstop=4
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
 
 " map space to jump to end of the line
 nnoremap <space> $
@@ -62,6 +72,7 @@ if dein#load_state('~/.cache/dein')
 
   " Let dein manage dein
   " Required:
+  "call dein#local("~/.vim/bundle")
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
   call dein#add('~/.vim/bundle/myBundle')
   call dein#add('~/.vim/bundle/totl')
@@ -69,7 +80,6 @@ if dein#load_state('~/.cache/dein')
   call dein#add('vim-airline/vim-airline-themes')
   call dein#add('altercation/vim-colors-solarized')
   call dein#add('Vigemus/iron.nvim')
-  call dein#add('Vigemus/trex.nvim')
   " -- python dev
   call dein#add('python-mode/python-mode')
   call dein#add('davidhalter/jedi-vim')
@@ -89,6 +99,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('vimoutliner/vimoutliner')
   call dein#add('vimwiki/vimwiki')
   call dein#add('tbabej/taskwiki')
+  call dein#add('mattn/calendar-vim')
   call dein#add('farseer90718/vim-taskwarrior')
   "call dein#add('chrisbra/Recover.vim')
 
@@ -106,7 +117,7 @@ colorscheme solarized
 
 " If you want to install not installed plugins on startup.
 "if dein#check_install()
-"  call dein#install()
+  "call dein#install()
 "endif
 
 "End dein Scripts-------------------------
@@ -118,40 +129,12 @@ let g:airline_theme = 'powerlineish'
 
 
 " -- Line Num toggle --
-if v:version >= 400
-  function! RelativeNumberToggle()
-    if (&number == 1 && &relativenumber == 1)
-      set number
-      set norelativenumber
-    elseif (&number == 0 && &relativenumber == 1)
-      set norelativenumber
-      set number number?
-    elseif (&number == 1 && &relativenumber == 0)
-      set norelativenumber
-      set nonumber number?
-    else
-      set number
-      set relativenumber relativenumber?
-    endif
-  endfunc
-else
-  function! RelativeNumberToggle()
-    if (&relativenumber == 1)
-      set number number?
-    elseif (&number == 1)
-      set nonumber number?
-    else
-      set relativenumber relativenumber?
-    endif
-  endfunc
-  nnoremap <silent> <space> :set number!<CR>
-endif
-nnoremap <silent><leader>n :call RelativeNumberToggle()<CR>
+nnoremap <silent><leader>1 :call RelativeNumberToggle()<CR>
 
-au FocusLost * :set number
-au FocusGained * :set relativenumber
-autocmd InsertEnter * :set number
-autocmd InsertLeave * :set relativenumber
+"au FocusLost * :set number
+"au FocusGained * :set relativenumber
+"autocmd InsertEnter * :set number
+"autocmd InsertLeave * :set relativenumber
 
 " -- fastfold
 "  prevents pymode folding from being very slow, works with version d2dead6
@@ -252,9 +235,11 @@ let g:ctrlp_cmd = 'CtrlPBuffer'
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|(\.(swp|ico|git|svn|pyc))'
 
 
+" - expandtab for some filetypes
+autocmd FileType wiki,vimwiki,unix set expandtab
+autocmd FileType wiki,vimwiki,unix set tabstop=4
+
 " - vimwiki
-autocmd FileType wiki,vimwiki set expandtab
-autocmd FileType wiki,vimwiki set tabstop=4
 nnoremap <leader>wa :VimwikiAll2HTML<CR>
 
 let g:vimwiki_list = [
@@ -293,5 +278,9 @@ let g:vimwiki_list = [
             \ 'template_default': 'def_template',
             \ 'template_ext': '.html'}
             \]
+
+
+" -- quick key to open general taskwarrior.totl
+nnoremap <leader><leader>t :e ~/vimwiki/otl/taskwarrior.totl<cr>
 
 nnoremap <silent> <F3> :redir @a<CR>:g//<CR>:redir END<CR>:new<CR>:put! a<CR>
