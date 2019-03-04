@@ -351,8 +351,8 @@ autocmd FileType wiki,vimwiki set tabstop=3
 nnoremap <leader>wa :VimwikiAll2HTML<CR>
 
  let g:vimwiki_list = [
-            \{'path': '~/vimwiki/text/datum',
-            \ 'path_html': '~/vimwiki/html/datum',
+            \{'path': '~/vimwiki/text/work',
+            \ 'path_html': '~/vimwiki/html/work',
             \'syntax': 'markdown',
             \'ext': '.md',
             \ 'auto_toc': '1',
