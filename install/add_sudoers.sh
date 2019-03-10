@@ -8,5 +8,5 @@ fi
 echo "add sudoer: $1"
 
 sudo adduser $1
-usermod -aG sudo janine
-usermod -aG docker janine
+sudo usermod -aG sudo $1
+# usermod -aG docker $1

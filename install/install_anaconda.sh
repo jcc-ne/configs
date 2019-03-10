@@ -17,7 +17,9 @@ set -e
 echo current PLATFORM: $(check_platform)
 
 if [ $(check_platform) = "OSX" ];then
-    echo "OSX"
+   echo "OSX"
+elif [ $(check_platform) = "LINUX" ];then
+   wget https://repo.anaconda.com/archive/Anaconda3-2018.12-Linux-x86_64.sh
 fi
 
 cd $my_cwd
