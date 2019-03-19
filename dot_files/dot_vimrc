@@ -140,6 +140,7 @@ set rtp+=~/.vim/bundle/myBundle/
  Bundle 'gmarik/vundle'
  Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
  Bundle 'scrooloose/nerdtree'
+ Bundle 'linuxcaffe/vim-template'
  " Bundle 'python-mode/python-mode'
  " Bundle 'davidhalter/jedi-vim'
  " Plugin 'Konfekt/FastFold'
@@ -399,10 +400,6 @@ nnoremap <leader><leader>cs :vsp<space>~/vimwiki/templates/css_color_v2.css<cr>:
 
 let g:BASH_Ctrl_j = 'off'
 let g:ZSH_Ctrl_j = 'off'
-"nnoremap <c-j> <c-w>j
-"nnoremap <c-k> <c-w>k
-"nnoremap <c-h> <c-w>h
-"nnoremap <c-l> <c-w>l
 
 " -- slimux
 let   g:slimux_select_from_current_window = 1
