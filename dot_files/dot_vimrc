@@ -24,7 +24,7 @@ nnoremap <tab><tab> <c-w>w
 " quick repeat, qq to start
 nnoremap <leader>. @q
 
-colorscheme solarized
+" colorscheme solarized
 " set background
 " set background to dark after 17"
 if strftime("%H") < 17 && strftime("%H") > 6
