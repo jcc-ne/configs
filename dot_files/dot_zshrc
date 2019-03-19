@@ -184,8 +184,12 @@ if [ -f '/Users/janine/google-cloud-sdk/completion.zsh.inc' ]; then source '/Use
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 POWERLEVEL9K_MODE='nerdfont-complete'
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon background_jobs ssh dir vcs newline status)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time disk_usage)
+POWERLEVEL9K_CUSTOM_MYPROMPT="echo ♛"
+POWERLEVEL9K_CUSTOM_MYPROMPT_BACKGROUND="black"
+POWERLEVEL9K_CUSTOM_MYPROMPT_FOREGROUND="yellow"
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon background_jobs dir vcs newline host)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(disk_usage load ram command_execution_time )
+POWERLEVEL9K_RAM_BACKGROUND="cyan"
 POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=4
 POWERLEVEL9K_SHORTEN_MIN_LENGTH=12

@@ -21,7 +21,7 @@ if [ $(check_platform) = "OSX" ];then
     bash Anaconda3-2018.12-MacOSX-x86_64.sh -b
 elif [ $(check_platform) = "LINUX" ];then
     wget https://repo.anaconda.com/archive/Anaconda3-2018.12-Linux-x86_64.sh
-    bash Anaconda3-2018.12-Linux-x86_64.sh -b
+    echo "Run: bash Anaconda3-2018.12-Linux-x86_64.sh"
 fi
 
 cd $my_cwd

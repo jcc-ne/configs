@@ -34,6 +34,9 @@ elif [ $(check_platform) = "LINUX" ];then
    # Issue with driver install requires creating /usr/lib/nvidia
    sudo mkdir /usr/lib/nvidia
    sudo apt-get install --no-install-recommends nvidia-410
+
+   # From https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#ubuntu-installation
+   sudo apt-get install cuda-drivers
    # Reboot. Check that GPUs are visible using the command: nvidia-smi
 
    # Install development and runtime libraries (~4GB)
