@@ -1,0 +1,69 @@
+snippet DIR
+DIR=\$(dirname \$(python -c 'import os,sys;print(os.path.realpath(sys.argv[1]))' \$0))
+my_cwd=\$PWD
+
+if [ ! \$DIR = \$PWD ]; then
+   echo "need to execute the script from \$DIR"
+   echo "*** moving to working directory *** "
+   echo
+   cd \$DIR
+fi
+cd \$my_cwd
+endsnippet
+
+snippet ROS_DISTRO
+if [ -z $ROS_DISTRO ]; then
+   runpython=rospython
+   sandbox=$SANDBOX_ROS
+else
+   runpython=python
+   sandbox=$SANDBOX
+fi
+endsnippet
+
+snippet check
+function check_error () {
+   set +x
+   if [ $1 -eq 0 ]; then
+      echo ""
+      set -x
+      return 0
+   else
+      echo "--- exit with error  ---"
+      exit 1
+   fi
+}
+endsnippet
+
+snippet IP 
+   WRAPPER_API_IPADDR=$(docker inspect $WRAPPER_API_CID| grep IPAddress | tail -n1 | awk '{print $2}' | sed -e 's/"//g' -e 's/,//g')
+endsnippet
+
+
+snippet getopt
+# A POSIX variable
+OPTIND=1         # Reset in case getopts has been used previously in the shell.
+
+# Initialize our own variables:
+output_file=""
+verbose=0
+
+while getopts "h?vf:" opt; do
+    case "$opt" in
+    h|\?)
+        show_help
+        exit 0
+        ;;
+    v)  verbose=1
+        ;;
+    f)  output_file=$OPTARG
+        ;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+[ "\${1:-}" = "--" ] && shift
+
+echo "verbose=$verbose, output_file='$output_file', Leftovers: $@"
+endsnippet

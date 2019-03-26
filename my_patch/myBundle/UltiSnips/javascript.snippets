@@ -1,0 +1,11 @@
+snippet ".*\.propT" "reactjs propTypes" r
+.propTypes = {
+   cid: PropTypes.number.isRequired,
+   type_key: PropTypes.string.isRequired,
+   editing: PropTypes.bool,
+}
+
+$1.defaultProps = {
+   editing: false
+}
+endsnippet
