@@ -164,6 +164,7 @@ alias -g l='|less'
 alias -g m='|more'
 alias ll='ls -lth |less'
 alias ls='ls -F'
+alias tadd='t add project:none'
 # export KEYTIMEOUT=1
 
 # alias rvm-prompt=$HOME/.rvm/bin/rvm-prompt
