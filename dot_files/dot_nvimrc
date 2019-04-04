@@ -11,6 +11,10 @@ nnoremap <leader>. @q
 " -- leave terminal mode
 tnoremap <c-l> <C-\><C-n><c-l>
 
+" -- easier omnicomplete
+inoremap <c-space> <c-x><c-o>
+
+
 set t_Co=256
 set autochdir
 
@@ -38,7 +42,6 @@ set nospell
 " Use <leader>i to toggle display of whitespace
 nmap <leader>i :set list!<CR>
 " Starting with no list
-nmap <leader>i :set list!<CR>
 set nolist
 "set lcs=trail:♪,tab:☂⚡
 set lcs=trail:+,tab:+-
@@ -53,6 +56,12 @@ endif
 " OR just set it to dark
 set background=dark
 
+let hostname=substitute(system('hostname -s'), "\n", "", "")
+if hostname == "Janines-iMac"
+    colorscheme gruvbox
+else
+    colorscheme solarized
+endif
 
 " dein Scripts-----------------------------
 " Follow https://github.com/Shougo/dein.vim to install
@@ -74,12 +83,16 @@ if dein#load_state('~/.cache/dein')
   " Required:
   "call dein#local("~/.vim/bundle")
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
-  call dein#add('~/.vim/bundle/myBundle')
-  call dein#add('~/.vim/bundle/totl')
+  " -- layout related
+  call dein#add('jcc-ne/vim-template', {'rev': 'dev'})
+  call dein#add('scrooloose/nerdtree')
+  call dein#add('majutsushi/tagbar')
+
   call dein#add('vim-airline/vim-airline')
   call dein#add('vim-airline/vim-airline-themes')
   call dein#add('altercation/vim-colors-solarized')
-  call dein#add('Vigemus/iron.nvim')
+  call dein#add('hzchirs/vim-material')
+  
   " -- python dev
   call dein#add('python-mode/python-mode')
   call dein#add('davidhalter/jedi-vim')
@@ -103,6 +116,12 @@ if dein#load_state('~/.cache/dein')
   call dein#add('farseer90718/vim-taskwarrior')
   "call dein#add('chrisbra/Recover.vim')
 
+  " - local plugins
+  call dein#add('~/.vim/bundle/myBundle')
+  call dein#add('~/.vim/bundle/totl')
+
+  call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
+              \ 'build': 'cd app & yarn install' })
 
   " Required:
   call dein#end()
@@ -113,7 +132,6 @@ endif
 filetype plugin indent on
 syntax enable
 
-colorscheme solarized
 
 " If you want to install not installed plugins on startup.
 "if dein#check_install()
@@ -238,49 +256,54 @@ let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|(\.(swp|ico|git|svn|py
 " - expandtab for some filetypes
 autocmd FileType wiki,vimwiki,unix set expandtab
 autocmd FileType wiki,vimwiki,unix set tabstop=4
+autocmd FileType wiki,vimwiki set foldmethod=expr
+
+"au BufEnter *.md set foldmethod=indent
+au BufEnter *.md set foldlevel=20
+au BufEnter *.md set shiftwidth=4
 
 " - vimwiki
-nnoremap <leader>wa :VimwikiAll2HTML<CR>
+nnoremap <leader>wg :VimwikiGenerateTags<CR>
 
 let g:vimwiki_list = [
             \{'path': '~/vimwiki/text/work',
             \ 'path_html': '~/vimwiki/html/work',
             \'syntax': 'markdown',
             \'ext': '.md',
-            \ 'auto_toc': '1',
-            \ 'index': 'index',
-            \ 'template_path': '~/vimwiki/templates/',
-            \ 'template_default': 'def_template',
-            \ 'template_ext': '.html'},
+            \ 'auto_toc': 1,
+            \ 'auto_tags': 1,
+            \ 'index': 'index'},
             \{'path': '~/vimwiki/text/fin',
             \ 'path_html': '~/vimwiki/html/fin',
             \'syntax': 'default',
             \'ext': '.md',
-            \ 'auto_toc': '1',
-            \ 'index': 'index',
-            \ 'template_path': '~/vimwiki/templates/',
-            \ 'template_default': 'def_template',
-            \ 'template_ext': '.html'},
+            \ 'auto_toc': 1,
+            \ 'auto_tags': 1,
+            \ 'index': 'index'},
             \{'path': '~/vimwiki/text/general',
             \ 'path_html': '~/vimwiki/html/general',
-            \'syntax': 'default',
-            \'ext': '.wiki',
-            \ 'auto_toc': '1',
+            \ 'syntax': 'default',
+            \ 'ext': '.wiki',
+            \ 'auto_toc': 1,
             \ 'index': 'index',
             \ 'template_path': '~/vimwiki/templates/',
             \ 'template_default': 'def_template',
             \ 'template_ext': '.html'},
             \{'path': '~/vimwiki/text/arc_2015',
             \ 'ext': '.wiki',
-            \ 'path_html': '~/vimwiki/html/arc_2015',
-            \ 'auto_toc': '1',
-            \ 'template_path': '~/vimwiki/templates/',
-            \ 'template_default': 'def_template',
-            \ 'template_ext': '.html'}
+            \ 'auto_toc': 1}
             \]
 
 
-" -- quick key to open general taskwarrior.totl
-nnoremap <leader><leader>t :e ~/vimwiki/otl/taskwarrior.totl<cr>
+map <leader>f :NERDTreeToggle<CR>
 
-nnoremap <silent> <F3> :redir @a<CR>:g//<CR>:redir END<CR>:new<CR>:put! a<CR>
+" -- taskwiki related
+" --    quick key to open general taskwarrior.totl
+" --    cheat sheets:
+" --        ,td    mark as done
+nnoremap <leader><leader>t :e ~/vimwiki/otl/taskwarrior.totl<cr>
+ 
+nnoremap <silent> <leader>q :redir @a<CR>:g//<CR>:redir END<CR>:new<CR>:put! a<CR>
+
+" -- slimux settings
+let g:slimux_select_from_current_window = 1
