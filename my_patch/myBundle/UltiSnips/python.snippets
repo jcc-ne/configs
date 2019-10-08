@@ -920,4 +920,20 @@ formatter = matplotlib.ticker.FuncFormatter(timeTicks
 ax.xaxis.set_major_formatter(formatter) 
 endsnippet
 
+snippet tf
+import tensorflow as tf
+sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+endsnippet
+
+snippet colorprint
+import colorama
+
+def _print(*args):
+    text = '\t ' + colorama.Fore.GREEN
+    reset = colorama.Style.RESET_ALL
+    print(text, *args, reset)
+endsnippet
+
+#
+
 # vim:ft=snippets:
