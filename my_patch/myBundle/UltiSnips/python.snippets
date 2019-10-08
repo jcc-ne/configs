@@ -920,4 +920,23 @@ formatter = matplotlib.ticker.FuncFormatter(timeTicks
 ax.xaxis.set_major_formatter(formatter) 
 endsnippet
 
+snippet ipy
+
+# <markdowncell>
+# <codecell>
+# <markdowncell>
+# <codecell>
+endsnippet
+
+snippet ImportError
+	import sys
+	import os
+
+	sys.path.append(
+		os.path.join(
+			os.path.dirname(os.path.realpath(__file__)),
+			'..'
+	))
+endsnippet
+
 # vim:ft=snippets:
