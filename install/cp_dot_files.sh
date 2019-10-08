@@ -12,9 +12,9 @@ fi
 
 cd ../dot_files
 
-ln dot_tmux.conf ~/.tmux.conf
-ln dot_zshrc ~/.zshrc
-ln dot_vimrc ~/.vimrc
-ln dot_nvimrc ~/.nvimrc
+ln -s dot_tmux.conf ~/.tmux.conf
+ln -s dot_zshrc ~/.zshrc
+ln -s dot_vimrc ~/.vimrc
+ln -s dot_nvimrc ~/.nvimrc
 
 cd $my_cwd

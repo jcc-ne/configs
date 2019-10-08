@@ -13,8 +13,10 @@ echo "Current platform is: $PLATFORM"
 
 echo "Install Anaconda..."
 
-if [ $PLATFORM == "OSX" ];then
-    
-elif [ $PLATFORM == "LINUX" ];then
-
+if [ $PLATFORM = "OSX" ];then
+    echo "PLATFORM: $PLATFORM"    
+elif [ $PLATFORM = "LINUX" ];then
+   sudo add-apt-repository ppa:git-core/ppa
+   sudo apt-get update
+   sudo apt-get install git
 fi
