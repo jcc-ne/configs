@@ -920,6 +920,7 @@ formatter = matplotlib.ticker.FuncFormatter(timeTicks
 ax.xaxis.set_major_formatter(formatter) 
 endsnippet
 
+<<<<<<< HEAD
 snippet tf
 import tensorflow as tf
 sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
@@ -936,4 +937,25 @@ endsnippet
 
 #
 
+=======
+snippet ipy
+
+# <markdowncell>
+# <codecell>
+# <markdowncell>
+# <codecell>
+endsnippet
+
+snippet ImportError
+	import sys
+	import os
+
+	sys.path.append(
+		os.path.join(
+			os.path.dirname(os.path.realpath(__file__)),
+			'..'
+	))
+endsnippet
+
+>>>>>>> 6fc658eb5931637d5fd5904169f929645b44d843
 # vim:ft=snippets:
