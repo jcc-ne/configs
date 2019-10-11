@@ -42,6 +42,7 @@ set nospell
 " Use <leader>i to toggle display of whitespace
 nmap <leader>i :set list!<CR>
 " Starting with no list
+nmap <leader>i :set list!<CR>
 set nolist
 "set lcs=trail:♪,tab:☂⚡
 set lcs=trail:+,tab:+-
@@ -216,6 +217,7 @@ let g:pymode_syntax_space_errors = g:pymode_syntax_all
 
 let g:jedi#goto_assignments_command = "<leader>g"
 let g:jedi#goto_definitions_command = "<leader>d"
+let g:jedi#goto_stubs_command = "<leader><leader>s"
 let g:jedi#documentation_command = "K"
 let g:jedi#usages_command = "<leader>n"
 let g:jedi#completions_command = "<C-Space>"

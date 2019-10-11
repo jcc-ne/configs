@@ -24,19 +24,6 @@ nnoremap <tab><tab> <c-w>w
 " quick repeat, qq to start
 nnoremap <leader>. @q
 
-" colorscheme solarized
-" set background
-" set background to dark after 17"
-if strftime("%H") < 17 && strftime("%H") > 6
-   " colorscheme default
-   set background=light
-"    echo strftime("%H")
-else
-   set background=dark
-endif
-
-set background=dark
-
 " toggle spell
 set spell spelllang=en_us
 
@@ -73,7 +60,7 @@ syntax on
 " au FileType python set omnifunc=pythoncomplete#Complete
 let g:SuperTabDefaultCompletionType = "context"
 
-"let g:pymode_python = 'python3'
+" let g:pymode_python = 'python3'
 let g:pymode_folding = 1
 
 " Load rope plugin
@@ -131,6 +118,7 @@ let g:UltiSnipsEditSplit="vertical"
 
 
 " --- vundle setup
+set rtp+=~/.vim/
 set rtp+=~/.vim/bundle/vundle/
 set rtp+=~/.vim/bundle/Vundle.vim
 set rtp+=~/.vim/bundle/myBundle/
@@ -141,9 +129,9 @@ set rtp+=~/.vim/bundle/myBundle/
  Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
  Bundle 'scrooloose/nerdtree'
  Bundle 'linuxcaffe/vim-template'
- " Bundle 'python-mode/python-mode'
- " Bundle 'davidhalter/jedi-vim'
- " Plugin 'Konfekt/FastFold'
+ Bundle 'python-mode/python-mode'
+ Bundle 'davidhalter/jedi-vim'
+ Plugin 'Konfekt/FastFold'
  Bundle 'vim-latex/vim-latex'
  Bundle 'christoomey/vim-tmux-navigator'
  Bundle 'altercation/vim-colors-solarized'
@@ -346,6 +334,13 @@ set langmenu=en_US.UTF-8    " sets the language of the menu (gvim)
 
  nmap <leader>` ysiw`
 
+" - map ctrl-p back to ctrl-p
+let g:ctrlp_map = '<c-p>'
+"let g:ctrlp_cmd = 'CtrlPMixed'
+let g:ctrlp_cmd = 'CtrlPBuffer'
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|(\.(swp|ico|git|svn|pyc))'
+
+
  " --- vimwiki
 autocmd FileType wiki,vimwiki set expandtab
 autocmd FileType wiki,vimwiki set tabstop=3
@@ -356,7 +351,7 @@ nnoremap <leader>wa :VimwikiAll2HTML<CR>
             \ 'path_html': '~/vimwiki/html/work',
             \'syntax': 'markdown',
             \'ext': '.md',
-            \ 'auto_toc': '1',
+            \ 'auto_toc': 1,
             \ 'index': 'index',
             \ 'template_path': '~/vimwiki/templates/',
             \ 'template_default': 'def_template',
@@ -365,7 +360,7 @@ nnoremap <leader>wa :VimwikiAll2HTML<CR>
             \ 'path_html': '~/vimwiki/html/fin',
             \'syntax': 'default',
             \'ext': '.md',
-            \ 'auto_toc': '1',
+            \ 'auto_toc': 1,
             \ 'index': 'index',
             \ 'template_path': '~/vimwiki/templates/',
             \ 'template_default': 'def_template',
@@ -374,7 +369,7 @@ nnoremap <leader>wa :VimwikiAll2HTML<CR>
             \ 'path_html': '~/vimwiki/html/general',
             \'syntax': 'default',
             \'ext': '.wiki',
-            \ 'auto_toc': '1',
+            \ 'auto_toc': 1,
             \ 'index': 'index',
             \ 'template_path': '~/vimwiki/templates/',
             \ 'template_default': 'def_template',
@@ -382,7 +377,7 @@ nnoremap <leader>wa :VimwikiAll2HTML<CR>
             \{'path': '~/vimwiki/text/tech',
             \ 'ext': '.wiki',
             \ 'path_html': '~/vimwiki/html/tech',
-            \ 'auto_toc': '1',
+            \ 'auto_toc': 1,
             \ 'template_path': '~/vimwiki/templates/',
             \ 'template_default': 'def_template',
             \ 'template_ext': '.html'}
@@ -483,4 +478,22 @@ let g:fastfold_force = 1
 " -- to be faster, set the fastfold update commands to blank
 let g:fastfold_fold_command_suffixes =  []  
 let g:fastfold_fold_movement_commands = []
+
+
+" -- using ctags   `ctags -R .` to create tags and then `C-]` to follow
+set tags=./tags,tags;$HOME
+
+" set background
+" set background to dark after 17"
+if strftime("%H") < 17 && strftime("%H") > 6
+   " colorscheme default
+   set background=light
+"    echo strftime("%H")
+else
+   set background=dark
+endif
+
+colorscheme solarized
+
+" set background=dark
 
