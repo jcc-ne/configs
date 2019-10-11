@@ -229,7 +229,7 @@ let g:jedi#goto_stubs_command = "<leader><leader>s"
 
 " let g:jedi#force_py_version = 3 " (default: 'auto')
 " let g:jedi#popup_select_first = 0 " (default: 1)
-" let g:jedi#popup_on_dot = 0 " (default: 1)
+ let g:jedi#popup_on_dot = 0 " (default: 1)
 
 " ------- snippet -------------
 
