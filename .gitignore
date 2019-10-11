@@ -1,3 +1,4 @@
 *.deb
 *.sqlite
 *.zip
+db/
