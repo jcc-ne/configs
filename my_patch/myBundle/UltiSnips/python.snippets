@@ -106,6 +106,39 @@ if __name__ == "__main__":
 		unittest.main()
 endsnippet
 
+snippet unittest2
+
+# -------- TEST SUITE -------
+if __name__ == "__main__":
+    import unittest
+
+    class TestCase(unittest.TestCase):
+        def test_filename(self):
+            filename = 'foo.bar'
+            print(filename)
+            self.assertRegex(add_timestamp(filename), r'foo-\d+\.\d+\.bar')
+
+        def test_filepath(self):
+            filename = './foo.bar'
+            print(filename)
+            self.assertRegex(add_timestamp(filename), r'\./foo-\d+\.\d+\.bar')
+
+        def test_filepath_1(self):
+            filename = '/home/user/proj/foo.bar'
+            print(filename)
+            self.assertRegex(add_timestamp(filename),
+                             r'/home/user/proj/foo-\d+\.\d+\.bar')
+
+        def test_filepath_no_ext(self):
+            filename = '../user/proj/foo'
+            print(filename)
+            self.assertRegex(add_timestamp(filename),
+                             r'../user/proj/foo-\d+\.\d+')
+
+    suite = unittest.TestLoader().loadTestsFromName(__name__)
+    unittest.TextTestRunner(verbosity=2).run(suite)
+endsnippet
+
 snippet subprocess
 	import subprocess
 	# output = subprocess.check_output(["", ""])
@@ -117,7 +150,12 @@ snippet logging
 import logging
 import sys
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
+endsnippet
+
+snippet logger
+import logging
+logger = logging.getLogger(__name__)
 endsnippet
 
 snippet argparse
@@ -206,9 +244,25 @@ snippet #! "Shebang header for python scripts" b
 $0
 endsnippet
 
-snippet ifmain "ifmain" b
+snippet ifmain0 "ifmain" b
 if __name__ == `!p snip.rv = get_quoting_style(snip)`__main__`!p snip.rv = get_quoting_style(snip)`:
 	${1:${VISUAL:main()}}
+endsnippet
+
+snippet ifmain
+if __name__ == "__main__":
+    import argparse
+
+    logging.basicConfig()
+    logger = logging.getLogger('root')
+    logger.setLevel(logging.DEBUG)
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('input_path', default=None,
+                        help="input filepath ad data source for fakeserial")
+
+    args = parser.parse_args()
+    main(args.input_path)
 endsnippet
 
 snippet with "with" b
@@ -937,6 +991,21 @@ snippet ImportError
 			os.path.dirname(os.path.realpath(__file__)),
 			'..'
 	))
+endsnippet
+
+snippet re_
+    re_model = re.compile(r'model_(?P<num>\d+)\.(?P<ext>(h5)|(pkl))')
+endsnippet
+
+snippet rev
+    re_npy = re.compile(r"""
+                        ^(?P<type>.*)       # type
+                        _                   # connecting word
+                        (?P<label>\d+)      # label (occupancy location)
+                        (?P<version>v\d+)*  # version, optional
+                        \.npy               # file ext .npy
+                        """,
+                        re.VERBOSE)
 endsnippet
 
 # vim:ft=snippets:
