@@ -15,7 +15,7 @@ tnoremap <c-l> <C-\><C-n><c-l>
 inoremap <c-space> <c-x><c-o>
 
 
-set t_Co=256
+set t_Co=tmux-256color
 set autochdir
 
 " -- I'd prefer spaces to tabs
@@ -92,10 +92,14 @@ if dein#load_state('~/.cache/dein')
   " -- python dev
   call dein#add('python-mode/python-mode')
   call dein#add('davidhalter/jedi-vim')
+  call dein#add('deoplete-plugins/deoplete-jedi')  " async jedi
+  call dein#add('Shougo/deoplete.nvim')
+
   call dein#add('Konfekt/FastFold')
   call dein#add('tpope/vim-fugitive')
   call dein#add('airblade/vim-gitgutter')
 
+  " -- tmux related
   call dein#add('christoomey/vim-tmux-navigator')
   call dein#add('epeli/slimux')
 
@@ -105,29 +109,24 @@ if dein#load_state('~/.cache/dein')
   call dein#add('honza/vim-snippets')
   call dein#add('scrooloose/nerdcommenter')
 
+  " -- general tasks
   call dein#add('vimoutliner/vimoutliner')
   call dein#add('vimwiki/vimwiki')
   call dein#add('tbabej/taskwiki')
   call dein#add('mattn/calendar-vim')
   call dein#add('farseer90718/vim-taskwarrior')
-  "call dein#add('chrisbra/Recover.vim')
-  call dein#add('/usr/local/opt/fzf')
-  call dein#add('junegunn/fzf.vim')
-
-  " - local plugins
-  call dein#add('~/.vim/bundle/myBundle')
-  call dein#add('~/.vim/bundle/totl')
-
   call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
               \ 'build': 'cd app & yarn install' })
 
-  call dein#add('.vim')
-  if hostname == "Janines-iMac" || "Janines-MBP"
-      call dein#add('/usr/local/opt/fzf')
-  endif
+  " -- local plugins
+  call dein#add('~/.vim/bundle/myBundle')
+  call dein#add('~/.vim/bundle/totl')
 
+  " -- fuzzy finder
+  call dein#add('~/.fzf')
   call dein#add('junegunn/fzf.vim')
-  " Required:
+
+  " -- Required:
   call dein#end()
   call dein#save_state()
 endif
@@ -204,7 +203,7 @@ let g:pymode_folding = 1
 " Load rope plugin
 let g:pymode_rope = 0
 
-" Documentation
+" Documentatron
 let g:pymode_doc = 1
 let g:pymode_doc_key = 'K'
 
@@ -229,6 +228,11 @@ let g:pymode_syntax_all = 1
 let g:pymode_syntax_indent_errors = g:pymode_syntax_all
 let g:pymode_syntax_space_errors = g:pymode_syntax_all
 
+" disable conflicting keys and their functions
+let g:pymode_breakpoint = 0
+" let g:pymode_breakpoint_bind = '<leader>b'  " conflicts with :Buffers
+let g:pymode_run = 0
+
 "-----------------set jedi-------------------
 
 let g:jedi#goto_assignments_command = "<leader>g"
@@ -236,13 +240,17 @@ let g:jedi#goto_definitions_command = "<leader>d"
 let g:jedi#documentation_command = "K"
 let g:jedi#usages_command = "<leader>n"
 let g:jedi#completions_command = "<C-Space>"
-let g:jedi#rename_command = "<leader>r"
+let g:jedi#rename_command = "<leader><leader>r"
 let g:jedi#show_call_signatures = "1"
 let g:jedi#goto_stubs_command = "<leader><leader>s"
 
 " let g:jedi#force_py_version = 3 " (default: 'auto')
 " let g:jedi#popup_select_first = 0 " (default: 1)
  let g:jedi#popup_on_dot = 0 " (default: 1)
+ let g:jedi#completions_enabled = 0  " use deoplete-jedi instead
+
+" deoplete startup
+ let g:deoplete#enable_at_startup = 1
 
 " ------- snippet -------------
 
@@ -315,7 +323,15 @@ let g:vimwiki_list = [
             \]
 
 
-map <leader>f :NERDTreeToggle<CR>
+nmap <F2> :NERDTreeToggle<CR>
+
+" -- fzf mapping
+"let g:fzf_command_prefix = 'Fz'
+nmap <leader>f :FzFiles<CR>
+nmap <leader>h :FzHistory<CR>
+nmap <leader>b :FzBuffers<CR>
+nmap <leader>r :FzRg<CR>
+nmap <leader>l :FzLines<CR>
 
 " -- taskwiki related
 " --    quick key to open general taskwarrior.totl
