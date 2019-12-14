@@ -46,6 +46,8 @@ set nolist
 "set lcs=trail:♪,tab:☂⚡
 set lcs=trail:+,tab:+-
 
+let hostname=substitute(system('hostname -s'), "\n", "", "")
+
 " set background light or dark
 if strftime("%H") < 17 && strftime("%H") > 6
    set background=light
@@ -116,13 +118,18 @@ if dein#load_state('~/.cache/dein')
   call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
               \ 'build': 'cd app & yarn install' })
 
+  call dein#add('.vim')
+  if hostname == "Janines-iMac" || "Janines-MBP"
+      call dein#add('/usr/local/opt/fzf')
+  endif
+
+  call dein#add('junegunn/fzf.vim')
   " Required:
   call dein#end()
   call dein#save_state()
 endif
 
 " ---- adjust background
-let hostname=substitute(system('hostname -s'), "\n", "", "")
 if hostname == "Janines-iMac" || "Janines-MBP"
     colorscheme gruvbox
     " -- fix slow issue
@@ -131,7 +138,9 @@ if hostname == "Janines-iMac" || "Janines-MBP"
 else
     colorscheme solarized
 endif
-colorscheme solarized
+"colorscheme solarized
+
+nmap <leader>c :colorscheme gruvbox<CR>
 
 " Required:
 filetype plugin indent on

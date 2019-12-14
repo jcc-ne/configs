@@ -117,7 +117,7 @@ snippet logging
 import logging
 import sys
 logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 endsnippet
 
 snippet argparse
