@@ -11,7 +11,7 @@ nnoremap <leader>. @q
 " -- leave terminal mode
 tnoremap <c-l> <C-\><C-n><c-l>
 
-" -- easier omnicomplete
+" -- easier omnicomplete (for vimwiki keywords lookup)
 inoremap <c-space> <c-x><c-o>
 
 
@@ -41,6 +41,7 @@ set nospell
 
 " Use <leader>i to toggle display of whitespace
 nmap <leader>i :set list!<CR>
+
 " Starting with no list
 set nolist
 "set lcs=trail:♪,tab:☂⚡
@@ -110,6 +111,8 @@ if dein#load_state('~/.cache/dein')
   call dein#add('mattn/calendar-vim')
   call dein#add('farseer90718/vim-taskwarrior')
   "call dein#add('chrisbra/Recover.vim')
+  call dein#add('/usr/local/opt/fzf')
+  call dein#add('junegunn/fzf.vim')
 
   " - local plugins
   call dein#add('~/.vim/bundle/myBundle')
@@ -130,7 +133,8 @@ if dein#load_state('~/.cache/dein')
 endif
 
 " ---- adjust background
-if hostname == "Janines-iMac" || "Janines-MBP"
+let hostname=substitute(system('hostname -s'), "\n", "", "")
+if hostname == ("Janines-iMac" || "Janines-MBP")
     colorscheme gruvbox
     " -- fix slow issue
     let g:jedi#popup_on_dot = 0 " (default: 1)
@@ -325,3 +329,10 @@ nnoremap <silent> <leader>q :redir @a<CR>:g//<CR>:redir END<CR>:new<CR>:put! a<C
 let g:slimux_select_from_current_window = 1
 
 let g:license = "GNU GPLv3"
+
+" -- vimgrep
+" :args `find . -type f`
+" :vim /pattern1/ ##
+" :vim /pattern2/ ##
+" :vim /pattern3/ ##
+nnoremap <F1> :args `find . -type f`<CR>:vim // ##
