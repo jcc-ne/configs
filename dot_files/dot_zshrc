@@ -52,9 +52,30 @@ function theme_time
   export THEME="$RANDOM_THEME"
 }
 
+function theme_clean
+{
+  themes=($ZSH/themes_clean/*zsh-theme)
+  N=${#themes[@]}
+  ((N=(RANDOM%N)+1))
+  RANDOM_THEME=${themes[$N]}
+  source "$RANDOM_THEME"
+  echo "[oh-my-zsh] my Random clearn theme '$RANDOM_THEME' loaded..."
+  export THEME="$RANDOM_THEME"
+}
+
 function theme_add2fav
 {
   ln -s $THEME $ZSH/fav_themes/
+}
+
+function theme_rm_from_fav
+{
+  rm -v $ZSH/fav_themes/$THEME
+}
+
+function theme_add2clean
+{
+  ln -s $THEME $ZSH/themes_clean/
 }
 
 function theme_add2time
@@ -215,3 +236,5 @@ PERL_MB_OPT="--install_base \"/Users/janine/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/Users/janine/perl5"; export PERL_MM_OPT;
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+unset ZLE_RPROMPT_INDENT

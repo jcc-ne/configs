@@ -239,7 +239,7 @@ let g:jedi#goto_assignments_command = "<leader>g"
 let g:jedi#goto_definitions_command = "<leader>d"
 let g:jedi#documentation_command = "K"
 let g:jedi#usages_command = "<leader>n"
-let g:jedi#completions_command = "<C-Space>"
+"let g:jedi#completions_command = "<C-Space>"
 let g:jedi#rename_command = "<leader><leader>r"
 let g:jedi#show_call_signatures = "1"
 let g:jedi#goto_stubs_command = "<leader><leader>s"
@@ -249,8 +249,11 @@ let g:jedi#goto_stubs_command = "<leader><leader>s"
  let g:jedi#popup_on_dot = 0 " (default: 1)
  let g:jedi#completions_enabled = 0  " use deoplete-jedi instead
 
-" deoplete startup
+" -- deoplete setup
  let g:deoplete#enable_at_startup = 1
+ let g:deoplete#sources#jedi#ignore_errors = v:true
+ nnoremap <leader>D :call deoplete#disable()<CR>
+ nnoremap <leader>E :call deoplete#enable()<CR>
 
 " ------- snippet -------------
 
@@ -329,6 +332,7 @@ nmap <F2> :NERDTreeToggle<CR>
 " -- fzf mapping
 let g:fzf_command_prefix = 'Fz'
 nmap <leader>f :FzFiles<CR>
+nmap <leader><leader>f :FzGFiles<CR>
 nmap <leader>h :FzHistory<CR>
 nmap <leader>b :FzBuffers<CR>
 nmap <leader>r :FzRg<CR>
