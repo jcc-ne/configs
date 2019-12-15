@@ -13,9 +13,25 @@ ZSH_THEME=""
 
 # manually load themes
 #
+function theme_power9k
+{
+    source $ZSH/fav_themes/powerlevel10k/powerlevel10k.zsh-theme
+    source ~/.p9k.zsh
+}
 function theme_power
 {
-    source $ZSH/fav_themes/powerlevel9k/powerlevel9k.zsh-theme
+    source $ZSH/fav_themes/powerlevel10k/powerlevel10k.zsh-theme
+    source ~/.p10k_plain.zsh
+}
+function theme_power_lean
+{
+    source $ZSH/fav_themes/powerlevel10k/powerlevel10k.zsh-theme
+    source ~/.p10k_lean.zsh
+}
+function theme_power_terse
+{
+    source $ZSH/fav_themes/powerlevel10k/powerlevel10k.zsh-theme
+    source ~/.p10k_terse.zsh
 }
 function theme_geo
 {
@@ -88,17 +104,17 @@ function theme_fav
   themes=($ZSH/fav_themes/*zsh-theme)
   #themes+=$ZSH/fav_themes/geometry/geometry.zsh-theme
   themes+=$ZSH/fav_themes/mygeo/geometry.zsh-theme
-  themes+=$ZSH/fav_themes/powerlevel9k/powerlevel9k.zsh-theme
+  themes+=$ZSH/fav_themes/powerlevel10k/powerlevel10k.zsh-theme
   N=${#themes[@]}
   ((N=(RANDOM%N)+1))
   RANDOM_THEME=${themes[$N]}
   source "$RANDOM_THEME"
-  echo "[oh-my-zsh] my Random theme '$RANDOM_THEME' loaded..."
+  echo "[oh-my-zsh] my fav random theme '$RANDOM_THEME' loaded..."
   export THEME="$RANDOM_THEME"
 }
 
 
-GEOMETRY_PROMPT_PLUGINS=(docker_machine exec_time git virtualenv)
+GEOMETRY_PROMPT_PLUGINS=(docker_machine exec_time git virtualenv anaconda)
 
 # Example aliases
 alias zshconfig="vim ~/.zshrc"
@@ -205,36 +221,31 @@ if [ -f '/Users/janine/google-cloud-sdk/completion.zsh.inc' ]; then source '/Use
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-POWERLEVEL9K_MODE='nerdfont-complete'
-POWERLEVEL9K_CUSTOM_MYPROMPT="echo ♛"
-POWERLEVEL9K_CUSTOM_MYPROMPT_BACKGROUND="008"
-POWERLEVEL9K_CUSTOM_MYPROMPT_FOREGROUND="174"
-POWERLEVEL9K_TIME_BACKGROUND="008"
-if [ $HOST = "MSI65" ];then
-   POWERLEVEL9K_TIME_FOREGROUND="black"
-else
-   POWERLEVEL9K_TIME_FOREGROUND="174"
-fi
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon background_jobs dir vcs newline time host)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(disk_usage load ram command_execution_time )
-POWERLEVEL9K_RAM_BACKGROUND="cyan"
-POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
-POWERLEVEL9K_SHORTEN_DIR_LENGTH=4
-POWERLEVEL9K_SHORTEN_MIN_LENGTH=12
-POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=10
-
 # -- load fav theme (make sure this block is below source ohmyzsh)
 
 if [[ "$ZSH_THEME" == "" ]]; then
    theme_fav
 fi
 
-PATH="/Users/janine/perl5/bin${PATH:+:${PATH}}"; export PATH;
-PERL5LIB="/Users/janine/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-PERL_LOCAL_LIB_ROOT="/Users/janine/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-PERL_MB_OPT="--install_base \"/Users/janine/perl5\""; export PERL_MB_OPT;
-PERL_MM_OPT="INSTALL_BASE=/Users/janine/perl5"; export PERL_MM_OPT;
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 unset ZLE_RPROMPT_INDENT
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/janine/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/janine/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/janine/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/janine/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+# -- load my custom power10k if powerlevel theme is selected
+[[ ! -f ~/.p10k_plain.zsh ]] || source ~/.p10k_plain.zsh
