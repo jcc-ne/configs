@@ -126,6 +126,8 @@ if dein#load_state('~/.cache/dein')
   call dein#add('~/.fzf')
   call dein#add('junegunn/fzf.vim')
 
+  call dein#add('sjl/gundo.vim')
+
   " -- Required:
   call dein#end()
   call dein#save_state()
@@ -207,12 +209,8 @@ let g:pymode_rope = 0
 let g:pymode_doc = 1
 let g:pymode_doc_key = 'K'
 
-" Map keys for autocompletion
-let g:pymode_rope_autocomplete_map = '<C-K>'
-
-let g:pymode_run = 1
-
 " Key for run python code
+let g:pymode_run = 1
 let g:pymode_run_key = 'R'
 
 "Linting
@@ -327,7 +325,8 @@ let g:vimwiki_list = [
             \]
 
 
-nmap <F2> :NERDTreeToggle<CR>
+nnoremap <F2> :NERDTreeToggle<CR>
+nnoremap <F5> :GundoToggle<CR>
 
 " -- fzf mapping
 let g:fzf_command_prefix = 'Fz'
