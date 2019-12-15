@@ -126,7 +126,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('~/.fzf')
   call dein#add('junegunn/fzf.vim')
 
-  call dein#add('sjl/gundo.vim')
+  call dein#add('mbbill/undotree')
 
   " -- Required:
   call dein#end()
@@ -326,7 +326,7 @@ let g:vimwiki_list = [
 
 
 nnoremap <F2> :NERDTreeToggle<CR>
-nnoremap <F5> :GundoToggle<CR>
+nnoremap <F5> :UndotreeToggle<CR>
 
 " -- fzf mapping
 let g:fzf_command_prefix = 'Fz'
