@@ -12,9 +12,13 @@ fi
 
 cd ../dot_files
 
-ln -s dot_tmux.conf ~/.tmux.conf
-ln -s dot_zshrc ~/.zshrc
-ln -s dot_vimrc ~/.vimrc
-ln -s dot_nvimrc ~/.nvimrc
+ln -sv $PWD/dot_tmux.conf ~/.tmux.conf
+ln -sv $PWD/dot_zshrc ~/.zshrc
+ln -sv $PWD/dot_vimrc ~/.vimrc
+ln -sv $PWD/dot_nvimrc ~/.nvimrc
+ln -sv $PWD/dot_p9k.zsh ~/.p9k.zsh
+ln -sv $PWD/dot_p10k_plain.zsh ~/.p10k_plain.zsh
+ln -sv $PWD/dot_p10k_lean.zsh ~/.p10k_lean.zsh
+ln -sv $PWD/dot_p10k_terse.zsh ~/.p10k_terse.zsh
 
 cd $my_cwd
