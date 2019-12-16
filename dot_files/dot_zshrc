@@ -12,58 +12,7 @@ source $HOME/.bashrc
 ZSH_THEME=""  
 
 # manually load themes
-#
-function theme_power9k
-{
-    unset -m 'GEOMETRY_*'
-    [[ -f $P10K_CONFIG ]] || source $ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
-    source $ZSH/custom/themes/p10k_configs/dot_p9k.zsh
-}
-function theme_power
-{
-    unset -m 'GEOMETRY_*'
-    [[ -f $P10K_CONFIG ]] || source $ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
-    source $ZSH/custom/themes/p10k_configs/dot_p10k_classic.zsh
-}
-function theme_power_lean
-{
-    unset -m 'GEOMETRY_*'
-    [[ -f $P10K_CONFIG ]] || source $ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
-    source $ZSH/custom/themes/p10k_configs/dot_p10k_lean.zsh
-}
-function theme_power_terse
-{
-    unset -m 'GEOMETRY_*'
-    [[ -f $P10K_CONFIG ]] || source $ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
-    source $ZSH/custom/themes/p10k_configs/dot_p10k_terse.zsh
-}
-function theme_power_rainbow
-{
-    unset -m 'GEOMETRY_*'
-    [[ -f $P10K_CONFIG ]] || source $ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
-    source $ZSH/custom/themes/p10k_configs/dot_p10k_rainbow.zsh
-}
-
-function theme_geomy
-{
-   unset -m '$POWERLEVEL*'
-   source $ZSH/custom/themes/geometry/geometry.zsh-theme
-}
-
-function theme_random
-{
-  unset -m 'GEOMETRY_*'
-  unset -m '$POWERLEVEL*'
-  unset -m '$LPROMPT*'
-  unset -m '$RPROMPT*'
-  themes=($ZSH/themes/*zsh-theme)
-  N=${#themes[@]}
-  ((N=(RANDOM%N)+1))
-  RANDOM_THEME=${themes[$N]}
-  source "$RANDOM_THEME"
-  echo "[oh-my-zsh] My random theme '$RANDOM_THEME' loaded..."
-  export THEME="$RANDOM_THEME"
-}
+source $ZSH/custom/themes/switch_themes.zsh
 
 function load_p10k
 {
@@ -79,17 +28,6 @@ function load_p10k
   export P10K_CONFIG="$RANDOM_CONFIG"
 }
 
-function theme_time
-{
-  themes=($ZSH/themes_time/*zsh-theme)
-  N=${#themes[@]}
-  ((N=(RANDOM%N)+1))
-  RANDOM_THEME=${themes[$N]}
-  source "$RANDOM_THEME"
-  echo "[oh-my-zsh] my Random theme '$RANDOM_THEME' loaded..."
-  export THEME="$RANDOM_THEME"
-}
-
 function theme_add2fav
 {
   ln -s $THEME $ZSH/custom/themes/
@@ -98,11 +36,6 @@ function theme_add2fav
 function theme_rm_from_fav
 {
   rm -v $ZSH/custom/themes/$THEME
-}
-
-function theme_add2time
-{
-  ln -s $THEME $ZSH/themes_time/
 }
 
 function theme_fav
