@@ -11,7 +11,6 @@ if [ ! $DIR = $PWD ]; then
 fi
 
 cd ../my_patch/ohmyzsh_themes
-mkdir -p ~/.oh-my-zsh/fav_themes
-cp -r * ~/.oh-my-zsh/fav_themes
+ln -sv $PWD ~/.oh-my-zsh/custom/
 
 cd $mycwd

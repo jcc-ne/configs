@@ -8,42 +8,40 @@ source $HOME/.bashrc
 # time that oh-my-zsh is loaded.
 # ZSH_THEME="robbyrussell"
 
-# -- set ZSH_THEME="" to load only fav_themes
+# -- set ZSH_THEME="" to load only custom/themes
 ZSH_THEME=""  
 
 # manually load themes
 #
 function theme_power9k
 {
-    source $ZSH/fav_themes/powerlevel10k/powerlevel10k.zsh-theme
-    source ~/.p9k.zsh
+    unset -m 'GEOMETRY_*'
+    [[ -f $P10K_CONFIG ]] || source $ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
+    source $ZSH/custom/ohmyzsh_themes/p10k_configs/dot_p9k.zsh
 }
 function theme_power
 {
-    source $ZSH/fav_themes/powerlevel10k/powerlevel10k.zsh-theme
-    source ~/.p10k_plain.zsh
+    unset -m 'GEOMETRY_*'
+    [[ -f $P10K_CONFIG ]] || source $ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
+    source $ZSH/custom/ohmyzsh_themes/p10k_configs/dot_p10k_classic.zsh
 }
 function theme_power_lean
 {
-    source $ZSH/fav_themes/powerlevel10k/powerlevel10k.zsh-theme
-    source ~/.p10k_lean.zsh
+    unset -m 'GEOMETRY_*'
+    [[ -f $P10K_CONFIG ]] || source $ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
+    source $ZSH/custom/ohmyzsh_themes/p10k_configs/dot_p10k_lean.zsh
 }
 function theme_power_terse
 {
-    source $ZSH/fav_themes/powerlevel10k/powerlevel10k.zsh-theme
-    source ~/.p10k_terse.zsh
+    unset -m 'GEOMETRY_*'
+    [[ -f $P10K_CONFIG ]] || source $ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
+    source $ZSH/custom/ohmyzsh_themes/p10k_configs/dot_p10k_terse.zsh
 }
-function theme_geo
-{
-   source $ZSH/fav_themes/geometry/geometry.zsh-theme
-}
+
 function theme_geomy
 {
-   source $ZSH/fav_themes/mygeo/geometry.zsh-theme
-}
-function theme_ago
-{
-    source $ZSH/fav_themes/agnoster.zsh-theme
+   unset -m '$POWERLEVEL*'
+   source $ZSH/custom/ohmyzsh_themes/mygeo/geometry.zsh-theme
 }
 
 function theme_random
@@ -57,6 +55,18 @@ function theme_random
   export THEME="$RANDOM_THEME"
 }
 
+function load_p10k
+{
+  unset -m 'GEOMETRY_*'
+  configs=($ZSH/custom/ohmyzsh_themes/p10k_configs/*zsh)
+  N=${#configs[@]}
+  ((N=(RANDOM%N)+1))
+  RANDOM_CONFIG=${configs[$N]}
+  source "$RANDOM_CONFIG"
+  echo "盛powerlevel10k  config $RANDOM_CONFIG   "
+  export P10K_CONFIG="$RANDOM_CONFIG"
+}
+
 function theme_time
 {
   themes=($ZSH/themes_time/*zsh-theme)
@@ -68,30 +78,14 @@ function theme_time
   export THEME="$RANDOM_THEME"
 }
 
-function theme_clean
-{
-  themes=($ZSH/themes_clean/*zsh-theme)
-  N=${#themes[@]}
-  ((N=(RANDOM%N)+1))
-  RANDOM_THEME=${themes[$N]}
-  source "$RANDOM_THEME"
-  echo "[oh-my-zsh] my Random clearn theme '$RANDOM_THEME' loaded..."
-  export THEME="$RANDOM_THEME"
-}
-
 function theme_add2fav
 {
-  ln -s $THEME $ZSH/fav_themes/
+  ln -s $THEME $ZSH/custom/themes/
 }
 
 function theme_rm_from_fav
 {
-  rm -v $ZSH/fav_themes/$THEME
-}
-
-function theme_add2clean
-{
-  ln -s $THEME $ZSH/themes_clean/
+  rm -v $ZSH/custom/themes/$THEME
 }
 
 function theme_add2time
@@ -101,18 +95,21 @@ function theme_add2time
 
 function theme_fav
 {
-  themes=($ZSH/fav_themes/*zsh-theme)
-  #themes+=$ZSH/fav_themes/geometry/geometry.zsh-theme
-  themes+=$ZSH/fav_themes/mygeo/geometry.zsh-theme
-  themes+=$ZSH/fav_themes/powerlevel10k/powerlevel10k.zsh-theme
+  # themes=($ZSH/custom/themes/*zsh-theme)
+  themes=()
+  themes+=$ZSH/custom/ohmyzsh_themes/mygeo/geometry.zsh-theme
+  themes+=$ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
   N=${#themes[@]}
   ((N=(RANDOM%N)+1))
   RANDOM_THEME=${themes[$N]}
-  source "$RANDOM_THEME"
-  echo "[oh-my-zsh] my fav random theme '$RANDOM_THEME' loaded..."
   export THEME="$RANDOM_THEME"
+  source "$RANDOM_THEME"
+  if [[ "$RANDOM_THEME" == "$ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme" ]];then
+      load_p10k
+  else
+      echo "[oh-my-zsh] my fav random theme '$RANDOM_THEME' loaded..."
+  fi 
 }
-
 
 GEOMETRY_PROMPT_PLUGINS=(docker_machine exec_time git virtualenv anaconda)
 
@@ -246,6 +243,3 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-
-# -- load my custom power10k if powerlevel theme is selected
-[[ ! -f ~/.p10k_plain.zsh ]] || source ~/.p10k_plain.zsh
