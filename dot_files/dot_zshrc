@@ -40,8 +40,7 @@ function theme_rm_from_fav
 
 function theme_fav
 {
-  # themes=($ZSH/custom/themes/*zsh-theme)
-  themes=()
+  themes=($ZSH/custom/themes/*zsh-theme)
   themes+=$ZSH/custom/themes/geometry/geometry.zsh-theme
   for ((i = 0; i < 3; i++)); do  # -- powerleve has 3 themes
       themes+=$ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
