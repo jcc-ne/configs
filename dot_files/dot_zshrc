@@ -17,35 +17,45 @@ function theme_power9k
 {
     unset -m 'GEOMETRY_*'
     [[ -f $P10K_CONFIG ]] || source $ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
-    source $ZSH/custom/ohmyzsh_themes/p10k_configs/dot_p9k.zsh
+    source $ZSH/custom/themes/p10k_configs/dot_p9k.zsh
 }
 function theme_power
 {
     unset -m 'GEOMETRY_*'
     [[ -f $P10K_CONFIG ]] || source $ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
-    source $ZSH/custom/ohmyzsh_themes/p10k_configs/dot_p10k_classic.zsh
+    source $ZSH/custom/themes/p10k_configs/dot_p10k_classic.zsh
 }
 function theme_power_lean
 {
     unset -m 'GEOMETRY_*'
     [[ -f $P10K_CONFIG ]] || source $ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
-    source $ZSH/custom/ohmyzsh_themes/p10k_configs/dot_p10k_lean.zsh
+    source $ZSH/custom/themes/p10k_configs/dot_p10k_lean.zsh
 }
 function theme_power_terse
 {
     unset -m 'GEOMETRY_*'
     [[ -f $P10K_CONFIG ]] || source $ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
-    source $ZSH/custom/ohmyzsh_themes/p10k_configs/dot_p10k_terse.zsh
+    source $ZSH/custom/themes/p10k_configs/dot_p10k_terse.zsh
+}
+function theme_power_rainbow
+{
+    unset -m 'GEOMETRY_*'
+    [[ -f $P10K_CONFIG ]] || source $ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
+    source $ZSH/custom/themes/p10k_configs/dot_p10k_rainbow.zsh
 }
 
 function theme_geomy
 {
    unset -m '$POWERLEVEL*'
-   source $ZSH/custom/ohmyzsh_themes/mygeo/geometry.zsh-theme
+   source $ZSH/custom/themes/geometry/geometry.zsh-theme
 }
 
 function theme_random
 {
+  unset -m 'GEOMETRY_*'
+  unset -m '$POWERLEVEL*'
+  unset -m '$LPROMPT*'
+  unset -m '$RPROMPT*'
   themes=($ZSH/themes/*zsh-theme)
   N=${#themes[@]}
   ((N=(RANDOM%N)+1))
@@ -58,12 +68,14 @@ function theme_random
 function load_p10k
 {
   unset -m 'GEOMETRY_*'
-  configs=($ZSH/custom/ohmyzsh_themes/p10k_configs/*zsh)
+  configs=($ZSH/custom/themes/p10k_configs/*zsh)
   N=${#configs[@]}
   ((N=(RANDOM%N)+1))
   RANDOM_CONFIG=${configs[$N]}
   source "$RANDOM_CONFIG"
-  echo "盛powerlevel10k  config $RANDOM_CONFIG   "
+  echo "盛powerlevel10k   config"
+  echo "    ... $RANDOM_CONFIG    "
+  echo ""
   export P10K_CONFIG="$RANDOM_CONFIG"
 }
 
@@ -97,8 +109,10 @@ function theme_fav
 {
   # themes=($ZSH/custom/themes/*zsh-theme)
   themes=()
-  themes+=$ZSH/custom/ohmyzsh_themes/mygeo/geometry.zsh-theme
-  themes+=$ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
+  themes+=$ZSH/custom/themes/geometry/geometry.zsh-theme
+  for ((i = 0; i < 3; i++)); do  # -- powerleve has 3 themes
+      themes+=$ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
+  done
   N=${#themes[@]}
   ((N=(RANDOM%N)+1))
   RANDOM_THEME=${themes[$N]}
