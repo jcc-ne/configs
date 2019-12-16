@@ -30,7 +30,10 @@ function load_p10k
 
 function theme_add2fav
 {
-  ln -s $THEME $ZSH/custom/themes/
+  THEME_NAME=$(basename $THEME)
+  cd $ZSH/custom/themes
+  ln -sv ../../themes/$THEME_NAME $ZSH/custom/themes/
+  cd -
 }
 
 function theme_rm_from_fav
