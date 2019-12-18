@@ -1,0 +1,14 @@
+[user]
+	name = Janine
+	email = janine.cheng@gmail.com
+[diff]
+	tool = nvimdiff
+[merge]
+	tool = nvimdiff
+
+[difftool "nvimdiff"]
+    cmd = nvim -d -u ~/.nvimrc \"$LOCAL\" \"$REMOTE\"
+
+[mergetool "nvimdiff"]
+    cmd = nvim -f -c \"Gdiff\" \"$MERGED\"
+
