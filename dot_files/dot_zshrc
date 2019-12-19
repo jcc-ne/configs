@@ -65,6 +65,7 @@ GEOMETRY_PROMPT_PLUGINS=(docker_machine exec_time git virtualenv anaconda)
 # Example aliases
 alias zshconfig="vim ~/.zshrc"
 alias ohmyzsh="vim ~/.oh-my-zsh"
+alias dm="docker-machine"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -103,7 +104,7 @@ alias ohmyzsh="vim ~/.oh-my-zsh"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(z git tmux osx emotty docker docker-compose aws taskwarrior history macports web-search themes)
+plugins=(z git tmux osx emotty docker docker-compose docker-machine aws taskwarrior history macports web-search themes)
 
 source $ZSH/oh-my-zsh.sh
 
