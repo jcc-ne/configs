@@ -145,7 +145,7 @@ if hostname == ("Janines-iMac" || "Janines-MBP")
 else
     colorscheme solarized
 endif
-"colorscheme solarized
+colorscheme solarized
 
 nmap <leader>c :colorscheme gruvbox<CR>
 
@@ -326,9 +326,15 @@ let g:vimwiki_list = [
             \ 'auto_toc': 1}
             \]
 
-
+" -- nerdtree
 nnoremap <F2> :NERDTreeToggle<CR>
+
+" -- undotree
 nnoremap <F5> :UndotreeToggle<CR>
+
+" -- nerdcommenter
+let NERDSpaceDelims=1
+autocmd FileType python let NERDSpaceDelims=0
 
 " -- fzf mapping
 let g:fzf_command_prefix = 'Fz'
