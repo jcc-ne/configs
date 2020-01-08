@@ -97,6 +97,7 @@ if dein#load_state('~/.cache/dein')
 
   call dein#add('Konfekt/FastFold')
   call dein#add('tpope/vim-fugitive')
+  call dein#add('tpope/vim-rhubarb')
   call dein#add('airblade/vim-gitgutter')
 
   " -- tmux related
