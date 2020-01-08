@@ -969,6 +969,22 @@ formatter = matplotlib.ticker.FuncFormatter(timeTicks
 ax.xaxis.set_major_formatter(formatter) 
 endsnippet
 
+snippet tf
+import tensorflow as tf
+sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+endsnippet
+
+snippet colorprint
+import colorama
+
+def _print(*args):
+    text = '\t ' + colorama.Fore.GREEN
+    reset = colorama.Style.RESET_ALL
+    print(text, *args, reset)
+endsnippet
+
+#
+
 snippet ipy
 
 # <markdowncell>
@@ -1004,3 +1020,101 @@ snippet rev
 endsnippet
 
 # vim:ft=snippets:
+
+snippet cach
+c = st.caching.Cache()
+if c:
+    print('loading data')
+    if dobj.videoFrames:
+        imgs = dobj.videoFrames.load(return_only=True)
+        c.imgs = imgs
+endsnippet
+
+snippet tz
+df.datetime.dt.tz_localize('utc').dt.tz_convert('US/Pacific')
+endsnippet
+
+snippet pytz
+from pytz import timezone
+
+now = dt.datetime.now()
+# -- convert native to UTC 
+# -- (note replace doesn't handle daylight savings)
+now.replace(tzinfo=timezone('UTC'))
+
+# -- convert native to UTC then conver to pacific
+timezone('UTC').localize(now).astimezone(timezone('US/pacific'))
+endsnippet
+
+snippet streamlit
+class PlotWidget(object):
+    def __init__(self, i_radar, dobj, bool_play, skip,
+                 room_plot_placeholder,
+                 camera_placeholder,
+                 slider_placeholder,
+                 timestamp_placeholder):
+        self.i_radar = i_radar
+        self.skip = skip
+        self.dobj = dobj
+        self.bool_play = bool_play
+        self.room_plot_placeholder = room_plot_placeholder
+        self.camera_placeholder = camera_placeholder
+        self.slider_placeholder = slider_placeholder
+        self.timestamp_placeholder = timestamp_placeholder
+        self.plot()
+
+    def plot(self):
+        self.radar_timestamp = self.dobj.radarTimestamps[self.i_radar]
+        point_plot = self.plot_points()
+        target_plot = self.plot_targets()
+        room_plot = point_plot + target_plot
+        self.room_plot_placeholder.altair_chart(alt.layer(room_plot))
+        self.render_camera()
+        self.timestamp_placeholder.text(
+            f'timestamp: {self.radar_timestamp} vid {self.video_timestamp}')
+        self.loop()
+
+    def render_camera(self):
+        t = self.radar_timestamp
+        i_img = np.where(self.dobj.videoTimestamps > t)[0][0]
+        t_img = self.dobj.videoTimestamps[i_img]
+        self.video_timestamp = t_img
+
+        img = self.dobj.videoFrames[i_img]
+        if img is None or img is np.nan:
+            return
+        img = img[:, :, ::-1]
+        self.camera_placeholder.image(img, width=500)
+
+    def plot_points(self):
+        df_points = pd.DataFrame(self.dobj.pointData[self.i_radar])
+        df_points['x'] = (df_points['range'] * np.sin(df_points['angle']))
+        df_points['y'] = (df_points['range'] * np.cos(df_points['angle']))
+        room_plot = alt.Chart(df_points).mark_point().encode(
+            x=alt.X('x:Q', scale=alt.Scale(domain=(-5, 5))),
+            y=alt.Y('y:Q', scale=alt.Scale(domain=(0, 8))),
+            color=alt.Color('doppler:Q', scale=alt.Scale(scheme='blueorange',
+                                                         domain=(-0.5, 0.5)))
+        ).properties(width=500, height=500)
+        return room_plot
+
+    def plot_targets(self):
+        df = pd.DataFrame(self.dobj.targetData[self.i_radar])
+        room_plot = alt.Chart(df).mark_point(
+            shape=PERSON_SHAPE_STR, size=60).encode(
+            x=alt.X('posX:Q', scale=alt.Scale(domain=(-5, 5))),
+            y=alt.Y('posY:Q', scale=alt.Scale(domain=(0, 8))),
+            color=alt.Color('tid:N', scale=alt.Scale(scheme='dark2'))
+        ).properties(width=500, height=500)
+        return room_plot
+
+    def loop(self):
+        if self.bool_play:
+            self.i_radar += self.skip
+            self.slider_placeholder.slider("idx:", 0, self.dobj.radar_data_len,
+                                           value=self.i_radar)
+            time.sleep(0.2)
+            self.plot()
+        else:
+            pass
+endsnippet
