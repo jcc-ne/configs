@@ -113,7 +113,7 @@ if dein#load_state('~/.cache/dein')
   " -- general tasks
   call dein#add('vimoutliner/vimoutliner')
   call dein#add('vimwiki/vimwiki')
-  call dein#add('tbabej/taskwiki')
+  call dein#add('jcc-ne/taskwiki')
   call dein#add('mattn/calendar-vim')
   call dein#add('farseer90718/vim-taskwarrior')
   call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
@@ -261,8 +261,8 @@ let g:jedi#goto_stubs_command = "<leader><leader>s"
 
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
 let g:UltiSnipsExpandTrigger="<tab>"
-"let g:UltiSnipsSnippetsDir="~/.vim/bundle/myBundle/UltiSnips"
-let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"  " configs/install/setup_ultisnips_dir.sh to config the dir
+let g:UltiSnipsSnippetsDir="~/.vim/bundle/myBundle/UltiSnips"
+" let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"  " configs/install/setup_ultisnips_dir.sh to config the dir
 let g:UltiSnipsListSnippets="<c-tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
@@ -338,7 +338,13 @@ nnoremap <F5> :UndotreeToggle<CR>
 let NERDSpaceDelims=1
 autocmd FileType python let NERDSpaceDelims=0
 
+" -- gitgutter
+nnoremap <F3> :GitGutterBufferToggle<CR>
+let g:gitgutter_override_sign_column_highlight = 1
+
 " -- fzf mapping
+" -- usage ex: ,r to grep a function, 
+"  <tab> to select <C-a> all <C-d> deselect all, <CR> quickfix
 let g:fzf_command_prefix = 'Fz'
 nmap <leader>f :FzFiles<CR>
 nmap <leader><leader>f :FzGFiles<CR>
@@ -346,6 +352,8 @@ nmap <leader>h :FzHistory<CR>
 nmap <leader>b :FzBuffers<CR>
 nmap <leader>r :FzRg<CR>
 nmap <leader>l :FzLines<CR>
+nmap <leader><leader>l :FzBLines<CR>
+
 
 " -- taskwiki related
 " --    quick key to open general taskwarrior.totl
@@ -366,3 +374,9 @@ let g:license = "GNU GPLv3"
 " :vim /pattern2/ ##
 " :vim /pattern3/ ##
 nnoremap <F1> :args `find . -type f`<CR>:vim // ##
+
+autocmd User fugitive 
+  \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
+  \   nnoremap <buffer> .. :edit %:h<CR> |
+  \ endif
+autocmd BufReadPost fugitive://* set bufhidden=delete
