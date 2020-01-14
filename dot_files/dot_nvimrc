@@ -355,6 +355,10 @@ nmap <leader>r :FzRg<CR>
 nmap <leader>l :FzLines<CR>
 nmap <leader><leader>l :FzBLines<CR>
 
+nnoremap <leader>2 :FZF -m ../<cr>
+nnoremap <leader>3 :FZF -m ../../<cr>
+nnoremap <leader>4 :FZF -m ../../../<cr>
+
 
 " -- taskwiki related
 " --    quick key to open general taskwarrior.totl
