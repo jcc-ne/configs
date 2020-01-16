@@ -1003,6 +1003,9 @@ snippet ImportError
 			'..'
 	))
 endsnippet
+snippet add_path
+from _add_cur_file_parent_path import add_path; add_path(__file__)  #noqa
+endsnippet
 
 snippet re_
     re_model = re.compile(r'model_(?P<num>\d+)\.(?P<ext>(h5)|(pkl))')

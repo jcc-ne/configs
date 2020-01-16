@@ -58,7 +58,7 @@ else
 endif
 
 " OR just set it to dark
-set background=dark
+"set background=dark
 
 " dein Scripts-----------------------------
 " Follow https://github.com/Shougo/dein.vim to install
