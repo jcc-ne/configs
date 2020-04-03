@@ -22,3 +22,5 @@
 	keepBackup = false
 [credential]
 	helper = store
+[core]
+	whitespace = cr-at-eol

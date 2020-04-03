@@ -112,7 +112,7 @@ alias dm="docker-machine"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(z git tmux osx emotty docker docker-compose docker-machine aws taskwarrior history macports web-search themes)
+plugins=(z git tmux osx emotty docker docker-compose docker-machine aws taskwarrior history macports web-search themes kubectl helm)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -202,3 +202,5 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+#
+. ~/.zsh_hashd
