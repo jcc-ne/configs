@@ -74,6 +74,7 @@ GEOMETRY_PROMPT_PLUGINS=(docker_machine exec_time git virtualenv anaconda)
 alias zshconfig="vim ~/.zshrc"
 alias ohmyzsh="vim ~/.oh-my-zsh"
 alias dm="docker-machine"
+alias k="kubectl"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"

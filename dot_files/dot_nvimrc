@@ -1,5 +1,6 @@
 mapclear
 let mapleader = ","
+let g:python_host_skip_check = 1
 set guioptions=M
 inoremap kj <esc>
 vnoremap kj <esc>
@@ -58,7 +59,7 @@ else
 endif
 
 " OR just set it to dark
-"set background=dark
+set background=dark
 
 " dein Scripts-----------------------------
 " Follow https://github.com/Shougo/dein.vim to install
@@ -71,6 +72,7 @@ endif
 
 " Required:
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
+set runtimepath+=~/.vim/
 
 " Required:
 if dein#load_state('~/.cache/dein')
@@ -82,7 +84,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
   " -- layout related
   call dein#add('jcc-ne/vim-template', {'rev': 'dev'})
-  call dein#add('scrooloose/nerdtree')
+  " call dein#add('scrooloose/nerdtree')
   call dein#add('majutsushi/tagbar')
 
   call dein#add('vim-airline/vim-airline')
@@ -139,7 +141,7 @@ endif
 
 " ---- adjust background
 let hostname=substitute(system('hostname -s'), "\n", "", "")
-if hostname == ("Janines-iMac" || "Janines-MBP")
+if hostname == ("Janines-iMac" || "blackbox")
     colorscheme gruvbox
     " -- fix slow issue
     let g:jedi#popup_on_dot = 0 " (default: 1)
@@ -147,7 +149,7 @@ if hostname == ("Janines-iMac" || "Janines-MBP")
 else
     colorscheme solarized
 endif
-colorscheme solarized
+" colorscheme solarized
 
 nmap <leader>c :colorscheme gruvbox<CR>
 
