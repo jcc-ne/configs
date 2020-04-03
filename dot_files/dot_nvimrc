@@ -1,5 +1,6 @@
 mapclear
 let mapleader = ","
+let g:python_host_skip_check = 1
 set guioptions=M
 inoremap kj <esc>
 vnoremap kj <esc>
@@ -83,7 +84,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
   " -- layout related
   call dein#add('jcc-ne/vim-template', {'rev': 'dev'})
-  call dein#add('scrooloose/nerdtree')
+  " call dein#add('scrooloose/nerdtree')
   call dein#add('majutsushi/tagbar')
 
   call dein#add('vim-airline/vim-airline')
