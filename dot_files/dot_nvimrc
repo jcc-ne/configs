@@ -1,5 +1,6 @@
 mapclear
 let mapleader = ","
+let g:python_host_skip_check = 1
 set guioptions=M
 inoremap kj <esc>
 vnoremap kj <esc>
@@ -48,18 +49,6 @@ set nolist
 "set lcs=trail:♪,tab:☂⚡
 set lcs=trail:+,tab:+-
 
-let hostname=substitute(system('hostname -s'), "\n", "", "")
-
-" set background light or dark
-if strftime("%H") < 17 && strftime("%H") > 6
-   set background=light
-else
-   set background=dark
-endif
-
-" OR just set it to dark
-set background=dark
-
 " dein Scripts-----------------------------
 " Follow https://github.com/Shougo/dein.vim to install
 " curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
@@ -71,6 +60,7 @@ endif
 
 " Required:
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
+set runtimepath+=~/.vim/
 
 " Required:
 if dein#load_state('~/.cache/dein')
@@ -82,7 +72,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
   " -- layout related
   call dein#add('jcc-ne/vim-template', {'rev': 'dev'})
-  call dein#add('scrooloose/nerdtree')
+  " call dein#add('scrooloose/nerdtree')
   call dein#add('majutsushi/tagbar')
 
   call dein#add('vim-airline/vim-airline')
@@ -98,6 +88,7 @@ if dein#load_state('~/.cache/dein')
 
   call dein#add('Konfekt/FastFold')
   call dein#add('tpope/vim-fugitive')
+  call dein#add('tpope/vim-rhubarb')
   call dein#add('airblade/vim-gitgutter')
 
   " -- tmux related
@@ -113,7 +104,7 @@ if dein#load_state('~/.cache/dein')
   " -- general tasks
   call dein#add('vimoutliner/vimoutliner')
   call dein#add('vimwiki/vimwiki')
-  call dein#add('tbabej/taskwiki')
+  call dein#add('jcc-ne/taskwiki')
   call dein#add('mattn/calendar-vim')
   call dein#add('farseer90718/vim-taskwarrior')
   call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
@@ -131,6 +122,8 @@ if dein#load_state('~/.cache/dein')
 
   call dein#add('whiteinge/diffconflicts')
 
+  call dein#add('liuchengxu/graphviz.vim')
+
   " -- Required:
   call dein#end()
   call dein#save_state()
@@ -138,15 +131,29 @@ endif
 
 " ---- adjust background
 let hostname=substitute(system('hostname -s'), "\n", "", "")
-if hostname == ("Janines-iMac" || "Janines-MBP")
-    colorscheme gruvbox
-    " -- fix slow issue
-    let g:jedi#popup_on_dot = 0 " (default: 1)
-   autocmd FileType python call jedi#configure_call_signatures()
+" echo hostname
+
+let colorscheme_=$VIMCOLORSCHEME
+if $VIMCOLORSCHEME != ""
+    colorscheme $VIMCOLORSCHEME
 else
-    colorscheme solarized
+    if hostname == "Janines-iMac" || hostname == "blackbox"
+        colorscheme gruvbox
+        " -- fix slow issue
+        let g:jedi#popup_on_dot = 0 " (default: 1)
+       autocmd FileType python call jedi#configure_call_signatures()
+    else
+        colorscheme solarized
+    endif
 endif
-colorscheme solarized
+
+" set background light or dark
+if strftime("%H") < 17 && strftime("%H") > 6
+   set background=light
+else
+   set background=dark
+endif
+exe 'set background='.expand($VIMBG)
 
 nmap <leader>c :colorscheme gruvbox<CR>
 
@@ -261,7 +268,7 @@ let g:jedi#goto_stubs_command = "<leader><leader>s"
 
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
 let g:UltiSnipsExpandTrigger="<tab>"
-"let g:UltiSnipsSnippetsDir="~/.vim/bundle/myBundle/UltiSnips"
+" let g:UltiSnipsSnippetsDir="~/.vim/bundle/myBundle/UltiSnips"
 let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"  " configs/install/setup_ultisnips_dir.sh to config the dir
 let g:UltiSnipsListSnippets="<c-tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
@@ -338,7 +345,13 @@ nnoremap <F5> :UndotreeToggle<CR>
 let NERDSpaceDelims=1
 autocmd FileType python let NERDSpaceDelims=0
 
+" -- gitgutter
+nnoremap <F3> :GitGutterBufferToggle<CR>
+let g:gitgutter_override_sign_column_highlight = 1
+
 " -- fzf mapping
+" -- usage ex: ,r to grep a function, 
+"  <tab> to select <C-a> all <C-d> deselect all, <CR> quickfix
 let g:fzf_command_prefix = 'Fz'
 nmap <leader>f :FzFiles<CR>
 nmap <leader><leader>f :FzGFiles<CR>
@@ -346,6 +359,13 @@ nmap <leader>h :FzHistory<CR>
 nmap <leader>b :FzBuffers<CR>
 nmap <leader>r :FzRg<CR>
 nmap <leader>l :FzLines<CR>
+nmap <leader><leader>l :FzBLines<CR>
+
+nnoremap <leader>2 :FZF -m ../<cr>
+nnoremap <leader>3 :FZF -m ../../<cr>
+nnoremap <leader>4 :FZF -m ../../../<cr>
+nnoremap <leader>5 :FZF -m ../../../../<cr>
+
 
 " -- taskwiki related
 " --    quick key to open general taskwarrior.totl
@@ -366,3 +386,9 @@ let g:license = "GNU GPLv3"
 " :vim /pattern2/ ##
 " :vim /pattern3/ ##
 nnoremap <F1> :args `find . -type f`<CR>:vim // ##
+
+autocmd User fugitive 
+  \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
+  \   nnoremap <buffer> .. :edit %:h<CR> |
+  \ endif
+autocmd BufReadPost fugitive://* set bufhidden=delete

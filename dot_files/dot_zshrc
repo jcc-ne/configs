@@ -8,6 +8,13 @@ source $HOME/.bashrc
 # time that oh-my-zsh is loaded.
 # ZSH_THEME="robbyrussell"
 
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block, everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # -- set ZSH_THEME="" to load only custom/themes
 ZSH_THEME=""  
 
@@ -43,8 +50,9 @@ function theme_rm_from_fav
 
 function theme_fav
 {
-  themes=($ZSH/custom/themes/*zsh-theme)
-  themes+=$ZSH/custom/themes/geometry/geometry.zsh-theme
+  themes=()
+  # themes=($ZSH/custom/themes/*zsh-theme)
+  # themes+=$ZSH/custom/themes/geometry/geometry.zsh-theme
   for ((i = 0; i < 3; i++)); do  # -- powerleve has 3 themes
       themes+=$ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
   done
@@ -66,6 +74,7 @@ GEOMETRY_PROMPT_PLUGINS=(docker_machine exec_time git virtualenv anaconda)
 alias zshconfig="vim ~/.zshrc"
 alias ohmyzsh="vim ~/.oh-my-zsh"
 alias dm="docker-machine"
+alias k="kubectl"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -104,7 +113,7 @@ alias dm="docker-machine"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(z git tmux osx emotty docker docker-compose docker-machine aws taskwarrior history macports web-search themes)
+plugins=(z git tmux osx emotty docker docker-compose docker-machine aws taskwarrior history macports web-search themes kubectl helm)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -172,6 +181,7 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 if [[ "$ZSH_THEME" == "" ]]; then
    theme_fav
+   # load_p10k
 fi
 
 
@@ -181,15 +191,26 @@ unset ZLE_RPROMPT_INDENT
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/janine/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('$HOME/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/Users/janine/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/janine/anaconda3/etc/profile.d/conda.sh"
+    if [ -f "$HOME/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "$HOME/anaconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/Users/janine/anaconda3/bin:$PATH"
+        export PATH="$HOME/anaconda3/bin:$PATH"
     fi
 fi
+source activate tf
 unset __conda_setup
 # <<< conda initialize <<<
+#
+. ~/.zsh_hashd
+
+alias taskh="export TASKRC=$HOME/.taskrc_home && export TASKWIKI_ROOT=$HOME/.task_home/wiki"
+alias taskw="export TASKRC=$HOME/.taskrc && export TASKWIKI_ROOT=$HOME/.task/wiki"
+
+# -- set vim colorscheme and bg light/dark
+alias vimsolarizedlight="tmux setenv VIMCOLORSCHEME solarized && tmux setenv VIMBG light && export VIMCOLORSCHEME=solarized && export VIMBG=light"
+alias vimsolarizeddark="tmux setenv VIMCOLORSCHEME solarized && tmux setenv VIMBG dark && export VIMCOLORSCHEME=solarized && export  VIMBG=dark"
+alias vimcoloschemeunset='tmux setenv VIMCOLORSCHEME "" && tmux setenv VIMBG "" && unset VIMCOLORSCHEME && unset VIMBG'
