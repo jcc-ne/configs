@@ -209,3 +209,8 @@ unset __conda_setup
 
 alias taskh="export TASKRC=$HOME/.taskrc_home && export TASKWIKI_ROOT=$HOME/.task_home/wiki"
 alias taskw="export TASKRC=$HOME/.taskrc && export TASKWIKI_ROOT=$HOME/.task/wiki"
+
+# -- set vim colorscheme and bg light/dark
+alias vimsolarizedlight="tmux setenv VIMCOLORSCHEME solarized && tmux setenv VIMBG light && export VIMCOLORSCHEME=solarized && export VIMBG=light"
+alias vimsolarizeddark="tmux setenv VIMCOLORSCHEME solarized && tmux setenv VIMBG dark && export VIMCOLORSCHEME=solarized && export  VIMBG=dark"
+alias vimcoloschemeunset='tmux setenv VIMCOLORSCHEME "" && tmux setenv VIMBG "" && unset VIMCOLORSCHEME && unset VIMBG'
