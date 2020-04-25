@@ -132,6 +132,8 @@ if dein#load_state('~/.cache/dein')
 
   call dein#add('whiteinge/diffconflicts')
 
+  call dein#add('liuchengxu/graphviz.vim')
+
   " -- Required:
   call dein#end()
   call dein#save_state()
@@ -358,6 +360,7 @@ nmap <leader><leader>l :FzBLines<CR>
 nnoremap <leader>2 :FZF -m ../<cr>
 nnoremap <leader>3 :FZF -m ../../<cr>
 nnoremap <leader>4 :FZF -m ../../../<cr>
+nnoremap <leader>5 :FZF -m ../../../../<cr>
 
 
 " -- taskwiki related
