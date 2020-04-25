@@ -1131,3 +1131,15 @@ import pandas as pd
 import numpy as np
 import datetime as dt
 endsnippet
+
+snippet altair
+import altair as at
+
+    chart = alt.Chart(df_range).mark_line(clip=True).encode(
+        x='index:N',
+        y=alt.Y('mag:Q', scale=alt.Scale(domain=(0, 12000)))
+    ).properties(width=500)
+	#cols = alt.vconcat()
+	#rows = alt.hconcat()
+    placeholder_chart2.altair_chart(chart)
+endsnippet
