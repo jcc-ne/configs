@@ -201,7 +201,9 @@ else
         export PATH="$HOME/anaconda3/bin:$PATH"
     fi
 fi
-source activate tf
+if [[ $HOST == 'blackbox' ]]; then
+    source activate tf
+fi
 unset __conda_setup
 # <<< conda initialize <<<
 #
