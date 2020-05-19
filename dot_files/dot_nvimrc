@@ -62,6 +62,9 @@ endif
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
 set runtimepath+=~/.vim/
 
+let hostname=substitute(system('hostname -s'), "\n", "", "")
+" echo hostname
+
 " Required:
 if dein#load_state('~/.cache/dein')
   call dein#begin('~/.cache/dein')
@@ -72,7 +75,9 @@ if dein#load_state('~/.cache/dein')
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
   " -- layout related
   call dein#add('jcc-ne/vim-template', {'rev': 'dev'})
-  " call dein#add('scrooloose/nerdtree')
+  if hostname != "blackbox"
+      call dein#add('scrooloose/nerdtree')
+  endif
   call dein#add('majutsushi/tagbar')
 
   call dein#add('vim-airline/vim-airline')
@@ -130,8 +135,6 @@ if dein#load_state('~/.cache/dein')
 endif
 
 " ---- adjust background
-let hostname=substitute(system('hostname -s'), "\n", "", "")
-" echo hostname
 
 let colorscheme_=$VIMCOLORSCHEME
 if $VIMCOLORSCHEME != ""
