@@ -1135,11 +1135,83 @@ endsnippet
 snippet altair
 import altair as at
 
-    chart = alt.Chart(df_range).mark_line(clip=True).encode(
-        x='index:N',
-        y=alt.Y('mag:Q', scale=alt.Scale(domain=(0, 12000)))
+    chart = alt.Chart(df).mark_line(clip=True).encode(
+        x=alt.X('${1:index:N}',scale=alt.Scale(domain(${2:0, 100})),
+			${3:axis=alt.Axis(tickCount=10, labels=False, title='title'))},
+		),
+        y=alt.Y('${4:mag:Q}', scale=alt.Scale(domain=(0, 100)))
     ).properties(width=500)
-	#cols = alt.vconcat()
-	#rows = alt.hconcat()
-    placeholder_chart2.altair_chart(chart)
+    placeholder_chart.altair_chart(chart)
+endsnippet
+
+
+snippet altair_combo
+        chart = {}
+        chart['heart'] = alt.Chart(df2).mark_line(
+            clip=True, color='orange').encode(
+                x=alt.X('ind:Q', axis=alt.Axis(tickCount=10, labels=False,
+                                               title='Heart')),
+                y=alt.Y('HeartBeat:Q',
+                        axis=alt.Axis(title='Measure', labels=False),
+                        scale=alt.Scale(domain=(-1.5, 1.5))),
+            # column='variable:N',
+            # color=alt.Color('variable:N', legend=None)
+        ).properties(
+            width=230,
+            height=230
+        )
+        # chart['heart'] += alt.Chart(pd.DataFrame(
+        #     dict(x=[7], y=[-1.2], text=[f'{self.heartrate_str}'])
+        # )).mark_text(size=20, color='#DF7401').encode(x='x', y='y', text='text')
+        chart['breath'] = alt.Chart(df2).mark_line(clip=True).encode(
+                x=alt.X('ind:Q', axis=alt.Axis(tickCount=10, labels=False,
+                                               title='Lungs')),
+                y=alt.Y('BreathWave:Q',
+                        axis=alt.Axis(title='Measure', labels=False),
+                        scale=alt.Scale(domain=(-1.5, 1.5))),
+        ).properties(
+            width=230,
+            height=230
+        )
+        # chart['breath'] += alt.Chart(pd.DataFrame(
+        #     dict(x=[7], y=[-1.2], text=[f'{self.breathrate_str}'])
+        # )).mark_text(size=20, color='#084B8A').encode(x='x', y='y', text='text')
+        # for case in ['heart', 'breath']:
+        #     lh = pd.DataFrame(
+        #         {'start': [0],
+        #          'end': [WIN_LEN],
+        #          'lower': [self.measure_model.lower_ind[case]],
+        #          'higher': [self.measure_model.higher_ind[case]]})
+        #     rule_l = alt.Chart(lh).mark_rect(color='gray', opacity=0.2).encode(
+        #         x='start:Q',
+        #         x2='lower:Q'
+        #     )
+        #     rule_h = alt.Chart(lh).mark_rect(color='gray', opacity=0.2).encode(
+        #         x='higher:Q',
+        #         x2='end:Q'
+        #     )
+        #     chart[case] += rule_l + rule_h
+        chart_combo = (chart['heart'] | chart['breath']).configure_axis(
+                           labelFontSize=14,
+                           titleFontSize=14
+                       ).configure_header(
+                           labelFontSize=20, title=None)
+
+        placeholder_chart.altair_chart(chart_combo)
+endsnippet
+
+snippet pltimshow
+norm = plt.Normalize(15, 44)
+img = plt.imshow(img, cmap='magma', norm=norm)
+sm = matplotlib.cm.ScalarMappable(
+cmap='magma',
+norm=norm)
+sm.set_array(img)
+plt.xticks([], [])
+plt.yticks([], [])
+plt.colorbar(sm)
+endsnippet
+
+snippet st_md_br
+        placeholder_text2.markdown('<br><br><br><br>', unsafe_allow_html=True)
 endsnippet

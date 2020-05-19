@@ -153,7 +153,9 @@ if strftime("%H") < 17 && strftime("%H") > 6
 else
    set background=dark
 endif
-exe 'set background='.expand($VIMBG)
+if $VIMBG != ""
+    exe 'set background='.expand($VIMBG)
+endif
 
 nmap <leader>c :colorscheme gruvbox<CR>
 
@@ -270,9 +272,9 @@ let g:jedi#goto_stubs_command = "<leader><leader>s"
 let g:UltiSnipsExpandTrigger="<tab>"
 " let g:UltiSnipsSnippetsDir="~/.vim/bundle/myBundle/UltiSnips"
 let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"  " configs/install/setup_ultisnips_dir.sh to config the dir
-let g:UltiSnipsListSnippets="<c-tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsListSnippets="<F4>"
+let g:UltiSnipsJumpForwardTrigger="<c-j>"
+let g:UltiSnipsJumpBackwardTrigger="<c-jj>"
 
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
@@ -371,7 +373,12 @@ nnoremap <leader>5 :FZF -m ../../../../<cr>
 " --    quick key to open general taskwarrior.totl
 " --    cheat sheets:
 " --        ,td    mark as done
-nnoremap <leader><leader>t :e ~/vimwiki/otl/taskwarrior.totl<cr>
+" --        ,tcp    change  project
+augroup taskwiki_related
+    autocmd!
+    " -- don't show tasks until oneday before due (followup concept)
+    autocmd FileType vimwiki nnoremap ,tf :TaskWikiMod<CR>due:7d<CR>:TaskWikiMod<CR>wait:due-1d<CR>:TawkWikiMod<CR>tag:followup<CR>
+augroup end
  
 nnoremap <silent> <leader>q :redir @a<CR>:g//<CR>:redir END<CR>:new<CR>:put! a<CR>
 
