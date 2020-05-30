@@ -224,10 +224,6 @@ HTML(data='''<video alt="test" width="850" controls>
 				             </video>'''.format(encoded.decode('ascii')))
 endsnippet
 
-snippet pyflakes
-  #noqa
-endsnippet
-
 ###########################################################################
 #                            TEXTMATE SNIPPETS                            #
 ###########################################################################
@@ -1146,7 +1142,7 @@ snippet line
 			)
 endsnippet
 snippet altair
-import altair as at
+import altair as alt
 
     chart = alt.Chart(df).mark_line(clip=True).encode(
         x=alt.X('${1:index:N}',scale=alt.Scale(domain(${2:0, 100})),
@@ -1213,6 +1209,31 @@ snippet altair_combo
         placeholder_chart.altair_chart(chart_combo)
 endsnippet
 
+snippet altair_heatmap
+import altair as alt
+import pandas as pd
+import streamlit as st
+
+def render_heatmap(img):
+	size = int(img.shape[0] / 2)
+	x, y = np.meshgrid(range(-size, size), range(-size, size))
+
+	source = pd.DataFrame({'x': x.ravel(),
+						   'y': y.ravel(),
+						   'mag': img.ravel()
+						})
+	chart = alt.Chart(source).mark_rect().encode(
+		x='x:O',
+		y='y:O',
+		color=alt.Color('mag:Q',
+						sort='descending',
+						scale=alt.Scale(scheme='redblue')),
+		tooltip=['degC:Q']
+	).properties(width=350, height=300)
+	st.altair_chart(chart)
+
+endsnippet
+
 snippet pltimshow
 norm = plt.Normalize(15, 44)
 img = plt.imshow(img, cmap='magma', norm=norm)
@@ -1227,4 +1248,8 @@ endsnippet
 
 snippet st_md_br
         placeholder_text2.markdown('<br><br><br><br>', unsafe_allow_html=True)
+endsnippet
+
+snippet noq "add noqa pyflakes" i
+  #noqa
 endsnippet

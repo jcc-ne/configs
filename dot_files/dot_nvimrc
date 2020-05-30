@@ -108,7 +108,7 @@ if dein#load_state('~/.cache/dein')
 
   " -- general tasks
   call dein#add('vimoutliner/vimoutliner')
-  call dein#add('vimwiki/vimwiki')
+  call dein#add('vimwiki/vimwiki', {'rev': 'fb5d2'})
   call dein#add('jcc-ne/taskwiki')
   call dein#add('mattn/calendar-vim')
   call dein#add('farseer90718/vim-taskwarrior')
@@ -358,8 +358,8 @@ let g:gitgutter_override_sign_column_highlight = 1
 " -- usage ex: ,r to grep a function, 
 "  <tab> to select <C-a> all <C-d> deselect all, <CR> quickfix
 let g:fzf_command_prefix = 'Fz'
-nmap <leader>f :FzFiles<CR>
-nmap <leader><leader>f :FzGFiles<CR>
+nmap <leader><leader>f :FzFiles<CR>
+nmap <leader>f :FzGFiles<CR>
 nmap <leader>h :FzHistory<CR>
 nmap <leader>b :FzBuffers<CR>
 nmap <leader>r :FzRg<CR>
@@ -380,7 +380,7 @@ nnoremap <leader>5 :FZF -m ../../../../<cr>
 augroup taskwiki_related
     autocmd!
     " -- don't show tasks until oneday before due (followup concept)
-    autocmd FileType vimwiki nnoremap ,tf :TaskWikiMod<CR>due:7d<CR>:TaskWikiMod<CR>wait:due-1d<CR>:TawkWikiMod<CR>tag:followup<CR>
+    autocmd FileType vimwiki nnoremap ,tf :TaskWikiMod<CR>due:7d<CR>:TaskWikiMod<CR>wait:due-1d<CR>:TaskWikiMod<CR>tag:followup<CR>
 augroup end
  
 nnoremap <silent> <leader>q :redir @a<CR>:g//<CR>:redir END<CR>:new<CR>:put! a<CR>
