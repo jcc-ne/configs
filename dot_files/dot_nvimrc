@@ -72,7 +72,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
   " -- layout related
   call dein#add('jcc-ne/vim-template', {'rev': 'dev'})
-  " call dein#add('scrooloose/nerdtree')
+  call dein#add('scrooloose/nerdtree')
   call dein#add('majutsushi/tagbar')
 
   call dein#add('vim-airline/vim-airline')
@@ -137,7 +137,7 @@ let colorscheme_=$VIMCOLORSCHEME
 if $VIMCOLORSCHEME != ""
     colorscheme $VIMCOLORSCHEME
 else
-    if hostname == "Janines-iMac" || hostname == "blackbox"
+    if hostname == "Janines-MBP" || hostname == "blackbox"
         colorscheme gruvbox
         " -- fix slow issue
         let g:jedi#popup_on_dot = 0 " (default: 1)
@@ -326,7 +326,7 @@ let g:vimwiki_list = [
             \{'path': '~/vimwiki/text/general',
             \ 'path_html': '~/vimwiki/html/general',
             \ 'syntax': 'default',
-            \ 'ext': '.wiki',
+            \ 'ext': '.md',
             \ 'auto_toc': 1,
             \ 'index': 'index',
             \ 'template_path': '~/vimwiki/templates/',
