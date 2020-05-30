@@ -217,4 +217,4 @@ alias vimsolarizedlight="tmux setenv VIMCOLORSCHEME solarized && tmux setenv VIM
 alias vimsolarizeddark="tmux setenv VIMCOLORSCHEME solarized && tmux setenv VIMBG dark && export VIMCOLORSCHEME=solarized && export  VIMBG=dark"
 alias vimcoloschemeunset='tmux setenv VIMCOLORSCHEME "" && tmux setenv VIMBG "" && unset VIMCOLORSCHEME && unset VIMBG'
 alias vimbglight="tmux setenv VIMBG light && export VIMBG=light"
-alias vimbgdart="tmux setenv VIMBG dark && export VIMBG=dark"
+alias vimbgdark="tmux setenv VIMBG dark && export VIMBG=dark"

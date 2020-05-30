@@ -1132,6 +1132,19 @@ import numpy as np
 import datetime as dt
 endsnippet
 
+snippet line
+	fig.add_shape(type="line",
+			xref="frame #",
+			yref="paper",
+			x0=self.i_radar,
+			y0=0,
+			x1=self.i_radar,
+			y1=1,
+			line=dict(color='gray', 
+				width=1,
+				dash="solid")
+			)
+endsnippet
 snippet altair
 import altair as at
 
