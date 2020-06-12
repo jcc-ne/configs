@@ -4,7 +4,7 @@ try:
     matplotlib.use('TkAgg')
     import matplotlib.pyplot as plt
 except ImportError:
-    matplotlib.use('TkAgg')
+    # matplotlib.use('TkAgg')
     import matplotlib.pyplot as plt
 import os
 import sys

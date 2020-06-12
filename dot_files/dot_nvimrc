@@ -1,5 +1,7 @@
 mapclear
 let mapleader = ","
+" let g:python3_host_prog="~/anaconda3/bin/python3.7"
+" let g:python_host_prog='~/anaconda3/bin/python'
 let g:python_host_skip_check = 1
 set guioptions=M
 inoremap kj <esc>
@@ -12,7 +14,7 @@ nnoremap <leader>. @q
 " -- leave terminal mode
 tnoremap <c-l> <C-\><C-n><c-l>
 
-" -- easier omnicomplete (for vimwiki keywords lookup)
+" -- easier omnicomplete (for vimwiki keywords tag lookup)
 inoremap <c-space> <c-x><c-o>
 
 
@@ -180,9 +182,6 @@ let g:airline#extensions#hunks#enabled = 0
 let g:airline_theme = 'powerlineish'
 
 
-" -- Line Num toggle --
-nnoremap <silent><leader>1 :call RelativeNumberToggle()<CR>
-
 "au FocusLost * :set number
 "au FocusGained * :set relativenumber
 "autocmd InsertEnter * :set number
@@ -216,6 +215,7 @@ let g:SuperTabDefaultCompletionType = "context"
 
 " let g:pymode_python = 'python3'
 let g:pymode_folding = 1
+let g:pymode_folding_regex = '^\s*\%(class\|def\|async\s\+def\|if\|for\)'
 
 " Load rope plugin
 let g:pymode_rope = 0
@@ -321,7 +321,7 @@ let g:vimwiki_list = [
             \ 'index': 'index'},
             \{'path': '~/vimwiki/text/fin',
             \ 'path_html': '~/vimwiki/html/fin',
-            \'syntax': 'default',
+            \'syntax': 'markdown',
             \'ext': '.md',
             \ 'auto_toc': 1,
             \ 'auto_tags': 1,
@@ -354,6 +354,15 @@ autocmd FileType python let NERDSpaceDelims=0
 nnoremap <F3> :GitGutterBufferToggle<CR>
 let g:gitgutter_override_sign_column_highlight = 1
 
+" -- Tagbar
+nnoremap <F4> :TagbarToggle<CR>
+
+" -- Line Num toggle --
+nnoremap <F1> :call  RelativeNumberToggle()<CR>
+" nnoremap <silent><leader>1 :call RelativeNumberToggle()<CR>
+
+
+
 " -- fzf mapping
 " -- usage ex: ,r to grep a function, 
 "  <tab> to select <C-a> all <C-d> deselect all, <CR> quickfix
@@ -380,7 +389,7 @@ nnoremap <leader>5 :FZF -m ../../../../<cr>
 augroup taskwiki_related
     autocmd!
     " -- don't show tasks until oneday before due (followup concept)
-    autocmd FileType vimwiki nnoremap ,tf :TaskWikiMod<CR>due:7d<CR>:TaskWikiMod<CR>wait:due-1d<CR>:TaskWikiMod<CR>tag:followup<CR>
+    autocmd FileType vimwiki nnoremap ,tw :TaskWikiMod<CR>due:7d<CR>:TaskWikiMod<CR>wait:due-1d<CR>:TaskWikiMod<CR>tag:followup<CR>
 augroup end
  
 nnoremap <silent> <leader>q :redir @a<CR>:g//<CR>:redir END<CR>:new<CR>:put! a<CR>
@@ -390,12 +399,12 @@ let g:slimux_select_from_current_window = 1
 
 let g:license = "GNU GPLv3"
 
-" -- vimgrep
+" -- vimgrep, similar effects as fzf rp <leader>r
 " :args `find . -type f`
 " :vim /pattern1/ ##
 " :vim /pattern2/ ##
 " :vim /pattern3/ ##
-nnoremap <F1> :args `find . -type f`<CR>:vim // ##
+nnoremap <F7> :args `find . -type f`<CR>:vim // ##
 
 autocmd User fugitive 
   \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |

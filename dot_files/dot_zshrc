@@ -191,20 +191,20 @@ unset ZLE_RPROMPT_INDENT
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('$HOME/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "$HOME/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "$HOME/anaconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="$HOME/anaconda3/bin:$PATH"
-    fi
-fi
-if [[ $HOST == 'blackbox' ]]; then
-    source activate tf
-fi
-unset __conda_setup
+# __conda_setup="$('$HOME/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+# if [ $? -eq 0 ]; then
+    # eval "$__conda_setup"
+# else
+    # if [ -f "$HOME/anaconda3/etc/profile.d/conda.sh" ]; then
+        # . "$HOME/anaconda3/etc/profile.d/conda.sh"
+    # else
+        # export PATH="$HOME/anaconda3/bin:$PATH"
+    # fi
+# fi
+# if [[ $HOST == 'blackbox' ]]; then
+    # source activate tf
+# fi
+# unset __conda_setup
 # <<< conda initialize <<<
 #
 . ~/.zsh_hashd
@@ -218,3 +218,17 @@ alias vimsolarizeddark="tmux setenv VIMCOLORSCHEME solarized && tmux setenv VIMB
 alias vimcoloschemeunset='tmux setenv VIMCOLORSCHEME "" && tmux setenv VIMBG "" && unset VIMCOLORSCHEME && unset VIMBG'
 alias vimbglight="tmux setenv VIMBG light && export VIMBG=light"
 alias vimbgdark="tmux setenv VIMBG dark && export VIMBG=dark"
+
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+if [ -d "${PYENV_ROOT}" ]; then
+    export PATH=${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}
+    eval "$(pyenv init -)"
+fi
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+  eval "$(pyenv virtualenv-init -)"
+fi
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+
+export PYTHON_CONFIGURE_OPTS="--enable-framework"
