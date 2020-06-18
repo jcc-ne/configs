@@ -1253,3 +1253,26 @@ endsnippet
 snippet noq "add noqa pyflakes" i
   #noqa
 endsnippet
+
+snippet img_convert
+img =  (img - img.min()) / (img.max() - img.min())
+
+array = np.uint8(cm.seismic(img)*255)
+st.image(array)
+
+# color  = matplotlib.cm.seismic(img)
+im = Image.fromarray(array)
+st.image(im)
+# img = img * 0.001 - 273.15
+
+
+converted = cv2.cvtColor(np.uint8((1. - img) * 255), cv2.COLOR_GRAY2BGR)
+heatmap = cv2.applyColorMap(converted, cv2.COLORMAP_JET)
+
+st.image(heatmap)
+
+fig = nparray_to_b64(heatmap)[0]
+f = io.BytesIO(base64.b64decode(fig.encode()))
+
+st.image(f)
+endsnippet

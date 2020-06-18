@@ -390,6 +390,7 @@ augroup taskwiki_related
     autocmd!
     " -- don't show tasks until oneday before due (followup concept)
     autocmd FileType vimwiki nnoremap ,tw :TaskWikiMod<CR>due:7d<CR>:TaskWikiMod<CR>wait:due-1d<CR>:TaskWikiMod<CR>tag:followup<CR>
+    autocmd FileType vimwiki nnoremap ,to :TaskWikiMod<CR>wait:14d<CR>:TaskWikiMod<CR>tag:followup<CR>
 augroup end
  
 nnoremap <silent> <leader>q :redir @a<CR>:g//<CR>:redir END<CR>:new<CR>:put! a<CR>
@@ -411,3 +412,7 @@ autocmd User fugitive
   \   nnoremap <buffer> .. :edit %:h<CR> |
   \ endif
 autocmd BufReadPost fugitive://* set bufhidden=delete
+
+
+" -- How to resize splits
+" -- For a split window: You can use Ctrl-w + and Ctrl-w - to resize the height of the current window by a single row. For a vsplit window: You can use Ctrl-w > and Ctrl-w <
