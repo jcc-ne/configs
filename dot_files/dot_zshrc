@@ -215,6 +215,8 @@ alias taskw="export TASKRC=$HOME/.taskrc && export TASKWIKI_ROOT=$HOME/.task/wik
 # -- set vim colorscheme and bg light/dark
 alias vimsolarizedlight="tmux setenv VIMCOLORSCHEME solarized && tmux setenv VIMBG light && export VIMCOLORSCHEME=solarized && export VIMBG=light"
 alias vimsolarizeddark="tmux setenv VIMCOLORSCHEME solarized && tmux setenv VIMBG dark && export VIMCOLORSCHEME=solarized && export  VIMBG=dark"
+alias vimgruvboxlight="tmux setenv VIMCOLORSCHEME gruvbox && tmux setenv VIMBG light && export VIMCOLORSCHEME=gruvbox && export VIMBG=light"
+alias vimgruvboxdark="tmux setenv VIMCOLORSCHEME gruvbox && tmux setenv VIMBG dark && export VIMCOLORSCHEME=gruvbox && export  VIMBG=dark"
 alias vimcoloschemeunset='tmux setenv VIMCOLORSCHEME "" && tmux setenv VIMBG "" && unset VIMCOLORSCHEME && unset VIMBG'
 alias vimbglight="tmux setenv VIMBG light && export VIMBG=light"
 alias vimbgdark="tmux setenv VIMBG dark && export VIMBG=dark"

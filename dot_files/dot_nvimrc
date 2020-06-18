@@ -88,12 +88,12 @@ if dein#load_state('~/.cache/dein')
   call dein#add('hzchirs/vim-material')
   
   " -- python dev
-  call dein#add('python-mode/python-mode')
-  call dein#add('davidhalter/jedi-vim')
+  call dein#add('python-mode/python-mode', {'on_ft': 'python'})
+  call dein#add('davidhalter/jedi-vim', {'on_ft': 'python'})
   call dein#add('deoplete-plugins/deoplete-jedi')  " async jedi
   call dein#add('Shougo/deoplete.nvim')
 
-  call dein#add('Konfekt/FastFold')
+  call dein#add('Konfekt/FastFold', {'on_ft': 'python'})
   call dein#add('tpope/vim-fugitive')
   call dein#add('tpope/vim-rhubarb')
   call dein#add('airblade/vim-gitgutter')
@@ -119,7 +119,7 @@ if dein#load_state('~/.cache/dein')
 
   " -- local plugins
   call dein#add('~/.vim/bundle/myBundle')
-  call dein#add('~/.vim/bundle/totl')
+  " call dein#add('~/.vim/bundle/totl')
 
   " -- fuzzy finder
   call dein#add('~/.fzf')
