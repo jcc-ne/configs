@@ -5,7 +5,7 @@ augroup my_vimwiki
     autocmd FileType wiki,vimwiki vmap x <esc><C-space>
     autocmd FileType wiki,vimwiki vnoremap D <esc>0wdf]
 
-    au BufRead,BufNewFile *.wiki,*.md set filetype=vimwiki
+    "au BufRead,BufNewFile *.wiki,*.md set filetype=vimwiki
     :autocmd FileType vimwiki map <leader>dl :VimwikiDiaryGenerateLinks
 
    function! ToggleCalendar()
@@ -54,6 +54,7 @@ augroup my_vimwiki
 
    :autocmd FileType vimwiki,totl exec "nnoremap <silent> <leader>tn :TaskWikiMod<cr>+next<cr>"
    :autocmd FileType vimwiki,totl exec "nnoremap <silent> <leader>tj :TaskWikiMod<cr>-next<cr>"
+   :autocmd FileType vimwiki,totl exec "nnoremap <silent> <leader>tr :TaskWikiMod<cr>+roadmap<cr>"
 
     au BufEnter *.md setlocal foldmethod=indent
     au BufEnter *.md setlocal foldlevel=20

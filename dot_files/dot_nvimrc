@@ -62,7 +62,7 @@ endif
 
 " Required:
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
-set runtimepath+=~/.vim/
+" set runtimepath+=~/.vim/
 
 let hostname=substitute(system('hostname -s'), "\n", "", "")
 " echo hostname
@@ -111,7 +111,11 @@ if dein#load_state('~/.cache/dein')
   " -- general tasks
   call dein#add('vimoutliner/vimoutliner')
   call dein#add('vimwiki/vimwiki', {'rev': 'fb5d2'})
-  call dein#add('jcc-ne/taskwiki')
+  " call dein#add('vimwiki/vimwiki', {'rev': 'dev'})
+  " call dein#add('lvht/tagbar-markdown', {'on_cmd' : ['Tagbar', 'TagbarToggle']})
+  call dein#add('lvht/tagbar-markdown')
+  " call dein#add('jcc-ne/taskwiki')
+  call dein#add('liskin/taskwiki')
   call dein#add('mattn/calendar-vim')
   call dein#add('farseer90718/vim-taskwarrior')
   call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
@@ -386,6 +390,8 @@ nnoremap <leader>5 :FZF -m ../../../../<cr>
 " --    cheat sheets:
 " --        ,td    mark as done
 " --        ,tcp    change  project
+
+" let g:taskwiki_markup_syntax = "markdown"
 augroup taskwiki_related
     autocmd!
     " -- don't show tasks until oneday before due (followup concept)
@@ -416,3 +422,4 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 
 " -- How to resize splits
 " -- For a split window: You can use Ctrl-w + and Ctrl-w - to resize the height of the current window by a single row. For a vsplit window: You can use Ctrl-w > and Ctrl-w <
+nnoremap <leader>m :setf markdown<cr>
