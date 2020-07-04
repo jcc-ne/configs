@@ -306,3 +306,23 @@ snippet a
     $0
 </a>
 endsnippet
+
+snippet notify
+[Unit]
+Description=thermal cam capture
+After=redis.service
+
+[Service]
+Type=notify
+NotifyAccess=all
+Restart=always
+ExecStart=/home/pi/aripi/labs/vitalsign_pkg/scripts/run_lepton_capture.py
+WatchdogSec=5s
+StartLimitInterval=20s
+RestartSec=5
+StartLimitBurst=20
+StartLimitAction=reboot-force
+
+[Install]
+WantedBy=default.target
+endsnippet

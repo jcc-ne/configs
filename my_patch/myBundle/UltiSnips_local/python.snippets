@@ -1276,3 +1276,11 @@ f = io.BytesIO(base64.b64decode(fig.encode()))
 
 st.image(f)
 endsnippet
+
+snippet watchdog
+import sdnotify
+notify = sdnotify.SystemdNotifier()
+logger.critical("notify ready")
+notify.notify("READY=1")
+notify.notify("WATCHDOG=1")
+endsnippet

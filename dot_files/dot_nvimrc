@@ -114,8 +114,8 @@ if dein#load_state('~/.cache/dein')
   " call dein#add('vimwiki/vimwiki', {'rev': 'dev'})
   " call dein#add('lvht/tagbar-markdown', {'on_cmd' : ['Tagbar', 'TagbarToggle']})
   call dein#add('lvht/tagbar-markdown')
-  " call dein#add('jcc-ne/taskwiki')
-  call dein#add('liskin/taskwiki')
+  call dein#add('jcc-ne/taskwiki')
+  " call dein#add('liskin/taskwiki')
   call dein#add('mattn/calendar-vim')
   call dein#add('farseer90718/vim-taskwarrior')
   call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
@@ -294,7 +294,7 @@ map <Leader>k :SlimuxSendKeysLast<CR>
 
 " -  yankring 
 map <Leader><space> :YRShow <CR>
-let g:yankring_replace_n_pkey="<leader> p"
+let g:yankring_replace_n_pkey="<leader>p"
 
 " - map ctrl-p back to ctrl-p
 let g:ctrlp_map = '<c-p>'
@@ -332,7 +332,7 @@ let g:vimwiki_list = [
             \ 'index': 'index'},
             \{'path': '~/vimwiki/text/general',
             \ 'path_html': '~/vimwiki/html/general',
-            \ 'syntax': 'default',
+            \ 'syntax': 'markdown',
             \ 'ext': '.md',
             \ 'auto_toc': 1,
             \ 'index': 'index',
@@ -394,9 +394,10 @@ nnoremap <leader>5 :FZF -m ../../../../<cr>
 " let g:taskwiki_markup_syntax = "markdown"
 augroup taskwiki_related
     autocmd!
-    " -- don't show tasks until oneday before due (followup concept)
-    autocmd FileType vimwiki nnoremap ,tw :TaskWikiMod<CR>due:7d<CR>:TaskWikiMod<CR>wait:due-1d<CR>:TaskWikiMod<CR>tag:followup<CR>
-    autocmd FileType vimwiki nnoremap ,to :TaskWikiMod<CR>wait:14d<CR>:TaskWikiMod<CR>tag:followup<CR>
+
+    " -- view keymaps
+    autocmd FileType vimwiki nnoremap <F3> :sp ~/.vim/bundle/myBundle/plugin/my_vimwiki.vim <CR>
+    " -- tn, tj toggle +next, tr roadmap, tw followup 7 days with due, ty today, to followup w/o due
 augroup end
  
 nnoremap <silent> <leader>q :redir @a<CR>:g//<CR>:redir END<CR>:new<CR>:put! a<CR>
