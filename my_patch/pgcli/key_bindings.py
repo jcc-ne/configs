@@ -1,14 +1,16 @@
 import logging
 from prompt_toolkit.enums import EditingMode
+from prompt_toolkit.keys import Keys
+from prompt_toolkit.key_binding.key_processor import KeyPress
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.filters import (
+    ViInsertMode,
     completion_is_selected,
     is_searching,
     has_completions,
     has_selection,
     vi_mode,
 )
-from prompt_toolkit.key_binding.vi_state import InputMode
 
 from .pgbuffer import buffer_should_be_handled
 
@@ -21,11 +23,13 @@ def pgcli_bindings(pgcli):
 
     tab_insert_text = " " * 4
 
-    @kb.add('k', 'j')
+    @kb.add("k", "j", filter=ViInsertMode())
     def _(event):
-        """vi Normal mode."""
-        _logger.debug('Detected jk keystroke.')
-        event.cli.vi_state.input_mode = InputMode.NAVIGATION
+        """
+        Typing 'kj' in Insert mode, should go back to navigation mode.
+        """
+        _logger.debug('Detected kj keys.')
+        event.cli.key_processor.feed(KeyPress(Keys.Escape))
 
     @kb.add("f2")
     def _(event):
