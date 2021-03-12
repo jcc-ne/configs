@@ -1284,3 +1284,24 @@ logger.critical("notify ready")
 notify.notify("READY=1")
 notify.notify("WATCHDOG=1")
 endsnippet
+
+snippet px_line
+
+# px.colors.sequential.Blue to see rgb
+ncolors = px.colors.n_colors((247, 252, 253), (0, 68, 27), df.exp.nunique())
+ncolors = [f"rgb{c}" for c in ncolors][::-1]
+
+chart = px.line(df, x='quote_date', y='iv_calc', facet_row='underlying_symbol',
+                color='exp', color_discrete_sequence=ncolors)
+chart.update_traces(line=dict(width=0.5))
+endsnippet
+
+snippet px_subfig
+chart = px.line(melted, x='quote_date', y='value', color='variable',
+                facet_row='underlying_symbol')
+chart_2 = px.line(df, x='quote_date', y='iv_calc',
+                  facet_row='underlying_symbol')
+chart_2.update_traces(yaxis='y2')
+subfig = make_subplots(specs=[[{"secondary_y": True}]])
+subfig.add_traces(chart.data + chart_2.data)
+endsnippet
