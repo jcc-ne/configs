@@ -1305,3 +1305,19 @@ chart_2.update_traces(yaxis='y2')
 subfig = make_subplots(specs=[[{"secondary_y": True}]])
 subfig.add_traces(chart.data + chart_2.data)
 endsnippet
+
+snippet base_module
+from .base_module_object import create_model_module_object
+
+model_module_obj = create_model_module_object(
+	load_model=load_model,
+	preproc=preproc,
+	preproc_one_frame=preproc_one_frame,
+	prepare_model=prepare_model,
+	name=__name__
+)
+endsnippet
+
+snippet cuda
+os.environ['CUDA_VISIBLE_DEVICES'] = ''
+endsnippet

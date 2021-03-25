@@ -129,7 +129,7 @@ if dein#load_state('~/.cache/dein')
 
   " -- fuzzy finder
   call dein#add('~/.fzf')
-  call dein#add('junegunn/fzf.vim')
+  call dein#add('junegunn/fzf.vim', {'rev': '23dda860'})
 
   call dein#add('mbbill/undotree')
 
@@ -240,6 +240,7 @@ let g:pymode_run_key = 'R'
 let g:pymode_lint = 1
 let g:pymode_lint_checker = "pyflakes, pep8"
 let g:pymode_lint_ignore=["E501"]
+
 " Auto check on save
 let g:pymode_lint_write = 1
 
