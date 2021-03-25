@@ -237,3 +237,5 @@ export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
 alias issue="gh --repo $ISSUE_REPO issue"
 alias openissue="gh --repo $ISSUE_REPO issue create --project WD"
+alias gittree="git log --all --graph --decorate --pretty=format:'%Cgreen%h %Cblue %<(12) %an %Cred %d %Creset %gs %<(80,trunc) %s'"
+
