@@ -240,3 +240,5 @@ alias openissue="gh --repo $ISSUE_REPO issue create --project WD"
 export PATH="/usr/local/opt/ruby/bin:$PATH"
 alias gittree="git log --all --graph --decorate --pretty=format:'%Cgreen%h %Cblue %<(12) %an %Cred %d %Creset %gs %<(80,trunc) %s'"
 
+export PATH=$PATH:$HOME/.gem/ruby/2.7.0/bin/
+alias restart_cam="sudo killall VDCAssistant"
