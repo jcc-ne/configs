@@ -1321,3 +1321,42 @@ endsnippet
 snippet cuda
 os.environ['CUDA_VISIBLE_DEVICES'] = ''
 endsnippet
+
+
+snippet dfstyle
+
+dfs = dfm.style.apply(lambda c: ['background-color: #FF7F50' if i != c['00-WD-read'] and c['00-WD-read'] != 'calibrating' and not pd.isnull(i) else '' for i in c.values], axis=1)
+dfs = dfs.apply(lambda c: ['background-color: cornsilk' if i == '00-WD-read' else '' for i in c.index], axis=1)
+dfs = dfs.apply(lambda c: ['background-color: grey' if i == 'status_id' else '' for i in c.index], axis=1).hide_index()
+endsnippet
+
+
+snippet img_str
+img_str = 'data:image/jpg;base64,' + img_str
+endsnippet
+
+snippet git
+try:
+    import git
+
+
+    repo = git.Repo(__file__, search_parent_directories=True)
+
+    __commit__ = repo.head.commit.hexsha[:8]
+except ModuleNotFoundError:
+    __commit__ = ''
+endsnippet
+
+snippet crappyhist
+def crappyhist(a, bins=50, width=140):
+    '''Simple text-based histogram (from stack overflow)'''
+    h, b = np.histogram(a, bins)
+
+    for i in range (0, bins):
+        print('{:12.5f}  | {:{width}s} {}'.format(
+            b[i], 
+            '#'*int(width*h[i]/np.amax(h)), 
+            h[i], 
+            width=width))
+    print('{:12.5f}  |'.format(b[bins]))
+endsnippet
