@@ -1,5 +1,7 @@
 mapclear
 let mapleader = ","
+" let g:python3_host_prog="~/anaconda3/bin/python3.7"
+" let g:python_host_prog='~/anaconda3/bin/python'
 let g:python_host_skip_check = 1
 set guioptions=M
 inoremap kj <esc>
@@ -12,7 +14,7 @@ nnoremap <leader>. @q
 " -- leave terminal mode
 tnoremap <c-l> <C-\><C-n><c-l>
 
-" -- easier omnicomplete (for vimwiki keywords lookup)
+" -- easier omnicomplete (for vimwiki keywords tag lookup)
 inoremap <c-space> <c-x><c-o>
 
 
@@ -60,7 +62,10 @@ endif
 
 " Required:
 set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
-set runtimepath+=~/.vim/
+" set runtimepath+=~/.vim/
+
+let hostname=substitute(system('hostname -s'), "\n", "", "")
+" echo hostname
 
 " Required:
 if dein#load_state('~/.cache/dein')
@@ -72,21 +77,23 @@ if dein#load_state('~/.cache/dein')
   call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
   " -- layout related
   call dein#add('jcc-ne/vim-template', {'rev': 'dev'})
-  " call dein#add('scrooloose/nerdtree')
   call dein#add('majutsushi/tagbar')
 
   call dein#add('vim-airline/vim-airline')
   call dein#add('vim-airline/vim-airline-themes')
   call dein#add('altercation/vim-colors-solarized')
+
+  " -- themes
+  call dein#add('arcticicestudio/nord-vim')
   call dein#add('hzchirs/vim-material')
   
   " -- python dev
-  call dein#add('python-mode/python-mode')
-  call dein#add('davidhalter/jedi-vim')
+  call dein#add('python-mode/python-mode', {'on_ft': 'python'})
+  call dein#add('davidhalter/jedi-vim', {'on_ft': 'python'})
   call dein#add('deoplete-plugins/deoplete-jedi')  " async jedi
   call dein#add('Shougo/deoplete.nvim')
 
-  call dein#add('Konfekt/FastFold')
+  call dein#add('Konfekt/FastFold', {'on_ft': 'python'})
   call dein#add('tpope/vim-fugitive')
   call dein#add('tpope/vim-rhubarb')
   call dein#add('airblade/vim-gitgutter')
@@ -101,37 +108,48 @@ if dein#load_state('~/.cache/dein')
   call dein#add('honza/vim-snippets')
   call dein#add('scrooloose/nerdcommenter')
 
-  " -- general tasks
-  call dein#add('vimoutliner/vimoutliner')
-  call dein#add('vimwiki/vimwiki')
-  call dein#add('jcc-ne/taskwiki')
+  " call dein#add('lvht/tagbar-markdown', {'on_cmd' : ['Tagbar', 'TagbarToggle']})
+  call dein#add('lvht/tagbar-markdown')
   call dein#add('mattn/calendar-vim')
-  call dein#add('farseer90718/vim-taskwarrior')
   call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
               \ 'build': 'cd app & yarn install' })
 
   " -- local plugins
   call dein#add('~/.vim/bundle/myBundle')
-  call dein#add('~/.vim/bundle/totl')
+  " call dein#add('~/.vim/bundle/totl')
 
   " -- fuzzy finder
   call dein#add('~/.fzf')
-  call dein#add('junegunn/fzf.vim')
+  call dein#add('junegunn/fzf.vim', {'rev': '23dda860'})
 
   call dein#add('mbbill/undotree')
 
   call dein#add('whiteinge/diffconflicts')
 
   call dein#add('liuchengxu/graphviz.vim')
+  call dein#add('chrisbra/csv.vim')
+
+  " -- LSP
+  " call dein#add('neovim/nvim-lspconfig')
+
+  " -- only vimwiki and taskwiki related plugins locally
+  if hostname == "Janine-MBP"
+      call dein#add('scrooloose/nerdtree')
+      call dein#add('kalafut/vim-taskjuggler')
+      call dein#add('jcc-ne/taskwiki')
+      call dein#add('farseer90718/vim-taskwarrior')
+      call dein#add('vimoutliner/vimoutliner')
+      call dein#add('vimwiki/vimwiki', {'rev': 'fb5d2'})
+      " call dein#add('vimwiki/vimwiki', {'rev': 'master'})
+  endif
 
   " -- Required:
   call dein#end()
   call dein#save_state()
+
 endif
 
 " ---- adjust background
-let hostname=substitute(system('hostname -s'), "\n", "", "")
-" echo hostname
 
 let colorscheme_=$VIMCOLORSCHEME
 if $VIMCOLORSCHEME != ""
@@ -153,7 +171,11 @@ if strftime("%H") < 17 && strftime("%H") > 6
 else
    set background=dark
 endif
-exe 'set background='.expand($VIMBG)
+
+" set background=dark
+if $VIMBG != ""
+    exe 'set background='.expand($VIMBG)
+endif
 
 nmap <leader>c :colorscheme gruvbox<CR>
 
@@ -174,9 +196,6 @@ let g:airline_powerline_fonts = 1
 let g:airline#extensions#hunks#enabled = 0
 let g:airline_theme = 'powerlineish'
 
-
-" -- Line Num toggle --
-nnoremap <silent><leader>1 :call RelativeNumberToggle()<CR>
 
 "au FocusLost * :set number
 "au FocusGained * :set relativenumber
@@ -211,6 +230,7 @@ let g:SuperTabDefaultCompletionType = "context"
 
 " let g:pymode_python = 'python3'
 let g:pymode_folding = 1
+let g:pymode_folding_regex = '^\s*\%(class\|def\|async\s\+def\|if\|for\)'
 
 " Load rope plugin
 let g:pymode_rope = 0
@@ -225,8 +245,9 @@ let g:pymode_run_key = 'R'
 
 "Linting
 let g:pymode_lint = 1
-" let g:pymode_lint_checker = "pyflakes, pep8"
-let g:pymode_lint_checker = "pep8"
+let g:pymode_lint_checker = "pyflakes, pep8"
+let g:pymode_lint_ignore=["E501"]
+
 " Auto check on save
 let g:pymode_lint_write = 1
 
@@ -269,7 +290,7 @@ let g:jedi#goto_stubs_command = "<leader><leader>s"
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
 let g:UltiSnipsExpandTrigger="<tab>"
 " let g:UltiSnipsSnippetsDir="~/.vim/bundle/myBundle/UltiSnips"
-let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"  " configs/install/setup_ultisnips_dir.sh to config the dir
+" let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"  " configs/install/setup_ultisnips_dir.sh to config the dir
 let g:UltiSnipsListSnippets="<c-tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
@@ -285,7 +306,7 @@ map <Leader>k :SlimuxSendKeysLast<CR>
 
 " -  yankring 
 map <Leader><space> :YRShow <CR>
-let g:yankring_replace_n_pkey="<leader> p"
+let g:yankring_replace_n_pkey="<leader>p"
 
 " - map ctrl-p back to ctrl-p
 let g:ctrlp_map = '<c-p>'
@@ -305,6 +326,7 @@ au BufEnter *.md set shiftwidth=4
 
 " - vimwiki
 nnoremap <leader>wg :VimwikiGenerateTags<CR>
+nnoremap <leader>wt :VimwikiRebuildTags<CR>
 
 let g:vimwiki_list = [
             \{'path': '~/vimwiki/text/work',
@@ -316,15 +338,15 @@ let g:vimwiki_list = [
             \ 'index': 'index'},
             \{'path': '~/vimwiki/text/fin',
             \ 'path_html': '~/vimwiki/html/fin',
-            \'syntax': 'default',
+            \'syntax': 'markdown',
             \'ext': '.md',
             \ 'auto_toc': 1,
             \ 'auto_tags': 1,
             \ 'index': 'index'},
             \{'path': '~/vimwiki/text/general',
             \ 'path_html': '~/vimwiki/html/general',
-            \ 'syntax': 'default',
-            \ 'ext': '.wiki',
+            \ 'syntax': 'markdown',
+            \ 'ext': '.md',
             \ 'auto_toc': 1,
             \ 'index': 'index',
             \ 'template_path': '~/vimwiki/templates/',
@@ -348,13 +370,22 @@ autocmd FileType python let NERDSpaceDelims=0
 " -- gitgutter
 nnoremap <F3> :GitGutterBufferToggle<CR>
 let g:gitgutter_override_sign_column_highlight = 1
+highlight clear SignColumn
+
+" -- Tagbar
+nnoremap <F4> :TagbarToggle<CR>
+
+" -- Line Num toggle --
+nnoremap <F1> :call  RelativeNumberToggle()<CR>
+" nnoremap <silent><leader>1 :call RelativeNumberToggle()<CR>
+
 
 " -- fzf mapping
 " -- usage ex: ,r to grep a function, 
 "  <tab> to select <C-a> all <C-d> deselect all, <CR> quickfix
 let g:fzf_command_prefix = 'Fz'
-nmap <leader>f :FzFiles<CR>
-nmap <leader><leader>f :FzGFiles<CR>
+nmap <leader><leader>f :FzFiles<CR>
+nmap <leader>f :FzGFiles<CR>
 nmap <leader>h :FzHistory<CR>
 nmap <leader>b :FzBuffers<CR>
 nmap <leader>r :FzRg<CR>
@@ -371,7 +402,16 @@ nnoremap <leader>5 :FZF -m ../../../../<cr>
 " --    quick key to open general taskwarrior.totl
 " --    cheat sheets:
 " --        ,td    mark as done
-nnoremap <leader><leader>t :e ~/vimwiki/otl/taskwarrior.totl<cr>
+" --        ,tcp    change  project
+
+" let g:taskwiki_markup_syntax = "markdown"
+augroup taskwiki_related
+    autocmd!
+
+    " -- view keymaps
+    autocmd FileType vimwiki nnoremap <F3> :sp ~/.vim/bundle/myBundle/plugin/my_vimwiki.vim <CR>
+    " -- tn, tj toggle +next, tr roadmap, tw followup 7 days with due, ty today, to followup w/o due
+augroup end
  
 nnoremap <silent> <leader>q :redir @a<CR>:g//<CR>:redir END<CR>:new<CR>:put! a<CR>
 
@@ -380,15 +420,40 @@ let g:slimux_select_from_current_window = 1
 
 let g:license = "GNU GPLv3"
 
-" -- vimgrep
+" -- vimgrep, similar effects as fzf rp <leader>r
 " :args `find . -type f`
 " :vim /pattern1/ ##
 " :vim /pattern2/ ##
 " :vim /pattern3/ ##
-nnoremap <F1> :args `find . -type f`<CR>:vim // ##
+nnoremap <F7> :args `find . -type f`<CR>:vim // ##
 
 autocmd User fugitive 
   \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
   \   nnoremap <buffer> .. :edit %:h<CR> |
   \ endif
 autocmd BufReadPost fugitive://* set bufhidden=delete
+
+
+" -- How to resize splits
+" -- For a split window: You can use Ctrl-w + and Ctrl-w - to resize the height of the current window by a single row. For a vsplit window: You can use Ctrl-w > and Ctrl-w <
+nnoremap <leader>m :setf markdown<cr>
+
+" --- LSP
+" lua << EOF
+" require("lspconfig").pylsp.setup{}
+" EOF
+
+" set completeopt-=preview
+
+" " use omni completion provided by lsp
+" autocmd Filetype python setlocal omnifunc=v:lua.vim.lsp.omnifunc
+
+" nnoremap <silent> ,g <cmd>lua vim.lsp.buf.definition()<CR>
+" nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
+" nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
+" nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+" nnoremap <silent> ,d <cmd>lua vim.lsp.buf.type_definition()<CR>
+" nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
+" nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
+" nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+" endfunction

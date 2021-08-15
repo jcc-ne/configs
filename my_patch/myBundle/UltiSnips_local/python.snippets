@@ -224,10 +224,6 @@ HTML(data='''<video alt="test" width="850" controls>
 				             </video>'''.format(encoded.decode('ascii')))
 endsnippet
 
-snippet pyflakes
-  #noqa
-endsnippet
-
 ###########################################################################
 #                            TEXTMATE SNIPPETS                            #
 ###########################################################################
@@ -1130,4 +1126,254 @@ import pickle
 import pandas as pd
 import numpy as np
 import datetime as dt
+endsnippet
+
+snippet line
+	fig.add_shape(type="line",
+			xref="frame #",
+			yref="paper",
+			x0=self.i_radar,
+			y0=0,
+			x1=self.i_radar,
+			y1=1,
+			line=dict(color='gray', 
+				width=1,
+				dash="solid")
+			)
+endsnippet
+snippet altair
+import altair as alt
+
+    chart = alt.Chart(df).mark_line(clip=True).encode(
+        x=alt.X('${1:index:N}',scale=alt.Scale(domain(${2:0, 100})),
+			${3:axis=alt.Axis(tickCount=10, labels=False, title='title'))},
+		),
+        y=alt.Y('${4:mag:Q}', scale=alt.Scale(domain=(0, 100)))
+    ).properties(width=500)
+    placeholder_chart.altair_chart(chart)
+endsnippet
+
+
+snippet altair_combo
+        chart = {}
+        chart['heart'] = alt.Chart(df2).mark_line(
+            clip=True, color='orange').encode(
+                x=alt.X('ind:Q', axis=alt.Axis(tickCount=10, labels=False,
+                                               title='Heart')),
+                y=alt.Y('HeartBeat:Q',
+                        axis=alt.Axis(title='Measure', labels=False),
+                        scale=alt.Scale(domain=(-1.5, 1.5))),
+            # column='variable:N',
+            # color=alt.Color('variable:N', legend=None)
+        ).properties(
+            width=230,
+            height=230
+        )
+        # chart['heart'] += alt.Chart(pd.DataFrame(
+        #     dict(x=[7], y=[-1.2], text=[f'{self.heartrate_str}'])
+        # )).mark_text(size=20, color='#DF7401').encode(x='x', y='y', text='text')
+        chart['breath'] = alt.Chart(df2).mark_line(clip=True).encode(
+                x=alt.X('ind:Q', axis=alt.Axis(tickCount=10, labels=False,
+                                               title='Lungs')),
+                y=alt.Y('BreathWave:Q',
+                        axis=alt.Axis(title='Measure', labels=False),
+                        scale=alt.Scale(domain=(-1.5, 1.5))),
+        ).properties(
+            width=230,
+            height=230
+        )
+        # chart['breath'] += alt.Chart(pd.DataFrame(
+        #     dict(x=[7], y=[-1.2], text=[f'{self.breathrate_str}'])
+        # )).mark_text(size=20, color='#084B8A').encode(x='x', y='y', text='text')
+        # for case in ['heart', 'breath']:
+        #     lh = pd.DataFrame(
+        #         {'start': [0],
+        #          'end': [WIN_LEN],
+        #          'lower': [self.measure_model.lower_ind[case]],
+        #          'higher': [self.measure_model.higher_ind[case]]})
+        #     rule_l = alt.Chart(lh).mark_rect(color='gray', opacity=0.2).encode(
+        #         x='start:Q',
+        #         x2='lower:Q'
+        #     )
+        #     rule_h = alt.Chart(lh).mark_rect(color='gray', opacity=0.2).encode(
+        #         x='higher:Q',
+        #         x2='end:Q'
+        #     )
+        #     chart[case] += rule_l + rule_h
+        chart_combo = (chart['heart'] | chart['breath']).configure_axis(
+                           labelFontSize=14,
+                           titleFontSize=14
+                       ).configure_header(
+                           labelFontSize=20, title=None)
+
+        placeholder_chart.altair_chart(chart_combo)
+endsnippet
+
+snippet altair_heatmap
+import altair as alt
+import pandas as pd
+import streamlit as st
+
+def render_heatmap(img):
+	size = int(img.shape[0] / 2)
+	x, y = np.meshgrid(range(-size, size), range(-size, size))
+
+	source = pd.DataFrame({'x': x.ravel(),
+						   'y': y.ravel(),
+						   'mag': img.ravel()
+						})
+	chart = alt.Chart(source).mark_rect().encode(
+		x='x:O',
+		y='y:O',
+		color=alt.Color('mag:Q',
+						sort='descending',
+						scale=alt.Scale(scheme='redblue')),
+		tooltip=['degC:Q']
+	).properties(width=350, height=300)
+	st.altair_chart(chart)
+
+endsnippet
+
+snippet pltimshow
+norm = plt.Normalize(15, 44)
+img = plt.imshow(img, cmap='magma', norm=norm)
+sm = matplotlib.cm.ScalarMappable(
+cmap='magma',
+norm=norm)
+sm.set_array(img)
+plt.xticks([], [])
+plt.yticks([], [])
+plt.colorbar(sm)
+endsnippet
+
+snippet st_md_br
+        placeholder_text2.markdown('<br><br><br><br>', unsafe_allow_html=True)
+endsnippet
+
+snippet noq "add noqa pyflakes" i
+  #noqa
+endsnippet
+
+snippet img_convert
+img =  (img - img.min()) / (img.max() - img.min())
+
+array = np.uint8(cm.seismic(img)*255)
+st.image(array)
+
+# color  = matplotlib.cm.seismic(img)
+im = Image.fromarray(array)
+st.image(im)
+# img = img * 0.001 - 273.15
+
+
+converted = cv2.cvtColor(np.uint8((1. - img) * 255), cv2.COLOR_GRAY2BGR)
+heatmap = cv2.applyColorMap(converted, cv2.COLORMAP_JET)
+
+st.image(heatmap)
+
+fig = nparray_to_b64(heatmap)[0]
+f = io.BytesIO(base64.b64decode(fig.encode()))
+
+st.image(f)
+endsnippet
+
+snippet watchdog
+import sdnotify
+notify = sdnotify.SystemdNotifier()
+logger.critical("notify ready")
+notify.notify("READY=1")
+notify.notify("WATCHDOG=1")
+endsnippet
+
+snippet px_line
+
+# px.colors.sequential.Blue to see rgb
+ncolors = px.colors.n_colors((247, 252, 253), (0, 68, 27), df.exp.nunique())
+ncolors = [f"rgb{c}" for c in ncolors][::-1]
+
+chart = px.line(df, x='quote_date', y='iv_calc', facet_row='underlying_symbol',
+                color='exp', color_discrete_sequence=ncolors)
+chart.update_traces(line=dict(width=0.5))
+endsnippet
+
+snippet px_subfig
+chart = px.line(melted, x='quote_date', y='value', color='variable',
+                facet_row='underlying_symbol')
+chart_2 = px.line(df, x='quote_date', y='iv_calc',
+                  facet_row='underlying_symbol')
+chart_2.update_traces(yaxis='y2')
+subfig = make_subplots(specs=[[{"secondary_y": True}]])
+subfig.add_traces(chart.data + chart_2.data)
+endsnippet
+
+snippet base_module
+from .base_module_object import create_model_module_object
+
+model_module_obj = create_model_module_object(
+	load_model=load_model,
+	preproc=preproc,
+	preproc_one_frame=preproc_one_frame,
+	prepare_model=prepare_model,
+	name=__name__
+)
+endsnippet
+
+snippet cuda
+os.environ['CUDA_VISIBLE_DEVICES'] = ''
+endsnippet
+
+
+snippet dfstyle
+
+dfs = dfm.style.apply(lambda c: ['background-color: #FF7F50' if i != c['00-WD-read'] and c['00-WD-read'] != 'calibrating' and not pd.isnull(i) else '' for i in c.values], axis=1)
+dfs = dfs.apply(lambda c: ['background-color: cornsilk' if i == '00-WD-read' else '' for i in c.index], axis=1)
+dfs = dfs.apply(lambda c: ['background-color: grey' if i == 'status_id' else '' for i in c.index], axis=1).hide_index()
+endsnippet
+
+
+snippet img_str
+img_str = 'data:image/jpg;base64,' + img_str
+endsnippet
+
+snippet git
+try:
+    import git
+
+
+    repo = git.Repo(__file__, search_parent_directories=True)
+
+    __commit__ = repo.head.commit.hexsha[:8]
+except ModuleNotFoundError:
+    __commit__ = ''
+endsnippet
+
+snippet crappyhist
+def crappyhist(a, bins=50, width=140):
+    '''Simple text-based histogram (from stack overflow)'''
+    h, b = np.histogram(a, bins)
+
+    for i in range (0, bins):
+        print('{:12.5f}  | {:{width}s} {}'.format(
+            b[i], 
+            '#'*int(width*h[i]/np.amax(h)), 
+            h[i], 
+            width=width))
+    print('{:12.5f}  |'.format(b[bins]))
+endsnippet
+
+snippet entropy
+def entropy(p:list):
+	e = 0
+	for p_ in p:
+		e -= p_ * np.log2(p_)
+	return e
+endsnippet
+
+snippet dataprep
+from dataprep.datasets import load_dataset
+from dataprep.eda import create_report, plot
+
+df = load_dataset("titanic")
+# create_report(df).show_browser()
+plot(df).show_browser()
 endsnippet

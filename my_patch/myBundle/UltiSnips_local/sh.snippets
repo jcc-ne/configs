@@ -67,3 +67,23 @@ shift $((OPTIND-1))
 
 echo "verbose=$verbose, output_file='$output_file', Leftovers: $@"
 endsnippet
+
+snippet confirm
+
+if [ $PROD ];then
+    POSTGRES_HOST="<...:postgres-main>"
+else
+    POSTGRES_HOST="<...:postgres-main-development>"
+fi
+
+if [ $POSTGRES_HOST == "<...:postgres-main>" ]; then 
+    confirm_migration_in_prod() {
+        read -p "we are running migration scrips in prod $POSTGRES_HOST.  To confirm: type 'production': " input
+        if [ $input != 'production' ];then
+            confirm_migration_in_prod
+        fi
+    }
+    confirm_migration_in_prod
+fi
+
+endsnippet

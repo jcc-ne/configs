@@ -5,7 +5,7 @@ augroup my_vimwiki
     autocmd FileType wiki,vimwiki vmap x <esc><C-space>
     autocmd FileType wiki,vimwiki vnoremap D <esc>0wdf]
 
-    au BufRead,BufNewFile *.wiki,*.md set filetype=vimwiki
+    "au BufRead,BufNewFile *.wiki,*.md set filetype=vimwiki
     :autocmd FileType vimwiki map <leader>dl :VimwikiDiaryGenerateLinks
 
    function! ToggleCalendar()
@@ -48,15 +48,22 @@ augroup my_vimwiki
       return 1
     endif
   endfunction
-   :autocmd FileType vimwiki exec "inoremap <silent> <leader><tab> <C-R>=UltiSnips#ExpandSnippet()<cr>"
-   :autocmd FileType vimwiki exec "nnoremap <silent> <c-,> :call UltiSnips#ExpandSnippet()<cr>"
-   :autocmd FileType vimwiki  set backspace=indent,start
+  autocmd FileType vimwiki exec "inoremap <silent> <leader><tab> <C-R>=UltiSnips#ExpandSnippet()<cr>"
+  autocmd FileType vimwiki exec "nnoremap <silent> <c-,> :call UltiSnips#ExpandSnippet()<cr>"
+  autocmd FileType vimwiki  set backspace=indent,start
 
-   :autocmd FileType vimwiki,totl exec "nnoremap <silent> <leader>tn :TaskWikiMod<cr>+next<cr>"
-   :autocmd FileType vimwiki,totl exec "nnoremap <silent> <leader>tj :TaskWikiMod<cr>-next<cr>"
+  autocmd FileType vimwiki,totl exec "nnoremap <leader>tn :TaskWikiMod<cr>+next<cr>"
+  autocmd FileType vimwiki,totl exec "nnoremap <leader>tj :TaskWikiMod<cr>-next<cr>"
+  "--vvv roadmap will show up after completion in filtered history
+  autocmd FileType vimwiki,totl exec "nnoremap <leader>tr :TaskWikiMod<cr>+roadmap<cr>"
 
-    au BufEnter *.md setlocal foldmethod=indent
-    au BufEnter *.md setlocal foldlevel=20
-    au BufEnter *.md set shiftwidth=4
+  " -- don't show tasks until oneday before due (followup concept)
+  autocmd FileType vimwiki nnoremap ,tw :TaskWikiMod<CR>due:7d<CR>:TaskWikiMod<CR>wait:due-1d<CR>:TaskWikiMod<CR>tag:followup<CR>
+  autocmd FileType vimwiki nnoremap ,ty :TaskWikiMod<CR>tag:today<CR>
+  autocmd FileType vimwiki nnoremap ,to :TaskWikiMod<CR>wait:14d<CR>:TaskWikiMod<CR>tag:followup<CR>
+
+  au BufEnter *.md setlocal foldmethod=indent
+  au BufEnter *.md setlocal foldlevel=20
+  au BufEnter *.md set shiftwidth=4
 
 augroup End
