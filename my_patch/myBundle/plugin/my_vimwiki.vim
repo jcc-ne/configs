@@ -54,6 +54,7 @@ augroup my_vimwiki
 
   autocmd FileType vimwiki,totl exec "nnoremap <leader>tn :TaskWikiMod<cr>+next<cr>"
   autocmd FileType vimwiki,totl exec "nnoremap <leader>tj :TaskWikiMod<cr>-next<cr>"
+  "--vvv roadmap will show up after completion in filtered history
   autocmd FileType vimwiki,totl exec "nnoremap <leader>tr :TaskWikiMod<cr>+roadmap<cr>"
 
   " -- don't show tasks until oneday before due (followup concept)

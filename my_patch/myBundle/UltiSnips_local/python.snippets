@@ -1360,3 +1360,20 @@ def crappyhist(a, bins=50, width=140):
             width=width))
     print('{:12.5f}  |'.format(b[bins]))
 endsnippet
+
+snippet entropy
+def entropy(p:list):
+	e = 0
+	for p_ in p:
+		e -= p_ * np.log2(p_)
+	return e
+endsnippet
+
+snippet dataprep
+from dataprep.datasets import load_dataset
+from dataprep.eda import create_report, plot
+
+df = load_dataset("titanic")
+# create_report(df).show_browser()
+plot(df).show_browser()
+endsnippet
