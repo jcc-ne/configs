@@ -85,6 +85,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('vim-airline/vim-airline')
   call dein#add('vim-airline/vim-airline-themes')
   call dein#add('altercation/vim-colors-solarized')
+  call dein#add('arcticicestudio/nord-vim')
   call dein#add('hzchirs/vim-material')
   
   " -- python dev
@@ -111,7 +112,7 @@ if dein#load_state('~/.cache/dein')
   " -- general tasks
   call dein#add('vimoutliner/vimoutliner')
   call dein#add('vimwiki/vimwiki', {'rev': 'fb5d2'})
-  " call dein#add('vimwiki/vimwiki', {'rev': 'dev'})
+  " call dein#add('vimwiki/vimwiki', {'rev': 'master'})
   call dein#add('kalafut/vim-taskjuggler')
   " call dein#add('vimwiki/vimwiki', {'rev': 'dev'})
   " call dein#add('lvht/tagbar-markdown', {'on_cmd' : ['Tagbar', 'TagbarToggle']})
@@ -138,9 +139,13 @@ if dein#load_state('~/.cache/dein')
   call dein#add('liuchengxu/graphviz.vim')
   call dein#add('chrisbra/csv.vim')
 
+  " -- LSP
+  " call dein#add('neovim/nvim-lspconfig')
+
   " -- Required:
   call dein#end()
   call dein#save_state()
+
 endif
 
 " ---- adjust background
@@ -165,7 +170,7 @@ if strftime("%H") < 17 && strftime("%H") > 6
 else
    set background=dark
 endif
-set background=dark
+" set background=dark
 if $VIMBG != ""
     exe 'set background='.expand($VIMBG)
 endif
@@ -319,6 +324,7 @@ au BufEnter *.md set shiftwidth=4
 
 " - vimwiki
 nnoremap <leader>wg :VimwikiGenerateTags<CR>
+nnoremap <leader>wt :VimwikiRebuildTags<CR>
 
 let g:vimwiki_list = [
             \{'path': '~/vimwiki/text/work',
@@ -430,3 +436,23 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 " -- How to resize splits
 " -- For a split window: You can use Ctrl-w + and Ctrl-w - to resize the height of the current window by a single row. For a vsplit window: You can use Ctrl-w > and Ctrl-w <
 nnoremap <leader>m :setf markdown<cr>
+
+" --- LSP
+" lua << EOF
+" require("lspconfig").pylsp.setup{}
+" EOF
+
+" set completeopt-=preview
+
+" " use omni completion provided by lsp
+" autocmd Filetype python setlocal omnifunc=v:lua.vim.lsp.omnifunc
+
+" nnoremap <silent> ,g <cmd>lua vim.lsp.buf.definition()<CR>
+" nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
+" nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
+" nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+" nnoremap <silent> ,d <cmd>lua vim.lsp.buf.type_definition()<CR>
+" nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
+" nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
+" nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+" endfunction

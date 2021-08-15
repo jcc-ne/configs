@@ -113,7 +113,7 @@ alias k="kubectl"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(z git git-extras tmux osx emotty docker docker-compose docker-machine taskwarrior history macports web-search themes kubectl helm)
+plugins=(z git git-extras osx emotty docker docker-compose docker-machine taskwarrior history macports web-search themes kubectl helm)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -191,22 +191,20 @@ unset ZLE_RPROMPT_INDENT
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-# __conda_setup="$('$HOME/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+# __conda_setup="$('/Users/janine/miniforge3/etc/profile.d/conda.sh' 'shell.zsh' 'hook' 2> /dev/null)"
 # if [ $? -eq 0 ]; then
-    # eval "$__conda_setup"
+#     eval "$__conda_setup"
 # else
-    # if [ -f "$HOME/anaconda3/etc/profile.d/conda.sh" ]; then
-        # . "$HOME/anaconda3/etc/profile.d/conda.sh"
-    # else
-        # export PATH="$HOME/anaconda3/bin:$PATH"
-    # fi
-# fi
-# if [[ $HOST == 'blackbox' ]]; then
-    # source activate tf
+#     if [ -f "/Users/janine/miniforge3/etc/profile.d/conda.sh" ]; then
+#         . "/Users/janine/miniforge3/etc/profile.d/conda.sh"
+#     else
+#         export PATH="/Users/janine/miniforge3/bin:$PATH"
+#     fi
 # fi
 # unset __conda_setup
 # <<< conda initialize <<<
 #
+alias source_conda="source $HOME/miniforge3/etc/profile.d/conda.sh"
 . ~/.zsh_hashd
 
 alias taskh="export TASKRC=$HOME/.taskrc_home && export TASKWIKI_ROOT=$HOME/.task_home/wiki"
@@ -242,7 +240,13 @@ alias gittree="git log --all --graph --decorate --pretty=format:'%Cgreen%h %Cblu
 alias gittree2="git log --first-parent --graph --decorate --pretty=format:'%Cgreen%h %Cblue %<(12) %an %Cred %d %Creset %gs %<(80,trunc) %s'"
 alias gittree3="git log --graph --decorate --pretty=format:'%Cgreen%h %Cblue %<(12) %an %Cred %d %Creset %gs %<(80,trunc) %s'"
 
-export PATH=$PATH:$HOME/.gem/ruby/2.7.0/bin/
+# export PATH=$PATH:$HOME/.gem/ruby/2.7.0/bin/
+
 alias restart_cam="sudo killall VDCAssistant"
 
 export GIT_INTERNAL_GETTEXT_TEST_FALLBACKS=1
+
+# -- more paths
+export PATH=$PATH:$HOME/google-cloud-sdk/bin
+export GEM_HOME=$HOME/.gem
+export PATH=$GEM_HOME/bin:$PATH
