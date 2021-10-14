@@ -113,7 +113,7 @@ alias k="kubectl"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(z git git-extras osx emotty docker docker-compose docker-machine taskwarrior history macports web-search themes kubectl helm)
+plugins=(z git git-extras osx emotty docker docker-compose docker-machine taskwarrior history macports web-search themes kubectl helm gcloud)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -239,6 +239,8 @@ export PATH="/usr/local/opt/ruby/bin:$PATH"
 alias gittree="git log --all --graph --decorate --pretty=format:'%Cgreen%h %Cblue %<(12) %an %Cred %d %Creset %gs %<(80,trunc) %s'"
 alias gittree2="git log --first-parent --graph --decorate --pretty=format:'%Cgreen%h %Cblue %<(12) %an %Cred %d %Creset %gs %<(80,trunc) %s'"
 alias gittree3="git log --graph --decorate --pretty=format:'%Cgreen%h %Cblue %<(12) %an %Cred %d %Creset %gs %<(80,trunc) %s'"
+alias gittree3="git log --graph --decorate --pretty=format:'%Cgreen%h %Cblue %<(12) %an %Cred %d %Creset %gs %<(80,trunc) %s'"
+alias gittree4="git log --graph --decorate --pretty=format:'%ad %Cgreen%h %Cblue %<(12) %an %Cred %d %Creset %gs %<(80,trunc) %s'"
 
 # export PATH=$PATH:$HOME/.gem/ruby/2.7.0/bin/
 
