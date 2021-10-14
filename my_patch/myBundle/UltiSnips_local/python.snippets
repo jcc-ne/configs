@@ -1360,3 +1360,60 @@ def crappyhist(a, bins=50, width=140):
             width=width))
     print('{:12.5f}  |'.format(b[bins]))
 endsnippet
+
+snippet confusion_matrix
+
+import plotly.express as px
+import plotly.figure_factory as ff
+import plotly.graph_objects as go
+
+def plot_confusion_matrix(confusion_matrix_all, returns_conf_only=False, annotated=True):
+    conf_ = confusion_matrix_all
+    scores = np.zeros(conf_.shape)
+    for c in range(scores.shape[1]):
+        scores[c][c] = conf_[c, c] / np.sum(conf_[:, c]) * 100
+    print(scores)
+    confusion_matrix_all = (np.round(confusion_matrix_all / confusion_matrix_all.sum(), 2) * 100)
+    remap = [[i for i, j in enumerate(labels_enumordered) if j == e][0]
+             for e in (labels_seq)]
+    if returns_conf_only:
+        return confusion_matrix_all[remap][:, remap],
+    confusion_matrix_all = confusion_matrix_all[remap][:, remap]
+    scores = scores[remap][:, remap]
+
+    chart = px.imshow(confusion_matrix_all,
+                      labels=dict(x="Actual", y="Predicted",
+                                  color="Perc %"),
+                      x=labels_name_seq,
+                      y=labels_name_seq,
+                      color_continuous_scale='GnBu'
+                      )
+
+    if annotated:
+        # text = pd.DataFrame(confusion_matrix_all).stack().apply(lambda x: f'{x:.0f}%').unstack().transpose()
+        text = pd.DataFrame(scores).stack().apply(lambda x: f'{x:.0f}%' if x else '').unstack().transpose()
+        chart = ff.create_annotated_heatmap(confusion_matrix_all,
+                                            annotation_text=text,
+                                            colorscale='GnBu')
+        chart.layout.update({
+            'xaxis': {'constrain': 'domain', 'scaleanchor': 'y',
+                    'showticklabels': True,
+                    'title': {'text': 'Actual'}},
+            'yaxis': {'autorange': 'reversed', 'constrain': 'domain',
+                    'showticklabels': True,
+                    'title': {'text': 'Predicted'}},
+            'coloraxis': {'colorbar': {'title': {'text': 'Perc %'}}}
+        })
+        heatmap_data = chart.data[0]
+        heatmap_data.update({'x': labels_name_seq,
+                             'y': labels_name_seq,
+            'colorbar': {'title': {'text': 'Perc %'}},
+                             'showscale': True})
+    chart.update_xaxes(side="top")
+
+    st.write(chart)
+    return chart
+
+
+
+endsnippet
