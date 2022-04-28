@@ -75,6 +75,7 @@ alias zshconfig="vim ~/.zshrc"
 alias ohmyzsh="vim ~/.oh-my-zsh"
 alias dm="docker-machine"
 alias k="kubectl"
+alias date=gdate
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -144,6 +145,7 @@ fi
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
 export TERM="xterm-256color"
+# export TERM="xterm"
 
 # bindkeys to vi
 bindkey -v
@@ -218,6 +220,26 @@ alias vimgruvboxdark="tmux setenv VIMCOLORSCHEME gruvbox && tmux setenv VIMBG da
 alias vimcoloschemeunset='tmux setenv VIMCOLORSCHEME "" && tmux setenv VIMBG "" && unset VIMCOLORSCHEME && unset VIMBG'
 alias vimbglight="tmux setenv VIMBG light && export VIMBG=light"
 alias vimbgdark="tmux setenv VIMBG dark && export VIMBG=dark"
+
+
+# git_pager="delta --syntax-theme GitHub"
+# alias setlight="tmux setenv GIT_PAGER \"$git_pager\" && export GIT_PAGER=\"$git_pager\""
+# # git_pager="delta --syntax-theme 'Solarized (dark)'"
+# git_pager="delta --syntax-theme gruvbox-dark"
+# alias setdark="tmux setenv GIT_PAGER \"$git_pager\" && export GIT_PAGER=\"$git_pager\""
+
+alias setlight="git config --global delta.syntax-theme GitHub"
+alias setdark="git config --global delta.syntax-theme 'Solarized (dark)'"
+# alias setdark="git config --global delta.syntax-theme gruvbox-dark"
+
+
+if [[  $(date +%H) -gt 17  ]] ||  [[ $(date +%H) -lt 8  ]]; then
+    echo "setting dark"
+    setdark
+else
+    echo "setting light"
+    setlight
+fi
 
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"

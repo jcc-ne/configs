@@ -1383,3 +1383,163 @@ import os
 
 this_dir = os.path.dirname(os.path.realpath(__file__))
 endsnippet
+
+snippet confusion_matrix_s
+
+import plotly.express as px
+import plotly.figure_factory as ff
+import plotly.graph_objects as go
+
+
+def plot_confusion_matrix(confusion_matrix_all, returns_conf_only=False, annotated=True):
+    conf_ = confusion_matrix_all
+    scores = np.zeros(conf_.shape)
+    labels_enumordered = [False, True]
+    labels_name_seq = [False, True]
+    labels_seq = [False, True]
+    for c in range(scores.shape[1]):
+        for i in range(scores.shape[0]):
+            scores[i][c] = conf_[i, c] / np.sum(conf_[:, c]) * 100
+    print(scores)
+    confusion_matrix_all = (np.round(confusion_matrix_all / confusion_matrix_all.sum(), 2) * 100)
+    remap = [[i for i, j in enumerate(labels_enumordered) if j == e][0]
+             for e in (labels_seq)]
+    if returns_conf_only:
+        return confusion_matrix_all[remap][:, remap],
+    confusion_matrix_all = confusion_matrix_all[remap][:, remap]
+    scores = scores[remap][:, remap]
+
+    chart = px.imshow(confusion_matrix_all,
+                      labels=dict(x="Actual", y="Predicted",
+                                  color="Perc %"),
+                      x=labels_name_seq,
+                      y=labels_name_seq,
+                      color_continuous_scale='GnBu'
+                      )
+
+    if annotated:
+        # text = pd.DataFrame(confusion_matrix_all).stack().apply(lambda x: f'{x:.0f}%').unstack().transpose()
+        text = pd.DataFrame(scores).stack().apply(lambda x: f'{x:.0f}%' if x else '').unstack().transpose()
+        chart = ff.create_annotated_heatmap(confusion_matrix_all,
+                                            annotation_text=text,
+                                            colorscale='GnBu')
+        chart.layout.update({
+            'xaxis': {'constrain': 'domain', 'scaleanchor': 'y',
+                      'showticklabels': True,
+                      'title': {'text': 'Actual'}},
+            'yaxis': {'autorange': 'reversed', 'constrain': 'domain',
+                      'showticklabels': True,
+                      'title': {'text': 'Predicted'}},
+            'coloraxis': {'colorbar': {'title': {'text': 'Perc %'}}}
+        })
+        heatmap_data = chart.data[0]
+        heatmap_data.update({'x': labels_name_seq,
+                             'y': labels_name_seq,
+            'colorbar': {'title': {'text': 'Perc %'}},
+                             'showscale': True})
+    chart.update_xaxes(side="top")
+
+    st.write(chart)
+    return chart
+
+endsnippet
+
+snippet this_dir
+import os
+import sys
+
+this_dir = os.path.dirname(os.path.realpath(__file__))
+
+parent_dir = os.path.join(this_dir, '..')
+
+sys.path.append(parent_dir)
+sys.path.append(os.path.join(parent_dir, 'app_pkg'))
+endsnippet
+
+snippet upsert
+
+def postgres_upsert(table, conn, keys, data_iter):
+    from sqlalchemy.dialects.postgresql import insert
+
+    data = [dict(zip(keys, row)) for row in data_iter]
+
+    insert_statement = insert(table.table).values(data)
+    upsert_statement = insert_statement.on_conflict_do_update(
+        constraint="pk_post_uuid_score_type",
+        set_={c.key: c for c in insert_statement.excluded},
+    )
+    conn.execute(upsert_statement)
+endsnippet
+
+snippet to_sql
+    df_aer.to_sql(
+        "post_scores",
+        con=conn,
+        schema="ds",
+        if_exists="append",
+        index=False,
+        method=postgres_upsert_post_score,
+    )
+endsnippet
+
+snippet gbq
+## this script is used to look at the posts we are returning from trending-page-prod to the client
+## currently its configured to read only college of charleston trending
+
+
+from google.oauth2 import service_account
+from os import path
+import datetime as dt
+import pandas as pd
+
+import os
+import sys
+
+this_dir = os.path.dirname(os.path.realpath(__file__))
+parent_dir = os.path.join(this_dir, "..")
+
+sys.path.append(parent_dir)
+sys.path.append(os.path.join(parent_dir, "app_pkg"))
+
+from app_pkg.app_utils.connection import get_engine
+
+
+PROJECT_ID = "annular-garage-257504"
+env = "dev"
+
+# -- set CREDENTIALS var this way or set in envvar
+# export GOOGLE_APPLICATION_CREDENTIALS=~/hive/annular-garage-257504-f6b3f3884461.json
+
+today = dt.datetime.utcnow().strftime("%Y-%m-%d")
+# today_time = dt.datetime(2022, 4, 12, 16, 0, 0).strftime("%Y-%m-%d %H:%M:%S")
+today_time = (dt.datetime.utcnow() - dt.timedelta(0, 2 * 3600)).isoformat()
+
+
+def q_in_bq():
+    query_2 = f"""
+    SELECT
+        r.timestamp,
+        r.resource.labels.service_name,
+        r.jsonPayload.message.args.ds_trending_page.get_trending_page.ret.user_id as my_user_id,
+        -- r.jsonPayload.message.args.ds_trending_page.get_trending_page.ret.meta_info,
+        s.type,
+        d
+    FROM `annular-garage-257504.ds_api_capture_v5.run_googleapis_com_stderr` as r
+    , unnest(jsonPayload.message.args.ds_trending_page.get_trending_page.ret.sections) as s
+    , unnest(s.data) as d
+    -- WHERE DATE(timestamp) >= "{today}"
+    WHERE timestamp >= "{today_time}"
+    and s.type = "people"
+    and r.resource.labels.service_name = "ds-trending-page-{env}"
+    order by 1 asc
+    LIMIT 1500
+    """
+
+    df_2 = pd.read_gbq(
+        query_2,
+        project_id=PROJECT_ID,
+        # credentials=CREDENTIALS
+    )
+    return df_2
+
+endsnippet

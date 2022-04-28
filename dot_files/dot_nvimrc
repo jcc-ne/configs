@@ -130,15 +130,20 @@ if dein#load_state('~/.cache/dein')
   call dein#add('liuchengxu/graphviz.vim')
   call dein#add('chrisbra/csv.vim')
 
+  call dein#add('pwntester/octo.nvim')
+  call dein#add('nvim-lua/plenary.nvim')
+  call dein#add('nvim-telescope/telescope.nvim', {'rev': 'nvim-0.6'})
+  call dein#add('kyazdani42/nvim-web-devicons')
+
   " -- LSP
   " call dein#add('neovim/nvim-lspconfig')
 
   " -- only vimwiki and taskwiki related plugins locally
   if hostname == "Janine-MBP"
       call dein#add('scrooloose/nerdtree')
-      call dein#add('kalafut/vim-taskjuggler')
-      call dein#add('jcc-ne/taskwiki')
-      call dein#add('farseer90718/vim-taskwarrior')
+      " call dein#add('kalafut/vim-taskjuggler')
+      " call dein#add('jcc-ne/taskwiki')
+      " call dein#add('farseer90718/vim-taskwarrior')
       call dein#add('vimoutliner/vimoutliner')
       call dein#add('vimwiki/vimwiki', {'rev': 'fb5d2'})
       " call dein#add('vimwiki/vimwiki', {'rev': 'master'})
@@ -173,7 +178,7 @@ else
    set background=dark
 endif
 
-set background=dark
+" set background=dark
 if $VIMBG != ""
     exe 'set background='.expand($VIMBG)
 endif
