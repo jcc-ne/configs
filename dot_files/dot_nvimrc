@@ -467,4 +467,6 @@ nnoremap <leader>e :!black %<cr>
 " nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
 " nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 " endfunction
+
+" --- lua plugins in ~/.config/nvim/lua/plugins.lua
 lua require('plugins')
