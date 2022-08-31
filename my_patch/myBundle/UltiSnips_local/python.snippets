@@ -1524,7 +1524,7 @@ def q_in_bq():
         -- r.jsonPayload.message.args.ds_trending_page.get_trending_page.ret.meta_info,
         s.type,
         d
-    FROM `annular-garage-257504.ds_api_capture_v5.run_googleapis_com_stderr` as r
+    FROM \`annular-garage-257504.ds_api_capture_v5.run_googleapis_com_stderr\` as r
     , unnest(jsonPayload.message.args.ds_trending_page.get_trending_page.ret.sections) as s
     , unnest(s.data) as d
     -- WHERE DATE(timestamp) >= "{today}"

@@ -5,10 +5,13 @@
 	tool = nvimdiff
 [merge]
     tool = diffconflicts
+    ff = no
+    commit = no
     ;tool = nvimdiff
 
 [difftool "nvimdiff"]
     cmd = nvim -d -u ~/.nvimrc \"$LOCAL\" \"$REMOTE\"
+    ; cmd = nvim -d
 
 [mergetool "nvimdiff"]
     ;cmd = nvim -d -u ~/.nvimrc \"$LOCAL\" \"$MERGED\" \"$REMOTE\"
@@ -22,5 +25,35 @@
 	keepBackup = false
 [credential]
 	helper = store
+[pull]
+	ff = only
 [core]
-	whitespace = cr-at-eol
+	eol = lf
+	autocrlf = input
+    ; pager = diff-so-fancy | less --tabs=4 -RFX
+    pager = delta
+
+[alias]
+    logx = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset)+%C(dim black)(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %C(bold black)%an%C(reset)%C(black): %s%C(reset)'
+    tree = log --all --graph --decorate=short --color --format=format:'%C(bold green)%h%C(reset) %C(auto)%d%C(reset)\n         %C(blue)[%cr]%C(reset)  %x09%C(auto)%an: %s %C(reset)'
+	purge-branches = "branch --merged | egrep -v \"(^\\*|master|main)\" | xargs git branch -d "
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[init]
+    defaultBranch = main
+[init]
+	templatedir = ~/.git-templates
+[interactive]
+    ; diffFilter = diff-so-fancy --patch
+    diffFilter = delta --color-only
+
+[delta]
+    ; syntax-theme= Solarized (Light)
+    ; syntax-theme= Solarized (Dark)
+    ; syntax-theme= GitHub
+    side-by-side=true
+    navigate=true
+	syntax-theme = Solarized (dark)
