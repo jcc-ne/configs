@@ -19,4 +19,8 @@ mkdir -v -p ~/.config/nvim/lua
 cd ~/.config/nvim/lua
 ln -s $DIR/../dot_files/plugins.lua .
 
+# - https://github.com/wbthomason/packer.nvim for package management
+git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+# :PackerCompile and :PackerInstall
+
 cd $my_cwd

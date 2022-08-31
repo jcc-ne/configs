@@ -57,4 +57,4 @@
     ; syntax-theme= GitHub
     side-by-side=true
     navigate=true
-	syntax-theme = Solarized (dark)
+	syntax-theme = GitHub

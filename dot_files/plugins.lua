@@ -28,6 +28,7 @@
 --
 -- - https://github.com/wbthomason/packer.nvim for package management
 -- git clone --depth 1 https://github.com/wbthomason/packer.nvim\\n ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+-- :PackerCompile and :PackerInstall
 -- - https://github.com/mfussenegger/nvim-dap (for debugging)
 -------------------------------------------------------------------------------
 local api = vim.api
@@ -66,13 +67,6 @@ require("packer").startup(function(use)
 
   use({
     "jose-elias-alvarez/null-ls.nvim",
-    config = function()
-        require("null-ls").setup({
-        sources = {
-            require("null-ls").builtins.diagnostics.vale,
-        },
-        })
-    end,
     requires = { "nvim-lua/plenary.nvim" },
   })
 end)
@@ -213,13 +207,6 @@ api.nvim_create_autocmd("FileType", {
     require("metals").initialize_or_attach(metals_config)
   end,
   group = nvim_metals_group,
-})
-
-require("null-ls").setup({
-    sources = {
-        require("null-ls").builtins.diagnostics.vale,
-    },
-    debug = true,
 })
 
 api.nvim_create_user_command("NullLsToggle", function()
