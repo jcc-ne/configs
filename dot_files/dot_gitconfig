@@ -32,6 +32,7 @@
 	autocrlf = input
     ; pager = diff-so-fancy | less --tabs=4 -RFX
     pager = delta
+	whitespace = cr-at-eol
 
 [alias]
     logx = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset)+%C(dim black)(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %C(bold black)%an%C(reset)%C(black): %s%C(reset)'
