@@ -142,8 +142,8 @@ if dein#load_state('~/.cache/dein')
   " -- only vimwiki and taskwiki related plugins locally
   if hostname == "Janine-MBP" || hostname == "GDL-813"
       call dein#add('scrooloose/nerdtree')
-      " call dein#add('kalafut/vim-taskjuggler')
       " call dein#add('jcc-ne/taskwiki')
+      call dein#add('tools-life/taskwiki')
       " call dein#add('farseer90718/vim-taskwarrior')
       call dein#add('vimoutliner/vimoutliner')
       " call dein#add('vimwiki/vimwiki', {'rev': 'fb5d2'})
