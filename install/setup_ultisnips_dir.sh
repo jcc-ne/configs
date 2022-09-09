@@ -18,6 +18,7 @@ if [ ! $DIR = $PWD ]; then
 fi
 
 mkdir -p ~/.config/nvim/
-ln -v -s $DIR/../my_patch/myBundle/UltiSnips ~/.config/nvim/
+ln -v -s $DIR/../my_patch/myBundle/UltiSnips_local ~/.config/nvim/
+mv ~/.config/nvim/UltiSnips_local ~/.config/nvim/UltiSnips
 
 cd $my_cwd

@@ -35,8 +35,9 @@
 	whitespace = cr-at-eol
 
 [alias]
-    logx = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset)+%C(dim black)(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %C(bold black)%an%C(reset)%C(black): %s%C(reset)'
-    tree = log --all --graph --decorate=short --color --format=format:'%C(bold green)%h%C(reset) %C(auto)%d%C(reset)\n         %C(blue)[%cr]%C(reset)  %x09%C(auto)%an: %s %C(reset)'
+    logx = log --author='^(?!devops).*$' --perl-regexp --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset)+%C(dim black)(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %C(bold black)%an%C(reset)%C(black): %s%C(reset)'
+    tree = log --author='^(?!devops).*$' --perl-regexp --all --graph --decorate=short --color --format=format:'%C(bold green)%h%C(reset) %C(auto)%d%C(reset)\n         %C(blue)[%ch]%C(reset)  %x09%C(auto)%an: %s %C(reset)'
+    tree2 = log --author='^(?!devops).*$' --date=iso --perl-regexp --all --graph --decorate=short --color --format=format:'%C(bold green)%h%C(reset) %C(auto)%d%C(reset)\n         %C(blue)[%cd]%C(reset)  %x09%C(auto)%an: %s %C(reset)'
 	purge-branches = "branch --merged | egrep -v \"(^\\*|master|main)\" | xargs git branch -d "
 [filter "lfs"]
 	process = git-lfs filter-process

@@ -112,7 +112,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('lvht/tagbar-markdown')
   call dein#add('mattn/calendar-vim')
   call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
-              \ 'build': 'cd app & yarn install' })
+              \ 'build': 'sh -c "cd app & yarn install"' })
 
   " -- local plugins
   call dein#add('~/.vim/bundle/myBundle')
@@ -140,7 +140,7 @@ if dein#load_state('~/.cache/dein')
   " call dein#add('scalameta/nvim-metals')
 
   " -- only vimwiki and taskwiki related plugins locally
-  if hostname == "Janine-MBP"
+  if hostname == "Janine-MBP" || hostname == "GDL-813"
       call dein#add('scrooloose/nerdtree')
       " call dein#add('kalafut/vim-taskjuggler')
       " call dein#add('jcc-ne/taskwiki')
@@ -179,7 +179,7 @@ else
    set background=dark
 endif
 
-set background=dark
+" set background=dark
 if $VIMBG != ""
     exe 'set background='.expand($VIMBG)
 endif
@@ -299,6 +299,7 @@ let g:jedi#goto_stubs_command = "<leader><leader>s"
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
 let g:UltiSnipsExpandTrigger="<tab>"
 " let g:UltiSnipsSnippetsDir="~/.vim/bundle/myBundle/UltiSnips"
+" let g:UltiSnipsSnippetDirectories="~/.config/nvim/UltiSnips"  " configs/install/setup_ultisnips_dir.sh to config the dir
 " let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"  " configs/install/setup_ultisnips_dir.sh to config the dir
 let g:UltiSnipsListSnippets="<c-tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
