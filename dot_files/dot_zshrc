@@ -115,7 +115,7 @@ alias k="kubectl"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(z git git-extras osx emotty docker docker-compose docker-machine taskwarrior history macports web-search themes kubectl helm gcloud)
+plugins=(z git git-extras macos emotty docker docker-compose docker-machine taskwarrior history macports web-search themes kubectl helm gcloud)
 
 source $ZSH/oh-my-zsh.sh
 
