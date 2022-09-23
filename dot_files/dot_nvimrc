@@ -184,7 +184,7 @@ if $VIMBG != ""
     exe 'set background='.expand($VIMBG)
 endif
 
-nmap <leader>c :colorscheme gruvbox<CR>
+" nmap <leader>c :colorscheme gruvbox<CR>
 
 " Required:
 filetype plugin indent on
@@ -394,8 +394,8 @@ nnoremap <F1> :call  RelativeNumberToggle()<CR>
 " -- usage ex: ,r to grep a function, 
 "  <tab> to select <C-a> all <C-d> deselect all, <CR> quickfix
 let g:fzf_command_prefix = 'Fz'
-nmap <leader><leader>f :FzFiles<CR>
-nmap <leader>f :FzGFiles<CR>
+nmap <leader><leader><leader>f :FzFiles<CR>
+nmap <leader><leader>f :FzGFiles<CR>
 nmap <leader>h :FzHistory<CR>
 nmap <leader>b :FzBuffers<CR>
 nmap <leader>r :FzRg<CR>
