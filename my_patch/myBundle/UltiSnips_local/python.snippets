@@ -1543,3 +1543,33 @@ def q_in_bq():
     return df_2
 
 endsnippet
+
+snippet st_aggrid
+	from st_aggrid import AgGrid
+	from st_aggrid.grid_options_builder import GridOptionsBuilder
+
+    gb = GridOptionsBuilder.from_dataframe(df)
+    gb.configure_auto_height(autoHeight=True)
+    gb.configure_pagination(paginationAutoPageSize=False, paginationPageSize=250)
+    gb.configure_default_column(editable=True, groupable=True, enableRowGroup=True, aggFunction="count")
+    gb.configure_side_bar()
+    gb.configure_selection(
+        selection_mode="multiple",
+        use_checkbox=True,
+        rowMultiSelectWithClick=True
+    )
+
+    gridOptions = gb.build()
+
+    st.markdown("Select the checkboxes to pick out target rows")
+    rows = AgGrid(
+            df,
+            gridOptions=gridOptions,
+            update_mode='MANUAL',  # for auto-update set it to 'SELECTION_CHANGED'
+            # fit_columns_on_grid_load=False,
+            theme='streamlit',
+            enable_enterprise_modules=True
+    )
+	selected_rows = rows['selected_rows']
+
+endsnippet
