@@ -1,3 +1,4 @@
+# zmodload zsh/zprof
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 source $HOME/.bashrc
@@ -20,7 +21,7 @@ fi
 ZSH_THEME=""  
 
 # manually load themes
-source $ZSH/custom/themes/switch_themes.zsh
+# source $ZSH/custom/themes/switch_themes.zsh
 
 function load_p10k
 {
@@ -69,7 +70,7 @@ function theme_fav
   fi 
 }
 
-GEOMETRY_PROMPT_PLUGINS=(docker_machine exec_time git virtualenv anaconda)
+# GEOMETRY_PROMPT_PLUGINS=(docker_machine exec_time git virtualenv anaconda)
 
 # Example aliases
 alias zshconfig="vim ~/.zshrc"
@@ -115,7 +116,7 @@ alias k="kubectl"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(z git git-extras macos emotty docker docker-compose docker-machine taskwarrior history macports web-search themes kubectl helm gcloud)
+plugins=(z git git-extras macos emotty docker docker-compose taskwarrior history kubectl helm gcloud)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -170,7 +171,7 @@ alias tadd='t add project:none'
 #   zle reset-prompt
 # }
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+# test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # -- load fav theme (make sure this block is below source ohmyzsh)
 
@@ -239,15 +240,15 @@ export PATH="$PATH:$HOME/.local/bin"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 
-alias conda="$PYENV_ROOT/versions/anaconda3-2022.05/bin/conda"
+# alias conda="$PYENV_ROOT/versions/anaconda3-2022.05/bin/conda"
 
-if [ -d "${PYENV_ROOT}" ]; then
-    export PATH=${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}
-    eval "$(pyenv init -)"
-fi
+# if [ -d "${PYENV_ROOT}" ]; then
+#     export PATH=${PYENV_ROOT}/bin:${PYENV_ROOT}/shims:${PATH}
+#     eval "$(pyenv init -)"
+# fi
 if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init -)"
-  eval "$(pyenv virtualenv-init -)"
+  eval "$(pyenv init - --no-rehash)"
+  # eval "$(pyenv virtualenv-init -)"
 fi
 export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
@@ -280,3 +281,5 @@ if [ -f '/Users/janine/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/janine/g
 if [ -f '/Users/janine/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/janine/google-cloud-sdk/completion.zsh.inc'; fi
 
 alias vi="nvim"
+
+# zprof
