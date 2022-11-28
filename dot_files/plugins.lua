@@ -76,9 +76,10 @@ end)
 ----------------------------------
 -- global
 vim.opt_global.completeopt = { "menuone", "noinsert", "noselect" }
-vim.opt_global.shortmess:remove("F"):append("c")
+-- vim.opt_global.shortmess:remove("F"):append("c")
 
 -- LSP mappings
+map("n", "<space>e", "<cmd>lua vim.diagnostic.open_float()<CR>")
 map("n", "gD", "<cmd>lua vim.lsp.buf.definition()<CR>")
 map("n", ",g", "<cmd>lua vim.lsp.buf.definition()<CR>")
 map("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>")
@@ -89,7 +90,7 @@ map("n", "gws", "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>")
 map("n", "<leader>cl", [[<cmd>lua vim.lsp.codelens.run()<CR>]])
 map("n", "<leader>sh", [[<cmd>lua vim.lsp.buf.signature_help()<CR>]])
 map("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>")
-map("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>")
+map("n", "<leader>fm", "<cmd>lua vim.lsp.buf.formatting()<CR>")
 map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>")
 map("n", "<leader>ws", '<cmd>lua require"metals".hover_worksheet()<CR>')
 map("n", "<leader>aa", [[<cmd>lua vim.diagnostic.setqflist()<CR>]]) -- all workspace diagnostics
@@ -156,6 +157,8 @@ local metals_config = require("metals").bare_config()
 metals_config.settings = {
   showImplicitArguments = true,
   excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
+  gradleScript="/Users/janine/gradlew",
+  -- gradleScript="/opt/homebrew/bin/gradle",
 }
 
 -- *READ THIS*
@@ -202,7 +205,7 @@ api.nvim_create_autocmd("FileType", {
   -- NOTE: You may or may not want java included here. You will need it if you
   -- want basic Java support but it may also conflict if you are using
   -- something like nvim-jdtls which also works on a java filetype autocmd.
-  pattern = { "scala", "sbt", "java" },
+  pattern = { "scala", "sbt", "java", "groovy" },
   callback = function()
     require("metals").initialize_or_attach(metals_config)
   end,
