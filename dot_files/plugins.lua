@@ -69,6 +69,28 @@ require("packer").startup(function(use)
     "jose-elias-alvarez/null-ls.nvim",
     requires = { "nvim-lua/plenary.nvim" },
   })
+
+  use {
+  'VonHeikemen/lsp-zero.nvim',
+  requires = {
+    -- LSP Support
+    {'neovim/nvim-lspconfig'},
+    {'williamboman/mason.nvim'},
+    {'williamboman/mason-lspconfig.nvim'},
+
+    -- Autocompletion
+    {'hrsh7th/nvim-cmp'},
+    {'hrsh7th/cmp-buffer'},
+    {'hrsh7th/cmp-path'},
+    {'saadparwaiz1/cmp_luasnip'},
+    {'hrsh7th/cmp-nvim-lsp'},
+    {'hrsh7th/cmp-nvim-lua'},
+
+    -- Snippets
+    {'L3MON4D3/LuaSnip'},
+    {'rafamadriz/friendly-snippets'},
+  }
+}
 end)
 
 ----------------------------------
@@ -90,7 +112,7 @@ map("n", "gws", "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>")
 map("n", "<leader>cl", [[<cmd>lua vim.lsp.codelens.run()<CR>]])
 map("n", "<leader>sh", [[<cmd>lua vim.lsp.buf.signature_help()<CR>]])
 map("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>")
-map("n", "<leader>fm", "<cmd>lua vim.lsp.buf.formatting()<CR>")
+map("n", "<leader>fm", "<cmd>lua vim.lsp.buf.format()<CR>")
 map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>")
 map("n", "<leader>ws", '<cmd>lua require"metals".hover_worksheet()<CR>')
 map("n", "<leader>aa", [[<cmd>lua vim.diagnostic.setqflist()<CR>]]) -- all workspace diagnostics
@@ -170,7 +192,7 @@ metals_config.settings = {
 
 -- Example if you are using cmp how to make sure the correct capabilities for snippets are set
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-metals_config.capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
 -- Debug settings if you're using nvim-dap
 local dap = require("dap")
@@ -216,3 +238,36 @@ api.nvim_create_user_command("NullLsToggle", function()
     -- you can also create commands to disable or enable sources
     require("null-ls").toggle({})
 end, {})
+
+
+local lsp = require('lsp-zero')
+lsp.preset('recommended')
+lsp.setup()
+
+local null_ls = require('null-ls')
+local diagnostics = null_ls.builtins.diagnostics
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = true,
+  update_in_insert = false,
+  underline = true,
+})
+
+local python_group = api.nvim_create_augroup("python_group", { clear = true })
+api.nvim_create_autocmd("FileType", {
+  pattern = { "python", "py", "ipy"},
+  callback = function()
+      null_ls.setup({
+          on_attach = on_attach,
+          sources = {
+              -- diagnostics.flake8,
+              diagnostics.mypy
+          }
+      })
+      require("lspconfig").pylsp.setup({
+          -- omnifunc = vim.lsp.omnifunc
+      })
+  end,
+  group = python_group,
+})
+

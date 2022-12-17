@@ -89,7 +89,7 @@ if dein#load_state('~/.cache/dein')
   
   " -- python dev
   call dein#add('python-mode/python-mode', {'on_ft': 'python'})
-  call dein#add('davidhalter/jedi-vim', {'on_ft': 'python'})
+  " call dein#add('davidhalter/jedi-vim', {'on_ft': 'python'})
   call dein#add('deoplete-plugins/deoplete-jedi')  " async jedi
   call dein#add('Shougo/deoplete.nvim')
 
@@ -224,6 +224,7 @@ let g:fastfold_fold_command_suffixes =  []
 let g:fastfold_fold_movement_commands = []
 
 
+augroup python_group
 " ====  set pymode ====
 filetype off
 filetype plugin indent on
@@ -277,9 +278,9 @@ let g:jedi#goto_stubs_command = "<leader><leader>s"
 let g:jedi#documentation_command = "K"
 
 " nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
-let g:jedi#usages_command = "gr"
+"let g:jedi#usages_command = "gr" -- use ^^^ gr 
 "let g:jedi#completions_command = "<C-Space>"
-let g:jedi#rename_command = "<leader><leader>r"
+"let g:jedi#rename_command = "<leader><leader>r" -- use lsp's instead <leader>rn
 let g:jedi#show_call_signatures = "1"
 let g:jedi#goto_stubs_command = "<leader><leader>s"
 
@@ -293,6 +294,7 @@ let g:jedi#goto_stubs_command = "<leader><leader>s"
  let g:deoplete#sources#jedi#ignore_errors = v:true
  nnoremap <leader>D :call deoplete#disable()<CR>
  nnoremap <leader>E :call deoplete#enable()<CR>
+ augroup end
 
 " ------- snippet -------------
 
@@ -456,8 +458,6 @@ nnoremap <leader>e :!black %<cr>
 
 " set completeopt-=preview
 
-" " use omni completion provided by lsp
-" autocmd Filetype python setlocal omnifunc=v:lua.vim.lsp.omnifunc
 
 " nnoremap <silent> ,g <cmd>lua vim.lsp.buf.definition()<CR>
 " nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
