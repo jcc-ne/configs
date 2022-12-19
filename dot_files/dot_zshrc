@@ -187,20 +187,20 @@ unset ZLE_RPROMPT_INDENT
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-# __conda_setup="$('/Users/janine/miniforge3/etc/profile.d/conda.sh' 'shell.zsh' 'hook' 2> /dev/null)"
+# __conda_setup="$('/Users/janine/.pyenv/versions/anaconda3-2022.05/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 # if [ $? -eq 0 ]; then
 #     eval "$__conda_setup"
 # else
-#     if [ -f "/Users/janine/miniforge3/etc/profile.d/conda.sh" ]; then
-#         . "/Users/janine/miniforge3/etc/profile.d/conda.sh"
+#     if [ -f "/Users/janine/.pyenv/versions/anaconda3-2022.05/etc/profile.d/conda.sh" ]; then
+#         . "/Users/janine/.pyenv/versions/anaconda3-2022.05/etc/profile.d/conda.sh"
 #     else
-#         export PATH="/Users/janine/miniforge3/bin:$PATH"
+#         export PATH="/Users/janine/.pyenv/versions/anaconda3-2022.05/bin:$PATH"
 #     fi
 # fi
 # unset __conda_setup
 # <<< conda initialize <<<
 #
-alias source_conda="source $HOME/miniforge3/etc/profile.d/conda.sh"
+# alias source_conda="source $HOME/miniforge3/etc/profile.d/conda.sh"
 
 . ~/.zsh_hashd
 
@@ -248,7 +248,7 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 # fi
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init - --no-rehash)"
-  # eval "$(pyenv virtualenv-init -)"
+  eval "$(pyenv virtualenv-init -)"
 fi
 export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
@@ -262,6 +262,8 @@ alias gittree2="git log --first-parent --graph --decorate --pretty=format:'%Cgre
 alias gittree3="git log --graph --decorate --pretty=format:'%Cgreen%h %Cblue %<(12) %an %Cred %d %Creset %gs %<(80,trunc) %s'"
 alias gittree3="git log --graph --decorate --pretty=format:'%Cgreen%h %Cblue %<(12) %an %Cred %d %Creset %gs %<(80,trunc) %s'"
 alias gittree4="git log --graph --decorate --pretty=format:'%ad %Cgreen%h %Cblue %<(12) %an %Cred %d %Creset %gs %<(80,trunc) %s'"
+alias git_find_lost_stash='git fsck --unreachable | grep commit | cut -d" " -f3 | xargs git log --merges --no-walk --grep=WIP'
+
 
 # export PATH=$PATH:$HOME/.gem/ruby/2.7.0/bin/
 
@@ -283,3 +285,4 @@ if [ -f '/Users/janine/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/ja
 alias vi="nvim"
 
 # zprof
+
