@@ -1,11 +1,14 @@
  " --- vimwiki
 
 augroup my_vimwiki
+    au BufRead,BufNewFile *.md set filetype=markdown
+    au BufRead,BufNewFile *.task.md set filetype=markdown
+    au BufRead,BufNewFile *.wiki set filetype=vimwiki
+
     autocmd FileType wiki,vimwiki vnoremap o <esc>I*<space>[<space>]<space><esc>
     autocmd FileType wiki,vimwiki vmap x <esc><C-space>
     autocmd FileType wiki,vimwiki vnoremap D <esc>0wdf]
 
-    "au BufRead,BufNewFile *.wiki,*.md set filetype=vimwiki
     :autocmd FileType vimwiki map <leader>dl :VimwikiDiaryGenerateLinks
 
    function! ToggleCalendar()
