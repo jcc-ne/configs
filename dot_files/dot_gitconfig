@@ -35,9 +35,14 @@
 	whitespace = cr-at-eol
 
 [alias]
-    logx = log --author='^(?!devops).*$' --perl-regexp --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset)+%C(dim black)(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %C(bold black)%an%C(reset)%C(black): %s%C(reset)'
-    tree = log --author='^(?!devops).*$' --perl-regexp --all --graph --decorate=short --color --format=format:'%C(bold green)%h%C(reset) %C(auto)%d%C(reset)\n         %C(blue)[%ch]%C(reset)  %x09%C(auto)%an: %s %C(reset)'
-    tree2 = log --author='^(?!devops).*$' --date=iso --perl-regexp --all --graph --decorate=short --color --format=format:'%C(bold green)%h%C(reset) %C(auto)%d%C(reset)\n         %C(blue)[%cd]%C(reset)  %x09%C(auto)%an: %s %C(reset)'
+    logx = log --author='^(?!devops).*$' --perl-regexp --exclude=refs/stash --all --graph --decorate=short --color\
+        --format=format:'%C(bold blue)%h%C(reset)+%C(dim black)(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %C(bold black)%an%C(reset)%C(black): %s%C(reset)'
+    tree = log --author='^(?!devops).*$' --perl-regexp --exclude=refs/stash --all --graph --decorate=short --color\
+        --format=format:'%C(bold green)%h%C(reset) %C(auto)%d%C(reset)\n         %C(blue)[%ch]%C(reset)  %x09%C(italic cyan)%an:%C(reset) %C(auto)%s %C(reset)'
+    tree2 = log --author='^(?!devops).*$' --date=iso --exclude=refs/stash --perl-regexp --all --graph --decorate=short --color\
+        --format=format:'%C(bold green)%h%C(reset) %C(auto)%d%C(reset)\n         %C(blue)[author %ad]%C(reset)  %x09%C(italic cyan)%an:%C(reset) %C(auto)%s %C(reset)'
+    tree3 = log --author='^(?!devops).*$' --date=iso --exclude=refs/stash --perl-regexp --graph --decorate=short --color\
+        --format=format:'%C(bold green)%h%C(reset) %C(auto)%d%C(reset)\n         %C(blue)[commit %cd][author %ad]%C(reset)  %x09%C(italic cyan)%an:%C(reset) %C(auto)%s %C(reset)'
 	purge-branches = "branch --merged | egrep -v \"(^\\*|master|main)\" | xargs git branch -d "
 [filter "lfs"]
 	process = git-lfs filter-process
