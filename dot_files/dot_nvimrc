@@ -340,9 +340,16 @@ au BufEnter *.md set shiftwidth=4
 nnoremap <leader>wg :VimwikiGenerateTags<CR>
 nnoremap <leader>wt :VimwikiRebuildTags<CR>
 
+let g:vimwiki_global_ext = 0
 let g:vimwiki_list = [
             \{'path': '~/vimwiki/text/work',
             \ 'path_html': '~/vimwiki/html/work',
+            \'syntax': 'markdown',
+            \'ext': '.md',
+            \ 'auto_toc': 1,
+            \ 'auto_tags': 1,
+            \ 'index': 'index'},
+            \{'path': '~/.task/wiki/',
             \'syntax': 'markdown',
             \'ext': '.md',
             \ 'auto_toc': 1,
