@@ -54,7 +54,7 @@ require("packer").startup(function(use)
     requires = {
       { "hrsh7th/cmp-nvim-lsp" },
       { "hrsh7th/cmp-vsnip" },
-      { "hrsh7th/vim-vsnip" },
+      -- { "hrsh7th/vim-vsnip" },
     },
   })
   use({
@@ -78,17 +78,17 @@ require("packer").startup(function(use)
           {'williamboman/mason.nvim'},
           {'williamboman/mason-lspconfig.nvim'},
 
-          -- Autocompletion
-          {'hrsh7th/nvim-cmp'},
-          {'hrsh7th/cmp-buffer'},
-          {'hrsh7th/cmp-path'},
-          {'saadparwaiz1/cmp_luasnip'},
-          {'hrsh7th/cmp-nvim-lsp'},
-          {'hrsh7th/cmp-nvim-lua'},
+  --         -- Autocompletion
+  --         {'hrsh7th/nvim-cmp'},
+  --         {'hrsh7th/cmp-buffer'},
+  --         {'hrsh7th/cmp-path'},
+  --         -- {'saadparwaiz1/cmp_luasnip'},
+  --         {'hrsh7th/cmp-nvim-lsp'},
+  --         {'hrsh7th/cmp-nvim-lua'},
 
-          -- Snippets
-          {'L3MON4D3/LuaSnip'},
-          {'rafamadriz/friendly-snippets'},
+  --         -- Snippets
+             {'L3MON4D3/LuaSnip'},
+  --         -- {'rafamadriz/friendly-snippets'},
       }
   }
   -- DAP
@@ -102,6 +102,17 @@ end)
 ----------------------------------
 -- global
 vim.opt_global.completeopt = { "menuone", "noinsert", "noselect" }
+
+local on_attach = function(client, bufnr)
+    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+    vim.diagnostic.config({
+        virtual_text = true,
+        signs = true,
+        update_in_insert = false,
+        underline = true,
+    })
+end
+
 -- vim.opt_global.shortmess:remove("F"):append("c")
 
 -- LSP mappings
@@ -157,20 +168,20 @@ cmp.setup({
     -- snippets you need to remove this select
     ["<CR>"] = cmp.mapping.confirm({ select = true }),
     -- I use tabs... some say you should stick to ins-completion but this is just here as an example
-    ["<Tab>"] = function(fallback)
+    ["<S-Tab>"] = function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
       else
         fallback()
       end
     end,
-    ["<S-Tab>"] = function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      else
-        fallback()
-      end
-    end,
+    -- ["<S-Tab>"] = function(fallback)
+    --   if cmp.visible() then
+    --     cmp.select_prev_item()
+    --   else
+    --     fallback()
+    --   end
+    -- end,
   }),
 })
 
@@ -244,18 +255,25 @@ api.nvim_create_user_command("NullLsToggle", function()
 end, {})
 
 
-local lsp = require('lsp-zero')
-lsp.preset('recommended')
-lsp.setup()
+-- local lsp = require('lsp-zero')
+-- lsp.preset('recommended')
+-- lsp.setup()
 
 local null_ls = require('null-ls')
 local diagnostics = null_ls.builtins.diagnostics
+
 vim.diagnostic.config({
   virtual_text = true,
   signs = true,
   update_in_insert = false,
   underline = true,
 })
+-- local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " } ▼
+local signs = { Error = "✗ ", Warn = " ", Hint = " ", Info = " " }
+for type, icon in pairs(signs) do
+  local hl = "DiagnosticSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+end
 
 local python_group = api.nvim_create_augroup("python_group", { clear = true })
 api.nvim_create_autocmd("FileType", {
@@ -265,9 +283,10 @@ api.nvim_create_autocmd("FileType", {
           on_attach = on_attach,
           sources = {
               -- diagnostics.flake8,
-              diagnostics.mypy
+             diagnostics.mypy
           }
       })
+
       require("lspconfig").pylsp.setup({
           -- omnifunc = vim.lsp.omnifunc
       })
