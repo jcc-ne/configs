@@ -258,6 +258,8 @@ end, {})
 -- local lsp = require('lsp-zero')
 -- lsp.preset('recommended')
 -- lsp.setup()
+require("mason").setup()
+require("mason-lspconfig").setup()
 
 local null_ls = require('null-ls')
 local diagnostics = null_ls.builtins.diagnostics
@@ -289,6 +291,16 @@ api.nvim_create_autocmd("FileType", {
 
       require("lspconfig").pylsp.setup({
           -- omnifunc = vim.lsp.omnifunc
+          settings = {
+              pylsp = {
+                  plugins = {
+                      pylint = { enabled = true, args = {'--disable=C0301'}},
+                      flake8 = { enabled = false, ignore = {'E501', 'E231'}},
+                      pycodestyle = { enabled = false, ignore ={'E501', 'E231'}},
+                      pyflakes = { enabled = false },
+                  }
+              }
+    }
       })
       require('dbg.python')
 
