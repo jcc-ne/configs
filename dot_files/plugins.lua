@@ -116,6 +116,7 @@ end
 -- vim.opt_global.shortmess:remove("F"):append("c")
 
 -- LSP mappings
+map("n", "<space>h", "<cmd>lua vim.diagnostic.hide()<CR>")
 map("n", "<space>e", "<cmd>lua vim.diagnostic.open_float()<CR>")
 map("n", "gD", "<cmd>lua vim.lsp.buf.definition()<CR>")
 map("n", ",g", "<cmd>lua vim.lsp.buf.definition()<CR>")
@@ -270,8 +271,8 @@ vim.diagnostic.config({
   update_in_insert = false,
   underline = true,
 })
--- local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " } ▼
-local signs = { Error = "✗ ", Warn = " ", Hint = " ", Info = " " }
+-- local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " } ▼▲ 
+local signs = { Error = "✗ ", Warn = " ", Hint = " ", Info = "⚑ " }
 for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
@@ -300,7 +301,7 @@ api.nvim_create_autocmd("FileType", {
                       pyflakes = { enabled = false },
                   }
               }
-    }
+          }
       })
       require('dbg.python')
 
