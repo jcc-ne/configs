@@ -286,7 +286,7 @@ api.nvim_create_autocmd("FileType", {
           on_attach = on_attach,
           sources = {
               -- diagnostics.flake8,
-             diagnostics.mypy
+              -- diagnostics.mypy
           }
       })
 
@@ -295,6 +295,7 @@ api.nvim_create_autocmd("FileType", {
           settings = {
               pylsp = {
                   plugins = {
+                      mypy = { enabled = true, overrides = {'--ignore-missing-imports'}},
                       pylint = { enabled = true, args = {'--disable=C0301'}},
                       flake8 = { enabled = false, ignore = {'E501', 'E231'}},
                       pycodestyle = { enabled = false, ignore ={'E501', 'E231'}},
