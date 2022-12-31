@@ -94,6 +94,7 @@ require("packer").startup(function(use)
   -- DAP
   use { 'mfussenegger/nvim-dap' }
   use { 'nvim-telescope/telescope-dap.nvim' }
+  use { 'nvim-treesitter/nvim-treesitter' }
   use { 'mfussenegger/nvim-dap-python' } -- Python
 end)
 
@@ -117,6 +118,9 @@ end
 
 -- LSP mappings
 map("n", "<space>h", "<cmd>lua vim.diagnostic.hide()<CR>")
+map("n", "<space>hh", "<cmd>lua vim.diagnostic.disable()<CR>")
+map("n", "<space>s", "<cmd>lua vim.diagnostic.show()<CR>")
+map("n", "<space>ss", "<cmd>lua vim.diagnostic.enable()<CR>")
 map("n", "<space>e", "<cmd>lua vim.diagnostic.open_float()<CR>")
 map("n", "gD", "<cmd>lua vim.lsp.buf.definition()<CR>")
 map("n", ",g", "<cmd>lua vim.lsp.buf.definition()<CR>")
@@ -139,13 +143,11 @@ map("n", "[c", "<cmd>lua vim.diagnostic.goto_prev { wrap = false }<CR>")
 map("n", "]c", "<cmd>lua vim.diagnostic.goto_next { wrap = false }<CR>")
 
 -- Example mappings for usage with nvim-dap. If you don't use that, you can
--- skip these
+-- skip these, also see dbg/python.lua
 map("n", "<leader>dc", [[<cmd>lua require"dap".continue()<CR>]])
 map("n", "<leader>dr", [[<cmd>lua require"dap".repl.toggle()<CR>]])
 map("n", "<leader>dK", [[<cmd>lua require"dap.ui.widgets".hover()<CR>]])
 map("n", "<leader>dt", [[<cmd>lua require"dap".toggle_breakpoint()<CR>]])
-map("n", "<leader>dso", [[<cmd>lua require"dap".step_over()<CR>]])
-map("n", "<leader>dsi", [[<cmd>lua require"dap".step_into()<CR>]])
 map("n", "<leader>dl", [[<cmd>lua require"dap".run_last()<CR>]])
 
 -- completion related settings
@@ -266,17 +268,36 @@ local null_ls = require('null-ls')
 local diagnostics = null_ls.builtins.diagnostics
 
 vim.diagnostic.config({
-  virtual_text = true,
+  virtual_text = false,
   signs = true,
   update_in_insert = false,
   underline = true,
 })
+-- add a function to toggle diagnostic text
+virtual_text = {}
+virtual_text.show = false
+virtual_text.toggle = function()
+    virtual_text.show = not virtual_text.show
+    vim.diagnostic.config({
+        virtual_text = virtual_text.show
+    })
+end
+
+vim.api.nvim_set_keymap(
+    'n',
+    '<space>v',
+    '<cmd>lua virtual_text.toggle()<CR>',
+    {silent=true, noremap=true}
+)
+
 -- local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " } ▼▲ 
 local signs = { Error = "✗ ", Warn = " ", Hint = " ", Info = "⚑ " }
 for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
+
+
 
 local python_group = api.nvim_create_augroup("python_group", { clear = true })
 api.nvim_create_autocmd("FileType", {
@@ -296,7 +317,8 @@ api.nvim_create_autocmd("FileType", {
               pylsp = {
                   plugins = {
                       mypy = { enabled = true, overrides = {'--ignore-missing-imports'}},
-                      pylint = { enabled = true, args = {'--disable=C0301'}},
+                      pylint = { enabled = true, args = {'--disable=C0301,C0116,C0115,C0103,logging-fstring-interpolation,unspecified-encoding'}},  
+                      -- line-too-long, missing-docstring
                       flake8 = { enabled = false, ignore = {'E501', 'E231'}},
                       pycodestyle = { enabled = false, ignore ={'E501', 'E231'}},
                       pyflakes = { enabled = false },
