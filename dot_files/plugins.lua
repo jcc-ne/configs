@@ -95,7 +95,13 @@ require("packer").startup(function(use)
   use { 'mfussenegger/nvim-dap' }
   use { 'nvim-telescope/telescope-dap.nvim' }
   use { 'nvim-treesitter/nvim-treesitter' }
+  --  if seeing helper error > :TSInstall vimdoc
   use { 'mfussenegger/nvim-dap-python' } -- Python
+
+  -- use({
+  -- 'jcc-ne/chatgpt.nvim', branch = "dev",
+  -- run = 'pip3 install -r requirements.txt'
+  -- })
 end)
 
 ----------------------------------
@@ -247,6 +253,7 @@ api.nvim_create_autocmd("FileType", {
   -- something like nvim-jdtls which also works on a java filetype autocmd.
   pattern = { "scala", "sbt", "java", "groovy" },
   callback = function()
+     print("loading scala lsp settings...")
     require("metals").initialize_or_attach(metals_config)
   end,
   group = nvim_metals_group,
@@ -303,6 +310,7 @@ local python_group = api.nvim_create_augroup("python_group", { clear = true })
 api.nvim_create_autocmd("FileType", {
   pattern = { "python", "py", "ipy"},
   callback = function()
+      print("loading python lsp settings...")
       null_ls.setup({
           on_attach = on_attach,
           sources = {
@@ -332,3 +340,24 @@ api.nvim_create_autocmd("FileType", {
   group = python_group,
 })
 
+--  local nvim_lsp = require('lspconfig')
+function setup_gopls()
+  -- nvim_lsp.gopls.setup{}
+  print("calling setup_gopls()...")
+  require('lspconfig').gopls.setup({})
+end
+
+local go_group = api.nvim_create_augroup("go_lsp_group_my", { clear = true})
+api.nvim_create_autocmd("FileType", {
+  pattern = {"go"},
+  callback = function() 
+      print("loading go lsp settings...")
+      setup_gopls()
+  end,
+  group = go_group,
+})
+vim.api.nvim_exec([[
+  augroup go_lsp_group_my
+    autocmd FileType go lua setup_gopls()
+  augroup end
+]], false)
