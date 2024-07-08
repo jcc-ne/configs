@@ -1,0 +1,6 @@
+python-lsp-server
+pylsp-mypy
+neovim
+jedi
+debugpy
+pylint

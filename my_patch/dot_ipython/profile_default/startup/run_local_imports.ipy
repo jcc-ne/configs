@@ -1,1 +1,4 @@
-%run _local_imports.py
+try:
+    %run _local_imports.py
+except:
+    pass

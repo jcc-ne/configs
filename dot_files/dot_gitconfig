@@ -25,6 +25,8 @@
 	keepBackup = false
 [credential]
 	helper = store
+[push]
+    autoSetupRemote = true
 [pull]
 	ff = only
 [core]
@@ -43,6 +45,8 @@
         --format=format:'%C(bold green)%h%C(reset) %C(auto)%d%C(reset)\n         %C(blue)[author %ad]%C(reset)  %x09%C(italic cyan)%an:%C(reset) %C(auto)%s %C(reset)'
     tree3 = log --author='^(?!devops).*$' --date=iso --exclude=refs/stash --perl-regexp --graph --decorate=short --color\
         --format=format:'%C(bold green)%h%C(reset) %C(auto)%d%C(reset)\n         %C(blue)[commit %cd][author %ad]%C(reset)  %x09%C(italic cyan)%an:%C(reset) %C(auto)%s %C(reset)'
+    tree4 = log --perl-regexp --exclude=refs/stash --graph --decorate=short --color\
+        --format=format:'%C(bold green)%h%C(reset) %C(auto)%d%C(reset)\n         %C(blue)[%ch]%C(reset)  %x09%C(italic cyan)%an:%C(reset) %C(auto)%s %C(reset)'
 	purge-branches = "branch --merged | egrep -v \"(^\\*|master|main)\" | xargs git branch -d "
 [filter "lfs"]
 	process = git-lfs filter-process
@@ -63,4 +67,4 @@
     ; syntax-theme= GitHub
     side-by-side=true
     navigate=true
-	syntax-theme = GitHub
+	syntax-theme = Solarized (dark)

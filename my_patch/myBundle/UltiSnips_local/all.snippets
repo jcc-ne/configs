@@ -326,3 +326,21 @@ StartLimitAction=reboot-force
 [Install]
 WantedBy=default.target
 endsnippet
+
+
+snippet makefile
+
+.PHONY: help
+
+rootdir = $(realpath .)
+
+.ONESHELL:
+
+help:  ## show this help.
+	@echo "Common commands are located in arcane/Makefile\n"
+	@egrep -h '\s##\s' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m  %-30s\033[0m %s\n", $\$1, $\$2}'
+
+prompt:  ## command stops with a promt
+	@read -p "(hit any key to continue.  Ctrl-C to abort)"
+endsnippet
+
