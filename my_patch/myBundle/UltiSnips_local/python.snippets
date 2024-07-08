@@ -1636,3 +1636,35 @@ np
 # %%
 
 endsnippet
+
+snippet ggplot_col
+
+from plotnine import ggplot, aes, geom_col, coord_flip, theme_classic, labs
+
+df = pd.DataFrame(
+    {
+        "Gender": ["Male", "Female"],
+        "Percentage %": [42.47, 57.53],
+    }
+)
+(
+    ggplot(data=df, mapping=aes(x="Gender", y="Percentage %", fill="Gender"))
+        + geom_col(width=0.5, color="gray", show_legend=False)
+        + coord_flip()
+        + theme_classic()
+        + labs(title="Segment by Gender")
+)
+(
+    ggplot(data=df, mapping=aes(x="Country", y="Sales Growth", fill="Ingredient"))
+    + geom_col(position="dodge")
+    + scale_fill_cmap_d("Set2")
+    + geom_text(
+        aes(label="Sales Growth"),
+        format_string="{:.0f}%",
+        va="bottom",
+        position=position_dodge2(width=0.9),
+    )
+    + theme_minimal()
+)
+
+endsnippet
