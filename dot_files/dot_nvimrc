@@ -1,6 +1,6 @@
 mapclear
 let mapleader = ","
-" let g:python3_host_prog="~/anaconda3/bin/python3.7"
+" let g:python3_host_prog="~/.pyenv/versions/anaconda3-2022.05/bin/python"
 " let g:python_host_prog='~/anaconda3/bin/python'
 let g:python_host_skip_check = 1
 set guioptions=M
@@ -15,10 +15,11 @@ nnoremap <leader>. @q
 tnoremap <c-l> <C-\><C-n><c-l>
 
 " -- easier omnicomplete (for vimwiki keywords tag lookup)
-inoremap <c-space> <c-x><c-o>
+inoremap <c-space> <c-x><c-n>
 
 
 set t_Co=tmux-256color
+let g:solarized_termcolors=256
 set autochdir
 
 " -- I'd prefer spaces to tabs
@@ -81,7 +82,8 @@ if dein#load_state('~/.cache/dein')
 
   call dein#add('vim-airline/vim-airline')
   call dein#add('vim-airline/vim-airline-themes')
-  call dein#add('altercation/vim-colors-solarized')
+  " call dein#add('altercation/vim-colors-solarized')
+  call dein#add('lifepillar/vim-solarized8')
 
   " -- themes
   call dein#add('arcticicestudio/nord-vim')
@@ -134,6 +136,9 @@ if dein#load_state('~/.cache/dein')
   call dein#add('nvim-lua/plenary.nvim')
   call dein#add('nvim-telescope/telescope.nvim', {'rev': 'nvim-0.6'})
   call dein#add('kyazdani42/nvim-web-devicons')
+  call dein#add('github/copilot.vim')
+
+  " call dein#add('jcc-ne/chatgpt.nvim', {'rev': 'dev', 'build': 'pip install -r requirements.txt'})
 
   " -- LSP
   " call dein#add('neovim/nvim-lspconfig')
@@ -143,7 +148,7 @@ if dein#load_state('~/.cache/dein')
   if hostname == "Janine-MBP" || hostname == "GDL-813"
       call dein#add('scrooloose/nerdtree')
       " call dein#add('jcc-ne/taskwiki')
-      call dein#add('tools-life/taskwiki')
+      " call dein#add('tools-life/taskwiki')
       " call dein#add('farseer90718/vim-taskwarrior')
       call dein#add('vimoutliner/vimoutliner')
       " call dein#add('vimwiki/vimwiki', {'rev': 'fb5d2'})
@@ -168,7 +173,7 @@ else
         let g:jedi#popup_on_dot = 0 " (default: 1)
        autocmd FileType python call jedi#configure_call_signatures()
     else
-        colorscheme solarized
+        colorscheme solarized8
     endif
 endif
 
