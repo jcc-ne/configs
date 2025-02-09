@@ -69,7 +69,7 @@ let hostname=substitute(system('hostname -s'), "\n", "", "")
 " echo hostname
 
 " Required:
-if dein#load_state('~/.cache/dein')
+if dein#load_state('~/.cache/dein') && !exists('g:vscode')
   call dein#begin('~/.cache/dein')
 
   " Let dein manage dein
@@ -86,8 +86,8 @@ if dein#load_state('~/.cache/dein')
   call dein#add('lifepillar/vim-solarized8')
 
   " -- themes
-  call dein#add('arcticicestudio/nord-vim')
-  call dein#add('hzchirs/vim-material')
+  " call dein#add('arcticicestudio/nord-vim')
+  " call dein#add('hzchirs/vim-material')
   
   " -- python dev
   call dein#add('python-mode/python-mode', {'on_ft': 'python'})
@@ -108,7 +108,7 @@ if dein#load_state('~/.cache/dein')
   call dein#add('ctrlpvim/ctrlP.vim')
   call dein#add('SirVer/ultisnips')
   call dein#add('honza/vim-snippets')
-  call dein#add('scrooloose/nerdcommenter')
+  " call dein#add('scrooloose/nerdcommenter')
 
   " call dein#add('lvht/tagbar-markdown', {'on_cmd' : ['Tagbar', 'TagbarToggle']})
   call dein#add('lvht/tagbar-markdown')
@@ -184,10 +184,10 @@ else
    set background=dark
 endif
 
-" set background=dark
 if $VIMBG != ""
     exe 'set background='.expand($VIMBG)
 endif
+set background=dark
 
 " nmap <leader>c :colorscheme gruvbox<CR>
 
@@ -304,7 +304,7 @@ let g:jedi#goto_stubs_command = "<leader><leader>s"
 " ------- snippet -------------
 
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsExpandTrigger="<c-K>"
 " let g:UltiSnipsSnippetsDir="~/.vim/bundle/myBundle/UltiSnips"
 " let g:UltiSnipsSnippetDirectories="~/.config/nvim/UltiSnips"  " configs/install/setup_ultisnips_dir.sh to config the dir
 " let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"  " configs/install/setup_ultisnips_dir.sh to config the dir
@@ -400,8 +400,8 @@ highlight clear SignColumn
 nnoremap <F4> :TagbarToggle<CR>
 
 " -- Line Num toggle --
-nnoremap <F1> :call  RelativeNumberToggle()<CR>
-" nnoremap <silent><leader>1 :call RelativeNumberToggle()<CR>
+" nnoremap <F1> :call  RelativeNumberToggle()<CR>
+nnoremap <silent><leader>1 :call RelativeNumberToggle()<CR>
 
 
 " -- fzf mapping
@@ -482,10 +482,35 @@ nnoremap <leader>e :!black %<cr>
 " endfunction
 
 " --- lua plugins in ~/.config/nvim/lua/plugins.lua
+lua require('lsp_mappings')
 lua require('plugins')
 
-imap <silent><script><expr> <C-K> copilot#Accept("\<CR>")
-let g:copilot_no_tab_map = v:true
-imap <C-]> <Plug>(copilot-next)
-imap <C-[> <Plug>(copilot-previous)
-imap <esc> <Plug>(copilot-dismiss)
+if !exists('g:vscode')
+    " imap <silent><script><expr> <C-K> copilot#Accept("\<CR>")
+    " let g:copilot_no_tab_map = v:true
+    imap <C-]> <Plug>(copilot-next)
+    imap <C-[> <Plug>(copilot-previous)
+    imap <esc> <Plug>(copilot-dismiss)
+else
+    nnoremap zM :call VSCodeNotify('editor.foldAll')<CR>
+    nnoremap zR :call VSCodeNotify('editor.unfoldAll')<CR>
+    nnoremap zc :call VSCodeNotify('editor.fold')<CR>
+    nnoremap zC :call VSCodeNotify('editor.foldRecursively')<CR>
+    nnoremap zo :call VSCodeNotify('editor.unfold')<CR>
+    nnoremap zO :call VSCodeNotify('editor.unfoldRecursively')<CR>
+    nnoremap za :call VSCodeNotify('editor.toggleFold')<CR>
+    
+    function! MoveCursor(direction) abort
+        if(reg_recording() == '' && reg_executing() == '')
+            return 'g'.a:direction
+        else
+            return a:direction
+        endif
+    endfunction
+    
+    " nmap <expr> j MoveCursor('j')
+    " nmap <expr> k MoveCursor('k')
+    nnoremap <silent>j :call VSCodeCall('cursorDown')<cr>
+    nnoremap <silent>k :call VSCodeCall('cursorUp')<cr>
+endif
+

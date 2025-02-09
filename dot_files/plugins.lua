@@ -47,8 +47,14 @@ end
 ----------------------------------
 cmd([[packadd packer.nvim]])
 require("packer").startup(function(use)
+  
+  use({'scrooloose/nerdcommenter'})
   use({ "wbthomason/packer.nvim", opt = true })
+  use { 'tpope/vim-fugitive' }
+  use { 'tpope/vim-rhubarb' }
+  use { '~/.vim/bundle/myBundle' }
 
+if not vim.g.vscode then
   use({
     "hrsh7th/nvim-cmp",
     requires = {
@@ -78,17 +84,9 @@ require("packer").startup(function(use)
           {'williamboman/mason.nvim'},
           {'williamboman/mason-lspconfig.nvim'},
 
-  --         -- Autocompletion
-  --         {'hrsh7th/nvim-cmp'},
-  --         {'hrsh7th/cmp-buffer'},
-  --         {'hrsh7th/cmp-path'},
-  --         -- {'saadparwaiz1/cmp_luasnip'},
-  --         {'hrsh7th/cmp-nvim-lsp'},
-  --         {'hrsh7th/cmp-nvim-lua'},
 
   --         -- Snippets
              {'L3MON4D3/LuaSnip'},
-  --         -- {'rafamadriz/friendly-snippets'},
       }
   }
   -- DAP
@@ -102,8 +100,11 @@ require("packer").startup(function(use)
   -- 'jcc-ne/chatgpt.nvim', branch = "dev",
   -- run = 'pip3 install -r requirements.txt'
   -- })
+  end
 end)
 
+
+if not vim.g.vscode then
 ----------------------------------
 -- OPTIONS -----------------------
 ----------------------------------
@@ -121,32 +122,6 @@ local on_attach = function(client, bufnr)
 end
 
 -- vim.opt_global.shortmess:remove("F"):append("c")
-
--- LSP mappings
-map("n", "<space>h", "<cmd>lua vim.diagnostic.hide()<CR>")
-map("n", "<space>hh", "<cmd>lua vim.diagnostic.disable()<CR>")
-map("n", "<space>s", "<cmd>lua vim.diagnostic.show()<CR>")
-map("n", "<space>ss", "<cmd>lua vim.diagnostic.enable()<CR>")
-map("n", "<space>e", "<cmd>lua vim.diagnostic.open_float()<CR>")
-map("n", "gD", "<cmd>lua vim.lsp.buf.definition()<CR>")
-map("n", ",g", "<cmd>lua vim.lsp.buf.definition()<CR>")
-map("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>")
-map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>")
-map("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>")
-map("n", "gds", "<cmd>lua vim.lsp.buf.document_symbol()<CR>")
-map("n", "gws", "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>")
-map("n", "<leader>cl", [[<cmd>lua vim.lsp.codelens.run()<CR>]])
-map("n", "<leader>sh", [[<cmd>lua vim.lsp.buf.signature_help()<CR>]])
-map("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>")
-map("n", "<leader>fm", "<cmd>lua vim.lsp.buf.format()<CR>")
-map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>")
-map("n", "<leader>ws", '<cmd>lua require"metals".hover_worksheet()<CR>')
-map("n", "<leader>aa", [[<cmd>lua vim.diagnostic.setqflist()<CR>]]) -- all workspace diagnostics
-map("n", "<leader>ae", [[<cmd>lua vim.diagnostic.setqflist({severity = "E"})<CR>]]) -- all workspace errors
-map("n", "<leader>aw", [[<cmd>lua vim.diagnostic.setqflist({severity = "W"})<CR>]]) -- all workspace warnings
-map("n", "<leader>d", "<cmd>lua vim.diagnostic.setloclist()<CR>") -- buffer diagnostics only
-map("n", "[d", "<cmd>lua vim.diagnostic.goto_prev { wrap = false }<CR>")
-map("n", "]d", "<cmd>lua vim.diagnostic.goto_next { wrap = false }<CR>")
 
 -- Example mappings for usage with nvim-dap. If you don't use that, you can
 -- skip these, also see dbg/python.lua
@@ -361,3 +336,5 @@ vim.api.nvim_exec([[
     autocmd FileType go lua setup_gopls()
   augroup end
 ]], false)
+
+end
