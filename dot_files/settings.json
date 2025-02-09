@@ -1,0 +1,26 @@
+{
+    "window.commandCenter": false,
+    "dvc.doNotShowSetupAfterInstall": true,
+    "dvc.doNotShowCliUnavailable": true,
+    "vscode-neovim.compositeKeys": {
+            "kj": {
+                "command": "vscode-neovim.escape",
+            },
+    },
+    "vscode-neovim.neovimClean": false,
+    "extensions.experimental.affinity": {
+        "asvetliakov.vscode-neovim": 1
+    },
+    "workbench.colorTheme": "Solarized Dark Vim",
+    "zenMode.centerLayout": false,
+    "editor.fontFamily": "SF Mono, Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontSize": 13,
+    "git.openRepositoryInParentFolders": "always",
+    "editor.minimap.enabled": true,
+    "zenMode.hideLineNumbers": false,
+    "files.watcherExclude": {
+        "**/.bloop": true,
+        "**/.metals": true,
+        "**/.ammonite": true
+    }
+}
