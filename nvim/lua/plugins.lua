@@ -23,6 +23,8 @@ vim.opt.rtp:prepend(lazypath)
 -- Set leader key before lazy
 vim.g.mapleader = ","
 
+-- Create the python augroup before loading plugins
+vim.api.nvim_create_augroup("python_group", { clear = true })
 
 -- Initialize lazy with plugins
 require("lazy").setup({
@@ -167,7 +169,7 @@ end
 
 
 
-local python_group = api.nvim_create_augroup("python_group", { clear = true })
+-- local python_group = api.nvim_create_augroup("python_group", { clear = true })
 api.nvim_create_autocmd("FileType", {
   pattern = { "python", "py", "ipy"},
   callback = function()

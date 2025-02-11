@@ -5,7 +5,6 @@ return {
      ft = 'python',
      init = function()
         -- Create the python augroup
-        vim.api.nvim_create_augroup("python_group", { clear = true })
         vim.api.nvim_create_autocmd("FileType", {
             pattern = "python",
             group = "python_group",
@@ -147,16 +146,3 @@ return {
     ft = {'python', 'py', 'ipy'},
     }
   } 
-
--- Python filetype settings
-vim.api.nvim_create_augroup("python_group", { clear = true })
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "python",
-    callback = function()
-        vim.cmd('filetype plugin indent on')
-        vim.cmd('syntax on')
-    end,
-    group = "python_group"
-})
-
--- Add any additional Lua-based Python configurations here if needed 
