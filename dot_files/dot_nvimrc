@@ -104,77 +104,7 @@ let g:fastfold_force = 1
 let g:fastfold_fold_command_suffixes =  []  
 let g:fastfold_fold_movement_commands = []
 
-
-augroup python_group
-" ====  set pymode ====
-filetype off
-filetype plugin indent on
-syntax on
-
-" <leader>, list functions
-" <leager>g go to definition
-"
-" au FileType python set omnifunc=pythoncomplete#Complete
-let g:SuperTabDefaultCompletionType = "context"
-
-" let g:pymode_python = 'python3'
-let g:pymode_folding = 1
-let g:pymode_folding_regex = '^\s*\%(class\|def\|async\s\+def\|if\|for\)'
-
-" Load rope plugin
-let g:pymode_rope = 0
-
-" Documentatron
-let g:pymode_doc = 1
-let g:pymode_doc_key = 'K'
-
-" Key for run python code
-let g:pymode_run = 1
-let g:pymode_run_key = 'R'
-
-"Linting
-let g:pymode_lint = 1
-let g:pymode_lint_checker = "pyflakes, pep8"
-let g:pymode_lint_ignore=["E501", "E712"]
-
-" Auto check on save
-let g:pymode_lint_write = 1
-
-" syntax highlighting
-let g:pymode_syntax = 1
-let g:pymode_syntax_all = 1
-let g:pymode_syntax_indent_errors = g:pymode_syntax_all
-let g:pymode_syntax_space_errors = g:pymode_syntax_all
-
-" disable conflicting keys and their functions
-let g:pymode_breakpoint = 0
-" let g:pymode_breakpoint_bind = '<leader>b'  " conflicts with :Buffers
-let g:pymode_run = 0
-
-"-----------------set jedi-------------------
-
-let g:jedi#goto_assignments_command = "<leader>g"
-let g:jedi#goto_definitions_command = "<leader>d"
-let g:jedi#documentation_command = "K"
-
-" nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
-"let g:jedi#usages_command = "gr" -- use ^^^ gr 
-"let g:jedi#completions_command = "<C-Space>"
-"let g:jedi#rename_command = "<leader><leader>r" -- use lsp's instead <leader>rn
-let g:jedi#show_call_signatures = "1"
-let g:jedi#goto_stubs_command = "<leader><leader>s"
-
-" let g:jedi#force_py_version = 3 " (default: 'auto')
-" let g:jedi#popup_select_first = 0 " (default: 1)
- let g:jedi#popup_on_dot = 0 " (default: 1)
- let g:jedi#completions_enabled = 0  " use deoplete-jedi instead
-
-" -- deoplete setup
- let g:deoplete#enable_at_startup = 1
- let g:deoplete#sources#jedi#ignore_errors = v:true
- nnoremap <leader>D :call deoplete#disable()<CR>
- nnoremap <leader>E :call deoplete#enable()<CR>
- augroup end
+lua require('neovim_standalone')
 
 " ------- snippet -------------
 

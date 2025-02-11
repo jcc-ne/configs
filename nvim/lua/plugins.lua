@@ -39,7 +39,6 @@ require("lazy").setup({
   }
 })
 
-
 if not vim.g.vscode then
 -------------------------------------------------------------------------------
 -- These are example settings to use with nvim-metals and the nvim built-in
