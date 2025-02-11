@@ -6,7 +6,41 @@
 -- Distributed under terms of the GNU GPLv3 license.
 --
 
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
 
+-- Set leader key before lazy
+vim.g.mapleader = ","
+
+
+-- Initialize lazy with plugins
+require("lazy").setup({
+  -- Always loaded plugins
+  vim.tbl_extend('keep', {}, require('always_loaded_plugins') or {}),
+
+  -- Load plugins for standalone Neovim (non-VSCode)
+  vim.tbl_extend('keep', {},
+    not vim.g.vscode and require('neovim_standalone') or {}
+  ),
+}, {
+  defaults = {
+    lazy = false, 
+  }
+})
+
+
+if not vim.g.vscode then
 -------------------------------------------------------------------------------
 -- These are example settings to use with nvim-metals and the nvim built-in
 -- LSP. Be sure to thoroughly read the `:help nvim-metals` docs to get an
@@ -18,17 +52,13 @@
 -- Unfamiliar with Lua and Neovim?
 --  - Check out https://github.com/nanotee/nvim-lua-guide
 --
--- The below configuration also makes use of the following plugins besides
--- nvim-metals, and therefore is a bit opinionated:
+-- The below configuration makes use of the following plugins:
 --
 -- - https://github.com/hrsh7th/nvim-cmp
 --   - hrsh7th/cmp-nvim-lsp for lsp completion sources
 --   - hrsh7th/cmp-vsnip for snippet sources
 --   - hrsh7th/vim-vsnip for snippet sources
 --
--- - https://github.com/wbthomason/packer.nvim for package management
--- git clone --depth 1 https://github.com/wbthomason/packer.nvim\\n ~/.local/share/nvim/site/pack/packer/start/packer.nvim
--- :PackerCompile and :PackerInstall
 -- - https://github.com/mfussenegger/nvim-dap (for debugging)
 -------------------------------------------------------------------------------
 local api = vim.api
@@ -42,157 +72,15 @@ local function map(mode, lhs, rhs, opts)
   api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 
-----------------------------------
--- PLUGINS -----------------------
-----------------------------------
-cmd([[packadd packer.nvim]])
-require("packer").startup(function(use)
-  
-  use({'scrooloose/nerdcommenter'})
-  use({ "wbthomason/packer.nvim", opt = true })
-  use { 'tpope/vim-fugitive' }
-  use { 'tpope/vim-rhubarb' }
-  use { '~/.vim/bundle/myBundle' }
-
-if not vim.g.vscode then
-  use({
-    "hrsh7th/nvim-cmp",
-    requires = {
-      { "hrsh7th/cmp-nvim-lsp" },
-      { "hrsh7th/cmp-vsnip" },
-      -- { "hrsh7th/vim-vsnip" },
-    },
-  })
-  use({
-    "scalameta/nvim-metals",
-    requires = {
-      "nvim-lua/plenary.nvim",
-      "mfussenegger/nvim-dap",
-    },
-  })
-
-  use({
-    "jose-elias-alvarez/null-ls.nvim",
-    requires = { "nvim-lua/plenary.nvim" },
-  })
-
-  use {
-      'VonHeikemen/lsp-zero.nvim',
-      requires = {
-          -- LSP Support
-          {'neovim/nvim-lspconfig'},
-          {'williamboman/mason.nvim'},
-          {'williamboman/mason-lspconfig.nvim'},
-
-
-  --         -- Snippets
-             {'L3MON4D3/LuaSnip'},
-      }
-  }
-  -- DAP
-  use { 'mfussenegger/nvim-dap' }
-  use { 'nvim-telescope/telescope-dap.nvim' }
-  use { 'nvim-treesitter/nvim-treesitter' }
-  --  if seeing helper error > :TSInstall vimdoc
-  use { 'mfussenegger/nvim-dap-python' } -- Python
-
-  -- use({
-  -- 'jcc-ne/chatgpt.nvim', branch = "dev",
-  -- run = 'pip3 install -r requirements.txt'
-  -- })
-  end
-end)
-
-
-if not vim.g.vscode then
-----------------------------------
--- OPTIONS -----------------------
-----------------------------------
--- global
-vim.opt_global.completeopt = { "menuone", "noinsert", "noselect" }
-
-local on_attach = function(client, bufnr)
-    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-    vim.diagnostic.config({
-        virtual_text = true,
-        signs = true,
-        update_in_insert = false,
-        underline = true,
-    })
-end
-
--- vim.opt_global.shortmess:remove("F"):append("c")
-
--- Example mappings for usage with nvim-dap. If you don't use that, you can
--- skip these, also see dbg/python.lua
-map("n", "<leader>dc", [[<cmd>lua require"dap".continue()<CR>]])
-map("n", "<leader>dr", [[<cmd>lua require"dap".repl.toggle()<CR>]])
-map("n", "<leader>dK", [[<cmd>lua require"dap.ui.widgets".hover()<CR>]])
-map("n", "<leader>dt", [[<cmd>lua require"dap".toggle_breakpoint()<CR>]])
-map("n", "<leader>dl", [[<cmd>lua require"dap".run_last()<CR>]])
-
--- completion related settings
--- This is similiar to what I use
-local cmp = require("cmp")
-cmp.setup({
-  sources = {
-    { name = "nvim_lsp" },
-    { name = "vsnip" },
-  },
-  snippet = {
-    expand = function(args)
-      -- Comes from vsnip
-      vim.fn["vsnip#anonymous"](args.body)
-    end,
-  },
-  mapping = cmp.mapping.preset.insert({
-    -- None of this made sense to me when first looking into this since there
-    -- is no vim docs, but you can't have select = true here _unless_ you are
-    -- also using the snippet stuff. So keep in mind that if you remove
-    -- snippets you need to remove this select
-    ["<CR>"] = cmp.mapping.confirm({ select = true }),
-    -- I use tabs... some say you should stick to ins-completion but this is just here as an example
-    ["<S-Tab>"] = function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      else
-        fallback()
-      end
-    end,
-    -- ["<S-Tab>"] = function(fallback)
-    --   if cmp.visible() then
-    --     cmp.select_prev_item()
-    --   else
-    --     fallback()
-    --   end
-    -- end,
-  }),
-})
-
-----------------------------------
--- LSP Setup ---------------------
-----------------------------------
 local metals_config = require("metals").bare_config()
-
--- Example of settings
 metals_config.settings = {
   showImplicitArguments = true,
   excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
   gradleScript="/Users/janine/gradlew",
   -- gradleScript="/opt/homebrew/bin/gradle",
 }
-
--- *READ THIS*
--- I *highly* recommend setting statusBarProvider to true, however if you do,
--- you *have* to have a setting to display this in your statusline or else
--- you'll not see any messages from metals. There is more info in the help
--- docs about this
--- metals_config.init_options.statusBarProvider = "on"
-
--- Example if you are using cmp how to make sure the correct capabilities for snippets are set
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-
 -- Debug settings if you're using nvim-dap
 local dap = require("dap")
 
@@ -215,7 +103,6 @@ dap.configurations.scala = {
     },
   },
 }
-
 metals_config.on_attach = function(client, bufnr)
   require("metals").setup_dap()
 end
@@ -336,5 +223,4 @@ vim.api.nvim_exec([[
     autocmd FileType go lua setup_gopls()
   augroup end
 ]], false)
-
 end

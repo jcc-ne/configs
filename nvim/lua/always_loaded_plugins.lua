@@ -1,0 +1,16 @@
+return {
+  'epeli/slimux',
+  {'majutsushi/tagbar', cmd = 'TagbarToggle'},
+  'christoomey/vim-tmux-navigator',
+  'scrooloose/nerdcommenter',
+  { 'tpope/vim-fugitive', cmd = 'G' },
+  'tpope/vim-rhubarb',
+  'lifepillar/vim-solarized8',
+  'vim-scripts/YankRing.vim',
+  'ctrlpvim/ctrlP.vim',
+  'SirVer/ultisnips',
+  'honza/vim-snippets',
+  { dir = '~/.fzf'},
+  'junegunn/fzf.vim',
+  { dir = '~/.vim/bundle/myBundle' },
+}

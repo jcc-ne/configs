@@ -52,114 +52,15 @@ set nolist
 "set lcs=trail:♪,tab:☂⚡
 set lcs=trail:+,tab:+-
 
-" dein Scripts-----------------------------
-" Follow https://github.com/Shougo/dein.vim to install
-" curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
-" sh ./installer.sh ~/.cache/dein
 
 if &compatible
   set nocompatible               " Be iMproved
 endif
 
-" Required:
-set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
-" set runtimepath+=~/.vim/
+lua require('plugins')
 
 let hostname=substitute(system('hostname -s'), "\n", "", "")
 " echo hostname
-
-" Required:
-if dein#load_state('~/.cache/dein') && !exists('g:vscode')
-  call dein#begin('~/.cache/dein')
-
-  " Let dein manage dein
-  " Required:
-  "call dein#local("~/.vim/bundle")
-  call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
-  " -- layout related
-  call dein#add('jcc-ne/vim-template', {'rev': 'dev'})
-  call dein#add('majutsushi/tagbar')
-
-  call dein#add('vim-airline/vim-airline')
-  call dein#add('vim-airline/vim-airline-themes')
-  " call dein#add('altercation/vim-colors-solarized')
-  call dein#add('lifepillar/vim-solarized8')
-
-  " -- themes
-  " call dein#add('arcticicestudio/nord-vim')
-  " call dein#add('hzchirs/vim-material')
-  
-  " -- python dev
-  call dein#add('python-mode/python-mode', {'on_ft': 'python'})
-  " call dein#add('davidhalter/jedi-vim', {'on_ft': 'python'})
-  call dein#add('deoplete-plugins/deoplete-jedi')  " async jedi
-  call dein#add('Shougo/deoplete.nvim')
-
-  call dein#add('Konfekt/FastFold', {'on_ft': 'python'})
-  call dein#add('tpope/vim-fugitive')
-  call dein#add('tpope/vim-rhubarb')
-  call dein#add('airblade/vim-gitgutter')
-
-  " -- tmux related
-  call dein#add('christoomey/vim-tmux-navigator')
-  call dein#add('epeli/slimux')
-
-  call dein#add('vim-scripts/YankRing.vim')
-  call dein#add('ctrlpvim/ctrlP.vim')
-  call dein#add('SirVer/ultisnips')
-  call dein#add('honza/vim-snippets')
-  " call dein#add('scrooloose/nerdcommenter')
-
-  " call dein#add('lvht/tagbar-markdown', {'on_cmd' : ['Tagbar', 'TagbarToggle']})
-  call dein#add('lvht/tagbar-markdown')
-  call dein#add('mattn/calendar-vim')
-  call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
-              \ 'build': 'sh -c "cd app & yarn install"' })
-
-  " -- local plugins
-  call dein#add('~/.vim/bundle/myBundle')
-  " call dein#add('~/.vim/bundle/totl')
-
-  " -- fuzzy finder
-  call dein#add('~/.fzf')
-  " call dein#add('junegunn/fzf.vim', {'rev': '23dda860'})
-  call dein#add('junegunn/fzf.vim', {'rev': 'main'})
-
-  call dein#add('mbbill/undotree')
-
-  call dein#add('whiteinge/diffconflicts')
-
-  call dein#add('liuchengxu/graphviz.vim')
-  call dein#add('chrisbra/csv.vim')
-
-  call dein#add('pwntester/octo.nvim')
-  call dein#add('nvim-lua/plenary.nvim')
-  call dein#add('nvim-telescope/telescope.nvim', {'rev': 'nvim-0.6'})
-  call dein#add('kyazdani42/nvim-web-devicons')
-  call dein#add('github/copilot.vim')
-
-  " call dein#add('jcc-ne/chatgpt.nvim', {'rev': 'dev', 'build': 'pip install -r requirements.txt'})
-
-  " -- LSP
-  " call dein#add('neovim/nvim-lspconfig')
-  " call dein#add('scalameta/nvim-metals')
-
-  " -- only vimwiki and taskwiki related plugins locally
-  if hostname == "Janine-MBP" || hostname == "GDL-813"
-      call dein#add('scrooloose/nerdtree')
-      " call dein#add('jcc-ne/taskwiki')
-      " call dein#add('tools-life/taskwiki')
-      " call dein#add('farseer90718/vim-taskwarrior')
-      call dein#add('vimoutliner/vimoutliner')
-      " call dein#add('vimwiki/vimwiki', {'rev': 'fb5d2'})
-      call dein#add('vimwiki/vimwiki', {'rev': 'master'})
-  endif
-
-  " -- Required:
-  call dein#end()
-  call dein#save_state()
-
-endif
 
 " ---- adjust background
 
@@ -196,34 +97,9 @@ filetype plugin indent on
 syntax enable
 
 
-" If you want to install not installed plugins on startup.
-"if dein#check_install()
-  "call dein#install()
-"endif
-
-"End dein Scripts-------------------------
-"
-
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#hunks#enabled = 0
-let g:airline_theme = 'powerlineish'
-
-
-"au FocusLost * :set number
-"au FocusGained * :set relativenumber
-"autocmd InsertEnter * :set number
-"autocmd InsertLeave * :set relativenumber
-
-" -- fastfold
-"  prevents pymode folding from being very slow, works with version d2dead6
-"  cd ~/.vim/bundle/python-mode/
-"  git checkout d2dead6     (git checkout tags/snappy)
-
 nmap zuz <Plug>(FastFoldUpdate)
 let g:fastfold_savehook = 1
 let g:fastfold_force = 1
-" let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
-" let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
 " -- to be faster, set the fastfold update commands to blank
 let g:fastfold_fold_command_suffixes =  []  
 let g:fastfold_fold_movement_commands = []
@@ -279,7 +155,6 @@ let g:pymode_run = 0
 
 let g:jedi#goto_assignments_command = "<leader>g"
 let g:jedi#goto_definitions_command = "<leader>d"
-let g:jedi#goto_stubs_command = "<leader><leader>s"
 let g:jedi#documentation_command = "K"
 
 " nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
@@ -385,7 +260,7 @@ let g:vimwiki_list = [
 nnoremap <F2> :NERDTreeToggle<CR>
 
 " -- undotree
-nnoremap <F5> :UndotreeToggle<CR>
+" nnoremap <F5> :UndotreeToggle<CR>
 
 " -- nerdcommenter
 let NERDSpaceDelims=1
@@ -483,7 +358,6 @@ nnoremap <leader>e :!black %<cr>
 
 " --- lua plugins in ~/.config/nvim/lua/plugins.lua
 lua require('lsp_mappings')
-lua require('plugins')
 
 if !exists('g:vscode')
     " imap <silent><script><expr> <C-K> copilot#Accept("\<CR>")
