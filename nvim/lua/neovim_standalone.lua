@@ -35,7 +35,56 @@ return {
      end
     },
     {'Konfekt/FastFold', ft = 'python'},
-    {'vimwiki/vimwiki', ft = 'markdown'},
+    {'vimwiki/vimwiki', cmd = 'VimwikiMakeDiaryNote',
+      init = function()
+        -- Vimwiki configuration
+        vim.g.vimwiki_global_ext = 0
+        vim.g.vimwiki_list = {
+          {
+            path = '~/vimwiki/text/work',
+            path_html = '~/vimwiki/html/work',
+            syntax = 'markdown',
+            ext = '.md',
+            auto_toc = 1,
+            auto_tags = 1,
+            index = 'index'
+          },
+          {
+            path = '~/.task/wiki/',
+            syntax = 'markdown',
+            ext = '.md',
+            auto_toc = 1,
+            auto_tags = 1,
+            index = 'index'
+          },
+          {
+            path = '~/vimwiki/text/fin',
+            path_html = '~/vimwiki/html/fin',
+            syntax = 'markdown',
+            ext = '.md',
+            auto_toc = 1,
+            auto_tags = 1,
+            index = 'index'
+          },
+          {
+            path = '~/vimwiki/text/general',
+            path_html = '~/vimwiki/html/general',
+            syntax = 'markdown',
+            ext = '.md',
+            auto_toc = 1,
+            index = 'index',
+            template_path = '~/vimwiki/templates/',
+            template_default = 'def_template',
+            template_ext = '.html'
+          },
+          {
+            path = '~/vimwiki/text/arc_2015',
+            ext = '.wiki',
+            auto_toc = 1
+          }
+        }
+     end
+    },
     {'deoplete-plugins/deoplete-jedi', 
      ft = 'python',
      init = function()
@@ -86,7 +135,15 @@ return {
     'vim-airline/vim-airline-themes',
     'airblade/vim-gitgutter',
     'epeli/slimux',
-    'github/copilot.vim',
+    {
+        'github/copilot.vim',
+        init = function()
+            -- Copilot keymaps
+            vim.keymap.set('i', '<C-]>', '<Plug>(copilot-next)', {})
+            vim.keymap.set('i', '<C-[>', '<Plug>(copilot-previous)', {})
+            vim.keymap.set('i', '<esc>', '<Plug>(copilot-dismiss)', {})
+        end
+    },
     'whiteinge/diffconflicts',
     {'lvht/tagbar-markdown', ft = 'markdown'},
     'mattn/calendar-vim',

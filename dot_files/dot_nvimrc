@@ -147,44 +147,11 @@ au BufEnter *.md set foldlevel=20
 au BufEnter *.md set shiftwidth=4
 
 " - vimwiki
+" - the plugin is set to be lazy loaded in neovim_standalone.lua
+" - it's activated by the command VimwikiMakeDiaryNote
+nnoremap <leader>w<leader>w :VimwikiMakeDiaryNote<CR>
 nnoremap <leader>wg :VimwikiGenerateTags<CR>
 nnoremap <leader>wt :VimwikiRebuildTags<CR>
-
-let g:vimwiki_global_ext = 0
-let g:vimwiki_list = [
-            \{'path': '~/vimwiki/text/work',
-            \ 'path_html': '~/vimwiki/html/work',
-            \'syntax': 'markdown',
-            \'ext': '.md',
-            \ 'auto_toc': 1,
-            \ 'auto_tags': 1,
-            \ 'index': 'index'},
-            \{'path': '~/.task/wiki/',
-            \'syntax': 'markdown',
-            \'ext': '.md',
-            \ 'auto_toc': 1,
-            \ 'auto_tags': 1,
-            \ 'index': 'index'},
-            \{'path': '~/vimwiki/text/fin',
-            \ 'path_html': '~/vimwiki/html/fin',
-            \'syntax': 'markdown',
-            \'ext': '.md',
-            \ 'auto_toc': 1,
-            \ 'auto_tags': 1,
-            \ 'index': 'index'},
-            \{'path': '~/vimwiki/text/general',
-            \ 'path_html': '~/vimwiki/html/general',
-            \ 'syntax': 'markdown',
-            \ 'ext': '.md',
-            \ 'auto_toc': 1,
-            \ 'index': 'index',
-            \ 'template_path': '~/vimwiki/templates/',
-            \ 'template_default': 'def_template',
-            \ 'template_ext': '.html'},
-            \{'path': '~/vimwiki/text/arc_2015',
-            \ 'ext': '.wiki',
-            \ 'auto_toc': 1}
-            \]
 
 " -- nerdtree
 nnoremap <F2> :NERDTreeToggle<CR>
@@ -212,36 +179,7 @@ nnoremap <silent><leader>1 :call RelativeNumberToggle()<CR>
 " -- fzf mapping
 " -- usage ex: ,r to grep a function, 
 "  <tab> to select <C-a> all <C-d> deselect all, <CR> quickfix
-let g:fzf_command_prefix = 'Fz'
-nmap <leader><leader>f :FzFiles<CR>
-nmap <leader>f :FzGFiles<CR>
-nmap <leader>h :FzHistory<CR>
-nmap <leader>b :FzBuffers<CR>
-nmap <leader>r :FzRg<CR>
-nmap <leader>l :FzLines<CR>
-nmap <leader><leader>l :FzBLines<CR>
-
-nnoremap <leader>2 :FZF -m ../<cr>
-nnoremap <leader>3 :FZF -m ../../<cr>
-nnoremap <leader>4 :FZF -m ../../../<cr>
-nnoremap <leader>5 :FZF -m ../../../../<cr>
-
-
-" -- taskwiki related
-" --    quick key to open general taskwarrior.totl
-" --    cheat sheets:
-" --        ,td    mark as done
-" --        ,tcp    change  project
-
-" let g:taskwiki_markup_syntax = "markdown"
-augroup taskwiki_related
-    autocmd!
-
-    " -- view keymaps
-    autocmd FileType vimwiki nnoremap <F3> :sp ~/.vim/bundle/myBundle/plugin/my_vimwiki.vim <CR>
-    " -- tn, tj toggle +next, tr roadmap, tw followup 7 days with due, ty today, to followup w/o due
-augroup end
- 
+"
 nnoremap <silent> <leader>q :redir @a<CR>:g//<CR>:redir END<CR>:new<CR>:put! a<CR>
 
 " -- slimux settings
@@ -268,53 +206,5 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 nnoremap <leader>m :setf markdown<cr>
 nnoremap <leader>e :!black %<cr>
 
-" --- LSP
-" lua << EOF
-" require("lspconfig").pylsp.setup{}
-" EOF
-
-" set completeopt-=preview
-
-
-" nnoremap <silent> ,g <cmd>lua vim.lsp.buf.definition()<CR>
-" nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
-" nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
-" nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
-" nnoremap <silent> ,d <cmd>lua vim.lsp.buf.type_definition()<CR>
-" nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
-" nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
-" nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-" endfunction
-
 " --- lua plugins in ~/.config/nvim/lua/plugins.lua
 lua require('lsp_mappings')
-
-if !exists('g:vscode')
-    " imap <silent><script><expr> <C-K> copilot#Accept("\<CR>")
-    " let g:copilot_no_tab_map = v:true
-    imap <C-]> <Plug>(copilot-next)
-    imap <C-[> <Plug>(copilot-previous)
-    imap <esc> <Plug>(copilot-dismiss)
-else
-    nnoremap zM :call VSCodeNotify('editor.foldAll')<CR>
-    nnoremap zR :call VSCodeNotify('editor.unfoldAll')<CR>
-    nnoremap zc :call VSCodeNotify('editor.fold')<CR>
-    nnoremap zC :call VSCodeNotify('editor.foldRecursively')<CR>
-    nnoremap zo :call VSCodeNotify('editor.unfold')<CR>
-    nnoremap zO :call VSCodeNotify('editor.unfoldRecursively')<CR>
-    nnoremap za :call VSCodeNotify('editor.toggleFold')<CR>
-    
-    function! MoveCursor(direction) abort
-        if(reg_recording() == '' && reg_executing() == '')
-            return 'g'.a:direction
-        else
-            return a:direction
-        endif
-    endfunction
-    
-    " nmap <expr> j MoveCursor('j')
-    " nmap <expr> k MoveCursor('k')
-    nnoremap <silent>j :call VSCodeCall('cursorDown')<cr>
-    nnoremap <silent>k :call VSCodeCall('cursorUp')<cr>
-endif
-
