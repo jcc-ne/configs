@@ -1,4 +1,10 @@
 -- VSCode specific keymaps and settings
+--
+--
+local function notify(cmd)
+    return string.format("<cmd>call VSCodeNotify('%s')<CR>", cmd)
+end
+
 local function setup()
     -- Folding commands
     vim.keymap.set('n', 'zM', function() vim.fn.VSCodeNotify('editor.foldAll') end)
@@ -12,6 +18,9 @@ local function setup()
     -- Cursor movement
     vim.keymap.set('n', 'j', function() vim.fn.VSCodeCall('cursorDown') end, { silent = true })
     vim.keymap.set('n', 'k', function() vim.fn.VSCodeCall('cursorUp') end, { silent = true })
+
+    -- file finders
+    vim.keymap.set('n', '<Leader>qo', notify 'workbench.action.quickOpen', { silent = true })
 end
 
 setup()

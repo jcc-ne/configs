@@ -2,7 +2,7 @@
 return {
     {'jcc-ne/vim-template', branch = 'dev'},
     {'python-mode/python-mode', 
-     ft = 'python',
+     ft = {'python', 'py', 'ipy'},
      init = function()
         -- Create the python augroup
         vim.api.nvim_create_autocmd("FileType", {
