@@ -9,10 +9,10 @@
 --end
 
 local map = vim.keymap.set
+local keymap = vim.api.nvim_set_keymap
 local api = vim.api
 local cmd = vim.cmd
 
-map({"n", "v"}, "<leader>t", "<cmd>lua require('vscode').action('workbench.action.terminal.toggleTerminal')<CR>")
 
 -- LSP mappings
 map("n", "<space>h", "<cmd>lua vim.diagnostic.hide()<CR>")
@@ -22,8 +22,41 @@ map("n", "<space>ss", "<cmd>lua vim.diagnostic.enable()<CR>")
 map("n", "<space>e", "<cmd>lua vim.diagnostic.open_float()<CR>")
 map("n", "gD", "<cmd>lua vim.lsp.buf.definition()<CR>")
 
+local function notify(cmd)
+    return string.format("<cmd>call VSCodeNotify('%s')<CR>", cmd)
+end
+
+local function v_notify(cmd)
+    return string.format("<cmd>call VSCodeNotifyVisual('%s', 1)<CR>", cmd)
+end
+
 if vim.g.vscode then
+    map({"n", "v"}, "<leader>t", "<cmd>lua require('vscode').action('workbench.action.terminal.toggleTerminal')<CR>")
     map("n", "gd", "<cmd>call <SNR>5_vscodeGoToDefinition('revealDefinition')<CR>")
+
+    -- keymap('n', '<Leader>xr', notify 'references-view.findReferences', { silent = true }) -- language references
+    keymap('n', '<Leader>xd', notify 'workbench.actions.view.problems', { silent = true }) -- language diagnostics
+    keymap('n', 'gr', notify 'editor.action.goToReferences', { silent = true })
+    -- keymap('n', '<Leader>rn', notify 'editor.action.rename', { silent = true })
+    keymap('n', '<Leader>fm', notify 'editor.action.formatDocument', { silent = true })
+    keymap('n', '<Leader>ca', notify 'editor.action.refactor', { silent = true }) -- language code actions
+
+    -- find inFiles, Files
+    keymap('n', '<Leader>r', notify 'workbench.action.findInFiles', { silent = true }) -- use ripgrep to search files
+    keymap('n', '<Leader>f', notify 'workbench.action.quickOpen', { silent = true }) -- find files
+
+    -- toggle panels
+    keymap('n', '<Leader>ts', notify 'workbench.action.toggleSidebarVisibility', { silent = true })
+    keymap('n', '<Leader>th', notify 'workbench.action.toggleAuxiliaryBar', { silent = true }) -- toggle docview (help page)
+    keymap('n', '<Leader>tp', notify 'workbench.action.togglePanel', { silent = true })
+    keymap('n', '<Leader>tw', notify 'workbench.action.terminal.toggleTerminal', { silent = true }) -- terminal window
+
+    keymap('n', '<Leader>fc', notify 'workbench.action.showCommands', { silent = true }) -- find commands
+
+    keymap('v', '<Leader>fm', v_notify 'editor.action.formatSelection', { silent = true })
+    keymap('v', '<Leader>ca', v_notify 'editor.action.refactor', { silent = true })
+    keymap('v', '<Leader>fc', v_notify 'workbench.action.showCommands', { silent = true })
+
     -- harpoon keymaps
     map({"n", "v"}, "<leader>ha", "<cmd>lua require('vscode').action('vscode-harpoon.addEditor')<CR>")
     map({"n", "v"}, "<leader>ho", "<cmd>lua require('vscode').action('vscode-harpoon.editorQuickPick')<CR>")
