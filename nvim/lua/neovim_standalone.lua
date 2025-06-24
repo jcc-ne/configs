@@ -128,22 +128,17 @@ return {
         'vim-airline/vim-airline',
         init = function()
             vim.g.airline_powerline_fonts = 1
-            vim.g["airline#extensions#hunks#enabled"] = 0
-            vim.g.airline_theme = 'powerlineish'
+            vim.g["airline#extensions#hunks#enabled"] = 1
+            -- vim.g.airline_theme = 'base16'
+            -- vim.g.airline_theme = 'deus'
+            -- vim.g.airline_theme = 'monochrome'
+            vim.g.airline_theme = 'silver'
+            -- vim.g.airline_theme = 'nord_minimal'
         end,
     },
     'vim-airline/vim-airline-themes',
     'airblade/vim-gitgutter',
     'epeli/slimux',
-    {
-        'github/copilot.vim',
-        init = function()
-            -- Copilot keymaps
-            vim.keymap.set('i', '<C-]>', '<Plug>(copilot-next)', {})
-            vim.keymap.set('i', '<C-[>', '<Plug>(copilot-previous)', {})
-            vim.keymap.set('i', '<esc>', '<Plug>(copilot-dismiss)', {})
-        end
-    },
     'whiteinge/diffconflicts',
     {'lvht/tagbar-markdown', ft = 'markdown'},
     'mattn/calendar-vim',

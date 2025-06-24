@@ -3,7 +3,7 @@ let mapleader = ","
 " let g:python3_host_prog="~/.pyenv/versions/anaconda3-2022.05/bin/python"
 " let g:python_host_prog='~/anaconda3/bin/python'
 let g:python_host_skip_check = 1
-set guioptions=M
+" set guioptions=M
 inoremap kj <esc>
 vnoremap kj <esc>
 nnoremap <tab><tab> <c-w>w
@@ -88,7 +88,7 @@ endif
 if $VIMBG != ""
     exe 'set background='.expand($VIMBG)
 endif
-set background=dark
+" set background=dark
 
 " nmap <leader>c :colorscheme gruvbox<CR>
 
