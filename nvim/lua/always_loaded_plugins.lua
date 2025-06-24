@@ -3,7 +3,10 @@ return {
   {'majutsushi/tagbar', cmd = 'TagbarToggle'},
   'christoomey/vim-tmux-navigator',
   'scrooloose/nerdcommenter',
-  { 'tpope/vim-fugitive', cmd = {'G', 'Git', 'GBlame'} },
+  --[[
+     [ { 'tpope/vim-fugitive', cmd = {'G', 'Git', 'GBlame', } },
+     ]]
+  { 'tpope/vim-fugitive'},
   'tpope/vim-rhubarb',
   'lifepillar/vim-solarized8',
   {'vim-scripts/YankRing.vim',

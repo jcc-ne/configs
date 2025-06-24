@@ -1,6 +1,8 @@
 -- Plugins that are only loaded when not in VSCode
 return {
     {'jcc-ne/vim-template', branch = 'dev'},
+    {'nvim-treesitter/nvim-treesitter-textobjects', ft = 'python'},
+    {'astral-sh/ruff', ft='python'},
     {'python-mode/python-mode', 
      ft = {'python', 'py', 'ipy'},
      init = function()
@@ -20,10 +22,10 @@ return {
                 vim.g.pymode_doc_key = 'K'
                 vim.g.pymode_run = 1
                 vim.g.pymode_run_key = 'R'
-                vim.g.pymode_lint = 1
-                vim.g.pymode_lint_checker = "pyflakes, pep8"
-                vim.g.pymode_lint_ignore = {"E501", "E712"}
-                vim.g.pymode_lint_write = 1
+                vim.g.pymode_lint = 0
+                -- vim.g.pymode_lint_checker = "pyflakes, pep8"
+                -- vim.g.pymode_lint_ignore = {"E501", "E712"}
+                -- vim.g.pymode_lint_write = 1
                 vim.g.pymode_syntax = 1
                 vim.g.pymode_syntax_all = 1
                 vim.g.pymode_syntax_indent_errors = vim.g.pymode_syntax_all
@@ -218,5 +220,6 @@ return {
 
       end
   },
+
 
   } 

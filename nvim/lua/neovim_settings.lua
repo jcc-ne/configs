@@ -130,11 +130,22 @@ api.nvim_create_autocmd("FileType", {
   pattern = { "python", "py", "ipy"},
   callback = function()
       print("loading python lsp settings...")
-      null_ls.setup({
-          on_attach = on_attach,
-          sources = {
-              -- diagnostics.flake8,
-              -- diagnostics.mypy
+      -- null_ls.setup({
+      --     on_attach = on_attach,
+      --     sources = {
+      --         -- diagnostics.flake8,
+      --         -- diagnostics.mypy
+      --     }
+      -- })
+
+      require('lspconfig').ruff.setup({
+          init_options = {
+              settings = {
+                  -- Ruff language server settings go here
+                  format = {
+                      ["quote-style"] = "double"
+                  }
+              }
           }
       })
 
