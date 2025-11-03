@@ -72,16 +72,16 @@ api.nvim_create_autocmd("FileType", {
   -- something like nvim-jdtls which also works on a java filetype autocmd.
   pattern = { "scala", "sbt", "java", "groovy" },
   callback = function()
-     print("loading scala lsp settings...")
+  -- print("loading scala lsp settings...")
     require("metals").initialize_or_attach(metals_config)
   end,
   group = nvim_metals_group,
 })
 
-api.nvim_create_user_command("NullLsToggle", function()
-    -- you can also create commands to disable or enable sources
-    require("null-ls").toggle({})
-end, {})
+-- api.nvim_create_user_command("NullLsToggle", function()
+--     -- you can also create commands to disable or enable sources
+--     require("null-ls").toggle({})
+-- end, {})
 
 
 -- local lsp = require('lsp-zero')
@@ -90,8 +90,8 @@ end, {})
 require("mason").setup()
 require("mason-lspconfig").setup()
 
-local null_ls = require('null-ls')
-local diagnostics = null_ls.builtins.diagnostics
+-- local null_ls = require('null-ls')
+-- local diagnostics = null_ls.builtins.diagnostics
 
 vim.diagnostic.config({
   virtual_text = false,
@@ -118,10 +118,16 @@ vim.api.nvim_set_keymap(
 
 -- local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " } ▼▲ 
 local signs = { Error = "✗ ", Warn = " ", Hint = " ", Info = "⚑ " }
-for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-end
+vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = signs.Error,
+      [vim.diagnostic.severity.WARN]  = signs.Warn,
+      [vim.diagnostic.severity.HINT]  = signs.Hint,
+      [vim.diagnostic.severity.INFO]  = signs.Info,
+    }
+  }
+})
 
 
 
@@ -129,7 +135,7 @@ end
 api.nvim_create_autocmd("FileType", {
   pattern = { "python", "py", "ipy"},
   callback = function()
-      print("loading python lsp settings...")
+      -- print("loading python lsp settings...")
       -- null_ls.setup({
       --     on_attach = on_attach,
       --     sources = {

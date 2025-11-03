@@ -171,10 +171,10 @@ return {
       ft = {'scala', 'sbt', 'java', 'groovy'},
     },
   
-    {
-      'jose-elias-alvarez/null-ls.nvim',
-      dependencies = { 'nvim-lua/plenary.nvim' },
-    },
+    -- {
+    --   'jose-elias-alvarez/null-ls.nvim',
+    --   dependencies = { 'nvim-lua/plenary.nvim' },
+    -- },
   
     {
       'VonHeikemen/lsp-zero.nvim',

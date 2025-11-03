@@ -42,9 +42,9 @@ require("lazy").setup({
 })
 
 if not vim.g.vscode then
-  print("loading neovim settings...")
+  -- print("loading neovim settings...")
   require('neovim_settings')
 else
-  print("loading vscode settings...")
+  -- print("loading vscode settings...")
   require('vscode_settings')
 end
