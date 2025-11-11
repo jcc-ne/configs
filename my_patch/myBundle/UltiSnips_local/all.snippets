@@ -344,3 +344,13 @@ prompt:  ## command stops with a promt
 	@read -p "(hit any key to continue.  Ctrl-C to abort)"
 endsnippet
 
+snippet envrc
+THIS_DIR="$(dirname "${BASH_SOURCE[0]}")"
+export $(grep -v '^\s*#' "${THIS_DIR}/env/.env.local" | grep -v '^$' | xargs)
+endsnippet
+
+snippet envrc_uv
+source ../.envrc
+source ~/.fn_layout_uv_pyenv.zsh
+layout_uv_pyenv
+endsnippet

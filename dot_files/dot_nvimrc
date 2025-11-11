@@ -3,7 +3,7 @@ let mapleader = ","
 " let g:python3_host_prog="~/.pyenv/versions/anaconda3-2022.05/bin/python"
 " let g:python_host_prog='~/anaconda3/bin/python'
 let g:python_host_skip_check = 1
-set guioptions=M
+" set guioptions=M
 inoremap kj <esc>
 vnoremap kj <esc>
 nnoremap <tab><tab> <c-w>w
@@ -52,114 +52,15 @@ set nolist
 "set lcs=trail:♪,tab:☂⚡
 set lcs=trail:+,tab:+-
 
-" dein Scripts-----------------------------
-" Follow https://github.com/Shougo/dein.vim to install
-" curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
-" sh ./installer.sh ~/.cache/dein
 
 if &compatible
   set nocompatible               " Be iMproved
 endif
 
-" Required:
-set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
-" set runtimepath+=~/.vim/
+lua require('plugins')
 
 let hostname=substitute(system('hostname -s'), "\n", "", "")
 " echo hostname
-
-" Required:
-if dein#load_state('~/.cache/dein')
-  call dein#begin('~/.cache/dein')
-
-  " Let dein manage dein
-  " Required:
-  "call dein#local("~/.vim/bundle")
-  call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
-  " -- layout related
-  call dein#add('jcc-ne/vim-template', {'rev': 'dev'})
-  call dein#add('majutsushi/tagbar')
-
-  call dein#add('vim-airline/vim-airline')
-  call dein#add('vim-airline/vim-airline-themes')
-  " call dein#add('altercation/vim-colors-solarized')
-  call dein#add('lifepillar/vim-solarized8')
-
-  " -- themes
-  call dein#add('arcticicestudio/nord-vim')
-  call dein#add('hzchirs/vim-material')
-  
-  " -- python dev
-  call dein#add('python-mode/python-mode', {'on_ft': 'python'})
-  " call dein#add('davidhalter/jedi-vim', {'on_ft': 'python'})
-  call dein#add('deoplete-plugins/deoplete-jedi')  " async jedi
-  call dein#add('Shougo/deoplete.nvim')
-
-  call dein#add('Konfekt/FastFold', {'on_ft': 'python'})
-  call dein#add('tpope/vim-fugitive')
-  call dein#add('tpope/vim-rhubarb')
-  call dein#add('airblade/vim-gitgutter')
-
-  " -- tmux related
-  call dein#add('christoomey/vim-tmux-navigator')
-  call dein#add('epeli/slimux')
-
-  call dein#add('vim-scripts/YankRing.vim')
-  call dein#add('ctrlpvim/ctrlP.vim')
-  call dein#add('SirVer/ultisnips')
-  call dein#add('honza/vim-snippets')
-  call dein#add('scrooloose/nerdcommenter')
-
-  " call dein#add('lvht/tagbar-markdown', {'on_cmd' : ['Tagbar', 'TagbarToggle']})
-  call dein#add('lvht/tagbar-markdown')
-  call dein#add('mattn/calendar-vim')
-  call dein#add('iamcco/markdown-preview.nvim', {'on_ft': ['markdown', 'pandoc.markdown', 'rmd'],
-              \ 'build': 'sh -c "cd app & yarn install"' })
-
-  " -- local plugins
-  call dein#add('~/.vim/bundle/myBundle')
-  " call dein#add('~/.vim/bundle/totl')
-
-  " -- fuzzy finder
-  call dein#add('~/.fzf')
-  " call dein#add('junegunn/fzf.vim', {'rev': '23dda860'})
-  call dein#add('junegunn/fzf.vim', {'rev': 'main'})
-
-  call dein#add('mbbill/undotree')
-
-  call dein#add('whiteinge/diffconflicts')
-
-  call dein#add('liuchengxu/graphviz.vim')
-  call dein#add('chrisbra/csv.vim')
-
-  call dein#add('pwntester/octo.nvim')
-  call dein#add('nvim-lua/plenary.nvim')
-  call dein#add('nvim-telescope/telescope.nvim', {'rev': 'nvim-0.6'})
-  call dein#add('kyazdani42/nvim-web-devicons')
-  call dein#add('github/copilot.vim')
-
-  " call dein#add('jcc-ne/chatgpt.nvim', {'rev': 'dev', 'build': 'pip install -r requirements.txt'})
-
-  " -- LSP
-  " call dein#add('neovim/nvim-lspconfig')
-  " call dein#add('scalameta/nvim-metals')
-
-  " -- only vimwiki and taskwiki related plugins locally
-  if hostname == "Janine-MBP" || hostname == "GDL-813"
-      call dein#add('scrooloose/nerdtree')
-      " call dein#add('jcc-ne/taskwiki')
-      " call dein#add('tools-life/taskwiki')
-      " call dein#add('farseer90718/vim-taskwarrior')
-      call dein#add('vimoutliner/vimoutliner')
-      " call dein#add('vimwiki/vimwiki', {'rev': 'fb5d2'})
-      call dein#add('vimwiki/vimwiki', {'rev': 'master'})
-  endif
-
-  " -- Required:
-  call dein#end()
-  call dein#save_state()
-
-endif
 
 " ---- adjust background
 
@@ -184,10 +85,10 @@ else
    set background=dark
 endif
 
-" set background=dark
 if $VIMBG != ""
     exe 'set background='.expand($VIMBG)
 endif
+" set background=dark
 
 " nmap <leader>c :colorscheme gruvbox<CR>
 
@@ -196,115 +97,19 @@ filetype plugin indent on
 syntax enable
 
 
-" If you want to install not installed plugins on startup.
-"if dein#check_install()
-  "call dein#install()
-"endif
-
-"End dein Scripts-------------------------
-"
-
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#hunks#enabled = 0
-let g:airline_theme = 'powerlineish'
-
-
-"au FocusLost * :set number
-"au FocusGained * :set relativenumber
-"autocmd InsertEnter * :set number
-"autocmd InsertLeave * :set relativenumber
-
-" -- fastfold
-"  prevents pymode folding from being very slow, works with version d2dead6
-"  cd ~/.vim/bundle/python-mode/
-"  git checkout d2dead6     (git checkout tags/snappy)
-
 nmap zuz <Plug>(FastFoldUpdate)
 let g:fastfold_savehook = 1
 let g:fastfold_force = 1
-" let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
-" let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
 " -- to be faster, set the fastfold update commands to blank
 let g:fastfold_fold_command_suffixes =  []  
 let g:fastfold_fold_movement_commands = []
 
-
-augroup python_group
-" ====  set pymode ====
-filetype off
-filetype plugin indent on
-syntax on
-
-" <leader>, list functions
-" <leager>g go to definition
-"
-" au FileType python set omnifunc=pythoncomplete#Complete
-let g:SuperTabDefaultCompletionType = "context"
-
-" let g:pymode_python = 'python3'
-let g:pymode_folding = 1
-let g:pymode_folding_regex = '^\s*\%(class\|def\|async\s\+def\|if\|for\)'
-
-" Load rope plugin
-let g:pymode_rope = 0
-
-" Documentatron
-let g:pymode_doc = 1
-let g:pymode_doc_key = 'K'
-
-" Key for run python code
-let g:pymode_run = 1
-let g:pymode_run_key = 'R'
-
-"Linting
-let g:pymode_lint = 1
-let g:pymode_lint_checker = "pyflakes, pep8"
-let g:pymode_lint_ignore=["E501", "E712"]
-
-" Auto check on save
-let g:pymode_lint_write = 1
-
-" syntax highlighting
-let g:pymode_syntax = 1
-let g:pymode_syntax_all = 1
-let g:pymode_syntax_indent_errors = g:pymode_syntax_all
-let g:pymode_syntax_space_errors = g:pymode_syntax_all
-
-" disable conflicting keys and their functions
-let g:pymode_breakpoint = 0
-" let g:pymode_breakpoint_bind = '<leader>b'  " conflicts with :Buffers
-let g:pymode_run = 0
-
-"-----------------set jedi-------------------
-
-let g:jedi#goto_assignments_command = "<leader>g"
-let g:jedi#goto_definitions_command = "<leader>d"
-let g:jedi#goto_stubs_command = "<leader><leader>s"
-let g:jedi#documentation_command = "K"
-
-" nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
-"let g:jedi#usages_command = "gr" -- use ^^^ gr 
-"let g:jedi#completions_command = "<C-Space>"
-"let g:jedi#rename_command = "<leader><leader>r" -- use lsp's instead <leader>rn
-let g:jedi#show_call_signatures = "1"
-let g:jedi#goto_stubs_command = "<leader><leader>s"
-
-" let g:jedi#force_py_version = 3 " (default: 'auto')
-" let g:jedi#popup_select_first = 0 " (default: 1)
- let g:jedi#popup_on_dot = 0 " (default: 1)
- let g:jedi#completions_enabled = 0  " use deoplete-jedi instead
-
-" -- deoplete setup
- let g:deoplete#enable_at_startup = 1
- let g:deoplete#sources#jedi#ignore_errors = v:true
- nnoremap <leader>D :call deoplete#disable()<CR>
- nnoremap <leader>E :call deoplete#enable()<CR>
- augroup end
+lua require('neovim_standalone')
 
 " ------- snippet -------------
 
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsExpandTrigger="<c-K>"
 " let g:UltiSnipsSnippetsDir="~/.vim/bundle/myBundle/UltiSnips"
 " let g:UltiSnipsSnippetDirectories="~/.config/nvim/UltiSnips"  " configs/install/setup_ultisnips_dir.sh to config the dir
 " let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"  " configs/install/setup_ultisnips_dir.sh to config the dir
@@ -342,50 +147,17 @@ au BufEnter *.md set foldlevel=20
 au BufEnter *.md set shiftwidth=4
 
 " - vimwiki
+" - the plugin is set to be lazy loaded in neovim_standalone.lua
+" - it's activated by the command VimwikiMakeDiaryNote
+nnoremap <leader>w<leader>w :VimwikiMakeDiaryNote<CR>
 nnoremap <leader>wg :VimwikiGenerateTags<CR>
 nnoremap <leader>wt :VimwikiRebuildTags<CR>
-
-let g:vimwiki_global_ext = 0
-let g:vimwiki_list = [
-            \{'path': '~/vimwiki/text/work',
-            \ 'path_html': '~/vimwiki/html/work',
-            \'syntax': 'markdown',
-            \'ext': '.md',
-            \ 'auto_toc': 1,
-            \ 'auto_tags': 1,
-            \ 'index': 'index'},
-            \{'path': '~/.task/wiki/',
-            \'syntax': 'markdown',
-            \'ext': '.md',
-            \ 'auto_toc': 1,
-            \ 'auto_tags': 1,
-            \ 'index': 'index'},
-            \{'path': '~/vimwiki/text/fin',
-            \ 'path_html': '~/vimwiki/html/fin',
-            \'syntax': 'markdown',
-            \'ext': '.md',
-            \ 'auto_toc': 1,
-            \ 'auto_tags': 1,
-            \ 'index': 'index'},
-            \{'path': '~/vimwiki/text/general',
-            \ 'path_html': '~/vimwiki/html/general',
-            \ 'syntax': 'markdown',
-            \ 'ext': '.md',
-            \ 'auto_toc': 1,
-            \ 'index': 'index',
-            \ 'template_path': '~/vimwiki/templates/',
-            \ 'template_default': 'def_template',
-            \ 'template_ext': '.html'},
-            \{'path': '~/vimwiki/text/arc_2015',
-            \ 'ext': '.wiki',
-            \ 'auto_toc': 1}
-            \]
 
 " -- nerdtree
 nnoremap <F2> :NERDTreeToggle<CR>
 
 " -- undotree
-nnoremap <F5> :UndotreeToggle<CR>
+" nnoremap <F5> :UndotreeToggle<CR>
 
 " -- nerdcommenter
 let NERDSpaceDelims=1
@@ -400,43 +172,14 @@ highlight clear SignColumn
 nnoremap <F4> :TagbarToggle<CR>
 
 " -- Line Num toggle --
-nnoremap <F1> :call  RelativeNumberToggle()<CR>
-" nnoremap <silent><leader>1 :call RelativeNumberToggle()<CR>
+" nnoremap <F1> :call  RelativeNumberToggle()<CR>
+nnoremap <silent><leader>1 :call RelativeNumberToggle()<CR>
 
 
 " -- fzf mapping
 " -- usage ex: ,r to grep a function, 
 "  <tab> to select <C-a> all <C-d> deselect all, <CR> quickfix
-let g:fzf_command_prefix = 'Fz'
-nmap <leader><leader>f :FzFiles<CR>
-nmap <leader>f :FzGFiles<CR>
-nmap <leader>h :FzHistory<CR>
-nmap <leader>b :FzBuffers<CR>
-nmap <leader>r :FzRg<CR>
-nmap <leader>l :FzLines<CR>
-nmap <leader><leader>l :FzBLines<CR>
-
-nnoremap <leader>2 :FZF -m ../<cr>
-nnoremap <leader>3 :FZF -m ../../<cr>
-nnoremap <leader>4 :FZF -m ../../../<cr>
-nnoremap <leader>5 :FZF -m ../../../../<cr>
-
-
-" -- taskwiki related
-" --    quick key to open general taskwarrior.totl
-" --    cheat sheets:
-" --        ,td    mark as done
-" --        ,tcp    change  project
-
-" let g:taskwiki_markup_syntax = "markdown"
-augroup taskwiki_related
-    autocmd!
-
-    " -- view keymaps
-    autocmd FileType vimwiki nnoremap <F3> :sp ~/.vim/bundle/myBundle/plugin/my_vimwiki.vim <CR>
-    " -- tn, tj toggle +next, tr roadmap, tw followup 7 days with due, ty today, to followup w/o due
-augroup end
- 
+"
 nnoremap <silent> <leader>q :redir @a<CR>:g//<CR>:redir END<CR>:new<CR>:put! a<CR>
 
 " -- slimux settings
@@ -463,29 +206,5 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 nnoremap <leader>m :setf markdown<cr>
 nnoremap <leader>e :!black %<cr>
 
-" --- LSP
-" lua << EOF
-" require("lspconfig").pylsp.setup{}
-" EOF
-
-" set completeopt-=preview
-
-
-" nnoremap <silent> ,g <cmd>lua vim.lsp.buf.definition()<CR>
-" nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
-" nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
-" nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
-" nnoremap <silent> ,d <cmd>lua vim.lsp.buf.type_definition()<CR>
-" nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
-" nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
-" nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-" endfunction
-
 " --- lua plugins in ~/.config/nvim/lua/plugins.lua
-lua require('plugins')
-
-imap <silent><script><expr> <C-K> copilot#Accept("\<CR>")
-let g:copilot_no_tab_map = v:true
-imap <C-]> <Plug>(copilot-next)
-imap <C-[> <Plug>(copilot-previous)
-imap <esc> <Plug>(copilot-dismiss)
+lua require('lsp_mappings')
