@@ -106,22 +106,33 @@ return {
         })
      end
     },
-    {'Shougo/deoplete.nvim', 
+    {'Shougo/deoplete.nvim',
      ft = 'python',
-     init = function()
+     config = function()
+        -- Deoplete global settings
+        vim.g['deoplete#enable_at_startup'] = 1
+        vim.g['deoplete#sources#jedi#ignore_errors'] = true
+
+        -- Function to set up keymaps for a Python buffer
+        local function setup_deoplete_keymaps(bufnr)
+            vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>D', ':call deoplete#disable()<CR>',
+                {noremap = true, silent = true})
+            vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>E', ':call deoplete#enable()<CR>',
+                {noremap = true, silent = true})
+        end
+
+        -- Set keymaps for current buffer (the one that triggered the load)
+        setup_deoplete_keymaps(0)
+
+        -- Create augroup to prevent duplicate autocmds on reload
+        local deoplete_group = vim.api.nvim_create_augroup("deoplete_keymaps", { clear = true })
+
+        -- Set up autocmd for future Python buffers
         vim.api.nvim_create_autocmd("FileType", {
             pattern = "python",
-            group = "python_group",
-            callback = function()
-                -- Deoplete settings
-                vim.g['deoplete#enable_at_startup'] = 1
-                vim.g['deoplete#sources#jedi#ignore_errors'] = true
-                
-                -- Add deoplete keymaps
-                vim.api.nvim_set_keymap('n', '<leader>D', ':call deoplete#disable()<CR>', 
-                    {noremap = true, silent = true})
-                vim.api.nvim_set_keymap('n', '<leader>E', ':call deoplete#enable()<CR>', 
-                    {noremap = true, silent = true})
+            group = deoplete_group,
+            callback = function(ev)
+                setup_deoplete_keymaps(ev.buf)
             end
         })
      end
