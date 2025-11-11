@@ -131,69 +131,49 @@ vim.diagnostic.config({
 
 
 
--- local python_group = api.nvim_create_augroup("python_group", { clear = true })
+-- Configure Python LSP servers
+vim.lsp.config('ruff', {
+    filetypes = { "python" },
+    init_options = {
+        settings = {
+            -- Ruff language server settings go here
+            format = {
+                ["quote-style"] = "double"
+            }
+        }
+    }
+})
+vim.lsp.enable('ruff')
+
+vim.lsp.config('pylsp', {
+    filetypes = { "python" },
+    settings = {
+        pylsp = {
+            plugins = {
+                mypy = { enabled = true, overrides = {'--ignore-missing-imports'}},
+                pylint = { enabled = true, args = {'--disable=C0301,C0116,C0115,C0103,logging-fstring-interpolation,unspecified-encoding'}},
+                -- line-too-long, missing-docstring
+                flake8 = { enabled = false, ignore = {'E501', 'E231'}},
+                pycodestyle = { enabled = false, ignore ={'E501', 'E231'}},
+                pyflakes = { enabled = false },
+            }
+        }
+    }
+})
+vim.lsp.enable('pylsp')
+
+-- Load Python debugger config on Python files
+local python_group = api.nvim_create_augroup("python_group", { clear = true })
 api.nvim_create_autocmd("FileType", {
-  pattern = { "python", "py", "ipy"},
+  pattern = { "python" },
   callback = function()
-      -- print("loading python lsp settings...")
-      -- null_ls.setup({
-      --     on_attach = on_attach,
-      --     sources = {
-      --         -- diagnostics.flake8,
-      --         -- diagnostics.mypy
-      --     }
-      -- })
-
-      require('lspconfig').ruff.setup({
-          init_options = {
-              settings = {
-                  -- Ruff language server settings go here
-                  format = {
-                      ["quote-style"] = "double"
-                  }
-              }
-          }
-      })
-
-      require("lspconfig").pylsp.setup({
-          -- omnifunc = vim.lsp.omnifunc
-          settings = {
-              pylsp = {
-                  plugins = {
-                      mypy = { enabled = true, overrides = {'--ignore-missing-imports'}},
-                      pylint = { enabled = true, args = {'--disable=C0301,C0116,C0115,C0103,logging-fstring-interpolation,unspecified-encoding'}},  
-                      -- line-too-long, missing-docstring
-                      flake8 = { enabled = false, ignore = {'E501', 'E231'}},
-                      pycodestyle = { enabled = false, ignore ={'E501', 'E231'}},
-                      pyflakes = { enabled = false },
-                  }
-              }
-          }
-      })
       require('dbg.python')
-
   end,
   group = python_group,
 })
 
---  local nvim_lsp = require('lspconfig')
-function setup_gopls()
-  -- nvim_lsp.gopls.setup{}
-  print("calling setup_gopls()...")
-  require('lspconfig').gopls.setup({})
-end
-
-local go_group = api.nvim_create_augroup("go_lsp_group_my", { clear = true})
-api.nvim_create_autocmd("FileType", {
-  pattern = {"go"},
-  callback = function() 
-      print("loading go lsp settings...")
-      setup_gopls()
-  end,
-  group = go_group,
+-- Configure Go LSP
+vim.lsp.config('gopls', {
+    filetypes = { "go" }
 })
-vim.api.nvim_exec([[
-  augroup go_lsp_group_my
-    autocmd FileType go lua setup_gopls()
-  augroup end
-]], false)
+vim.lsp.enable('gopls')
