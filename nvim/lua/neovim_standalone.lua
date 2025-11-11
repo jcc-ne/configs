@@ -177,13 +177,39 @@ return {
       config = function()
         local cmp = require('cmp')
 
+        -- Set up gray highlight for kind
+        vim.api.nvim_set_hl(0, 'CmpItemKindGray', { fg = '#808080', bg = 'NONE' })
+
+        -- Mapping for shortened kind names
+        local kind_abbr = {
+          Text = "text",
+          Method = "meth",
+          Function = "func",
+          Constructor = "cnst",
+          Field = "fld",
+          Variable = "var",
+          Class = "cls",
+          Interface = "intf",
+          Module = "mod",
+          Property = "prop",
+          Unit = "unit",
+          Value = "val",
+          Enum = "enum",
+          Keyword = "keyw",
+          Snippet = "snip",
+          Color = "color",
+          File = "file",
+          Reference = "ref",
+          Folder = "dir",
+          EnumMember = "emem",
+          Constant = "cnst",
+          Struct = "strc",
+          Event = "evnt",
+          Operator = "op",
+          TypeParameter = "type",
+        }
+
         cmp.setup({
-          ---- Snippet engine configuration
-          --snippet = {
-          --  expand = function(args)
-          --    vim.fn["UltiSnips#Anon"](args.body)
-          --  end,
-          --},
 
           -- Completion sources (order determines priority)
           sources = cmp.config.sources({
@@ -193,12 +219,14 @@ return {
             { name = 'path', priority = 300 },
           }),
 
-          
+
           -- Formatting (adds icons and source names)
           formatting = {
             format = function(entry, vim_item)
-              -- Kind icons
-              -- vim_item.kind = string.format('%s %s', vim_item.kind, vim_item.kind)
+              -- Shorten kind name and apply gray color
+              vim_item.kind = kind_abbr[vim_item.kind] or vim_item.kind
+              vim_item.kind_hl_group = 'CmpItemKindGray'
+
               -- Source names
               vim_item.menu = ({
                 nvim_lsp = "∘lsp",
