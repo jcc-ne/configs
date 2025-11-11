@@ -33,7 +33,7 @@ function load_p10k
   ((N=(RANDOM%N)+1))
   RANDOM_CONFIG=${configs[$N]}
   source "$RANDOM_CONFIG"
-  echo "盛powerlevel10k   config"
+  echo "☼ powerlevel10k   config"
   echo "    ... $RANDOM_CONFIG    "
   echo ""
   export P10K_CONFIG="$RANDOM_CONFIG"
@@ -208,8 +208,8 @@ alias vimbgdark="tmux setenv VIMBG dark && export VIMBG=dark"
 # git_pager="delta --syntax-theme gruvbox-dark"
 # alias setdark="tmux setenv GIT_PAGER \"$git_pager\" && export GIT_PAGER=\"$git_pager\""
 
-alias setlight="git config --global delta.syntax-theme GitHub"
-alias setdark="git config --global delta.syntax-theme 'Solarized (dark)'"
+alias setlight="git config --global delta.syntax-theme GitHub && git config --global delta.dark false"
+alias setdark="git config --global delta.syntax-theme 'Solarized (dark)' && git config --global delta.dark true"
 # alias setdark="git config --global delta.syntax-theme gruvbox-dark"
 
 
@@ -228,7 +228,7 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 # -- If conda virtualenv cannot find command conda: `conda config --set auto_activate_base false`
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init - --no-rehash)"
-  eval "$(pyenv virtualenv-init -)"
+  # eval "$(pyenv virtualenv-init -)"
 fi
 export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 # ~/.pyenv/versions/anaconda3-2022.10/bin/conda config --set auto_activate_base false
