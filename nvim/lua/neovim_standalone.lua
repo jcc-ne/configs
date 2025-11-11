@@ -167,10 +167,50 @@ return {
     },
     {
       'hrsh7th/nvim-cmp',
+      event = 'InsertEnter',  -- Load when entering insert mode
       dependencies = {
-        'hrsh7th/cmp-nvim-lsp',
-        'hrsh7th/cmp-vsnip',
+        'hrsh7th/cmp-nvim-lsp',     -- LSP completion
+        'hrsh7th/cmp-buffer',       -- Buffer completion
+        'hrsh7th/cmp-path',         -- Path completion
+        'quangnguyen30192/cmp-nvim-ultisnips',  -- UltiSnips completion
       },
+      config = function()
+        local cmp = require('cmp')
+
+        cmp.setup({
+          ---- Snippet engine configuration
+          --snippet = {
+          --  expand = function(args)
+          --    vim.fn["UltiSnips#Anon"](args.body)
+          --  end,
+          --},
+
+          -- Completion sources (order determines priority)
+          sources = cmp.config.sources({
+            { name = 'nvim_lsp', priority = 1000 },
+            { name = 'ultisnips', priority = 900 },
+            { name = 'buffer', priority = 500, keyword_length = 3 },
+            { name = 'path', priority = 300 },
+          }),
+
+          
+          -- Formatting (adds icons and source names)
+          formatting = {
+            format = function(entry, vim_item)
+              -- Kind icons
+              -- vim_item.kind = string.format('%s %s', vim_item.kind, vim_item.kind)
+              -- Source names
+              vim_item.menu = ({
+                nvim_lsp = "∘lsp",
+                ultisnips = "∘snip",
+                buffer = "∘buf",
+                path = "∘path",
+              })[entry.source.name]
+              return vim_item
+            end
+          },
+        })
+      end
     },
   
     {
