@@ -240,7 +240,21 @@ return {
         })
       end
     },
-  
+    {
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        opts = {
+        },
+        keys = {
+            {
+                "<leader>?",
+                function()
+                    require("which-key").show({ global = false })
+                end,
+                desc = "Buffer Local Keymaps (which-key)",
+            },
+        },
+    },
     {
       'scalameta/nvim-metals',
       dependencies = {
@@ -271,14 +285,33 @@ return {
     {
       'nvim-treesitter/nvim-treesitter',
       build = ':TSUpdate',
-    },
-    {'mfussenegger/nvim-dap-python',
-    dependencies = {
-        'nvim-lua/plenary.nvim',
-    },
-    ft = {'python', 'py', 'ipy'}, },
-    { dir = '~/.fzf'},
-    {'junegunn/fzf.vim',
+  },
+  {
+      'mfussenegger/nvim-dap-python',
+      dependencies = {
+          'nvim-lua/plenary.nvim',
+      },
+      ft = {'python', 'py', 'ipy'}, 
+  },
+  {
+      dir = '~/.fzf',
+      build = function()
+        -- To build: Run :Lazy build .fzf
+        -- Check if fzf is already installed
+        local fzf_path = vim.fn.expand('~/.fzf')
+        local fzf_bin = fzf_path .. '/bin/fzf'
+
+        if vim.fn.isdirectory(fzf_path) == 0 or vim.fn.executable(fzf_bin) == 0 then
+          print("FZF not found, installing...")
+          vim.fn.system('git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf')
+          vim.fn.system('~/.fzf/install --all --no-bash --no-fish')
+        else
+          print("FZF already installed")
+        end
+      end
+  },
+  {
+      'junegunn/fzf.vim',
       cmd = { 'FZF', 'FzFiles', 'FzGFiles', 'FzHistory', 'FzBuffers', 'FzRg', 'FzLines', 'FzBLines' },
       init = function()
           -- FZF mappings
