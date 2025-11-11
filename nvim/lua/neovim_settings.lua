@@ -163,7 +163,8 @@ vim.lsp.config('pylsp', {
 vim.lsp.enable('pylsp')
 
 -- Load Python debugger config on Python files
-local python_group = api.nvim_create_augroup("python_group", { clear = true })
+-- Use existing python_group created in plugins.lua (don't recreate with clear=true)
+local python_group = "python_group"
 api.nvim_create_autocmd("FileType", {
   pattern = { "python" },
   callback = function()

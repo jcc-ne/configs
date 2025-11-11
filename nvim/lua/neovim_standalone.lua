@@ -2,6 +2,7 @@
 return {
     {'jcc-ne/vim-template', branch = 'dev'},
     {'nvim-treesitter/nvim-treesitter-textobjects', ft = 'python'},
+    {'christoomey/vim-tmux-navigator'},
     {'astral-sh/ruff', ft='python'},
     {'python-mode/python-mode', 
      ft = {'python', 'py', 'ipy'},
@@ -153,6 +154,7 @@ return {
     'airblade/vim-gitgutter',
     'epeli/slimux',
     'whiteinge/diffconflicts',
+    {'majutsushi/tagbar', cmd = 'TagbarToggle'},
     {'lvht/tagbar-markdown', ft = 'markdown'},
     'mattn/calendar-vim',
     'nvim-telescope/telescope.nvim',
@@ -333,6 +335,8 @@ return {
       end
   },
   {'sindrets/diffview.nvim'},
-
+  {'SirVer/ultisnips'},
+  {'honza/vim-snippets'},
+  { dir = '~/.vim/bundle/myBundle' },
 
   } 
