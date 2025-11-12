@@ -21,7 +21,6 @@ return {
                 vim.g.pymode_rope = 0
                 vim.g.pymode_doc = 1
                 vim.g.pymode_doc_key = 'K'
-                vim.g.pymode_run = 1
                 vim.g.pymode_run_key = 'R'
                 vim.g.pymode_lint = 0
                 -- vim.g.pymode_lint_checker = "pyflakes, pep8"
@@ -266,21 +265,6 @@ return {
       ft = {'scala', 'sbt', 'java', 'groovy'},
     },
   
-    -- {
-    --   'jose-elias-alvarez/null-ls.nvim',
-    --   dependencies = { 'nvim-lua/plenary.nvim' },
-    -- },
-  
-    {
-      'VonHeikemen/lsp-zero.nvim',
-      dependencies = {
-        'neovim/nvim-lspconfig',
-        'williamboman/mason.nvim',
-        'williamboman/mason-lspconfig.nvim',
-        'L3MON4D3/LuaSnip',
-      },
-    },
-  
     -- DAP related plugins
     'mfussenegger/nvim-dap',
     'nvim-telescope/telescope-dap.nvim',
@@ -337,6 +321,35 @@ return {
   {'sindrets/diffview.nvim'},
   {'SirVer/ultisnips'},
   {'honza/vim-snippets'},
+  {
+      "coder/claudecode.nvim",
+      cmd = {'ClaudeCode', 'ClaudeCodeFocus', 'ClaudeCodeSend'},
+      dependencies = { "folke/snacks.nvim" },
+      opts = {
+          terminal_cmd = "/opt/homebrew/bin/claude",
+      },
+      config = true,
+      keys = {
+          -- Your keymaps here
+          { "<leader>a", nil, desc = "AI/Claude Code" },
+          { "<leader>ac", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
+          { "<leader>af", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
+          { "<leader>ar", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
+          { "<leader>aC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
+          { "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
+          { "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
+          { "<leader>as", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
+          {
+              "<leader>as",
+              "<cmd>ClaudeCodeTreeAdd<cr>",
+              desc = "Add file",
+              ft = { "NvimTree", "neo-tree", "oil", "minifiles", "netrw" },
+          },
+          -- Diff management
+          { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
+          { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
+      },
+  },
   { dir = '~/.vim/bundle/myBundle' },
 
   } 

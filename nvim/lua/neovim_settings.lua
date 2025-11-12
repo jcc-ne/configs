@@ -78,21 +78,6 @@ api.nvim_create_autocmd("FileType", {
   group = nvim_metals_group,
 })
 
--- api.nvim_create_user_command("NullLsToggle", function()
---     -- you can also create commands to disable or enable sources
---     require("null-ls").toggle({})
--- end, {})
-
-
--- local lsp = require('lsp-zero')
--- lsp.preset('recommended')
--- lsp.setup()
-require("mason").setup()
-require("mason-lspconfig").setup()
-
--- local null_ls = require('null-ls')
--- local diagnostics = null_ls.builtins.diagnostics
-
 vim.diagnostic.config({
   virtual_text = false,
   signs = true,
@@ -134,12 +119,10 @@ vim.diagnostic.config({
 -- Configure Python LSP servers
 vim.lsp.config('ruff', {
     filetypes = { "python" },
-    init_options = {
-        settings = {
-            -- Ruff language server settings go here
-            format = {
-                ["quote-style"] = "double"
-            }
+    settings = {
+        -- Ruff language server settings go here
+        format = {
+            ["quote-style"] = "double"
         }
     }
 })
