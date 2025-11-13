@@ -205,6 +205,7 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 " -- For a split window: You can use Ctrl-w + and Ctrl-w - to resize the height of the current window by a single row. For a vsplit window: You can use Ctrl-w > and Ctrl-w <
 nnoremap <leader>m :setf markdown<cr>
 nnoremap <leader>e :!black %<cr>
+tnoremap <C-n> <C-\><C-n>
 
 " --- lua plugins in ~/.config/nvim/lua/plugins.lua
 lua require('lsp_mappings')
