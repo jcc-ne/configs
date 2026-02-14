@@ -2,6 +2,7 @@
 return {
     {'jcc-ne/vim-template', branch = 'dev'},
     {'nvim-treesitter/nvim-treesitter-textobjects', ft = 'python'},
+    {'christoomey/vim-tmux-navigator'},
     {'astral-sh/ruff', ft='python'},
     {'python-mode/python-mode', 
      ft = {'python', 'py', 'ipy'},
@@ -20,7 +21,6 @@ return {
                 vim.g.pymode_rope = 0
                 vim.g.pymode_doc = 1
                 vim.g.pymode_doc_key = 'K'
-                vim.g.pymode_run = 1
                 vim.g.pymode_run_key = 'R'
                 vim.g.pymode_lint = 0
                 -- vim.g.pymode_lint_checker = "pyflakes, pep8"
@@ -106,22 +106,33 @@ return {
         })
      end
     },
-    {'Shougo/deoplete.nvim', 
+    {'Shougo/deoplete.nvim',
      ft = 'python',
-     init = function()
+     config = function()
+        -- Deoplete global settings
+        vim.g['deoplete#enable_at_startup'] = 1
+        vim.g['deoplete#sources#jedi#ignore_errors'] = true
+
+        -- Function to set up keymaps for a Python buffer
+        local function setup_deoplete_keymaps(bufnr)
+            vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>D', ':call deoplete#disable()<CR>',
+                {noremap = true, silent = true})
+            vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>E', ':call deoplete#enable()<CR>',
+                {noremap = true, silent = true})
+        end
+
+        -- Set keymaps for current buffer (the one that triggered the load)
+        setup_deoplete_keymaps(0)
+
+        -- Create augroup to prevent duplicate autocmds on reload
+        local deoplete_group = vim.api.nvim_create_augroup("deoplete_keymaps", { clear = true })
+
+        -- Set up autocmd for future Python buffers
         vim.api.nvim_create_autocmd("FileType", {
             pattern = "python",
-            group = "python_group",
-            callback = function()
-                -- Deoplete settings
-                vim.g['deoplete#enable_at_startup'] = 1
-                vim.g['deoplete#sources#jedi#ignore_errors'] = true
-                
-                -- Add deoplete keymaps
-                vim.api.nvim_set_keymap('n', '<leader>D', ':call deoplete#disable()<CR>', 
-                    {noremap = true, silent = true})
-                vim.api.nvim_set_keymap('n', '<leader>E', ':call deoplete#enable()<CR>', 
-                    {noremap = true, silent = true})
+            group = deoplete_group,
+            callback = function(ev)
+                setup_deoplete_keymaps(ev.buf)
             end
         })
      end
@@ -142,6 +153,7 @@ return {
     'airblade/vim-gitgutter',
     'epeli/slimux',
     'whiteinge/diffconflicts',
+    {'majutsushi/tagbar', cmd = 'TagbarToggle'},
     {'lvht/tagbar-markdown', ft = 'markdown'},
     'mattn/calendar-vim',
     'nvim-telescope/telescope.nvim',
@@ -156,12 +168,94 @@ return {
     },
     {
       'hrsh7th/nvim-cmp',
+      event = 'InsertEnter',  -- Load when entering insert mode
       dependencies = {
-        'hrsh7th/cmp-nvim-lsp',
-        'hrsh7th/cmp-vsnip',
+        'hrsh7th/cmp-nvim-lsp',     -- LSP completion
+        'hrsh7th/cmp-buffer',       -- Buffer completion
+        'hrsh7th/cmp-path',         -- Path completion
+        'quangnguyen30192/cmp-nvim-ultisnips',  -- UltiSnips completion
       },
+      config = function()
+        local cmp = require('cmp')
+
+        -- Set up gray highlight for kind
+        vim.api.nvim_set_hl(0, 'CmpItemKindGray', { fg = '#808080', bg = 'NONE' })
+
+        -- Mapping for shortened kind names
+        local kind_abbr = {
+          Text = "text",
+          Method = "meth",
+          Function = "func",
+          Constructor = "cnst",
+          Field = "fld",
+          Variable = "var",
+          Class = "cls",
+          Interface = "intf",
+          Module = "mod",
+          Property = "prop",
+          Unit = "unit",
+          Value = "val",
+          Enum = "enum",
+          Keyword = "keyw",
+          Snippet = "snip",
+          Color = "color",
+          File = "file",
+          Reference = "ref",
+          Folder = "dir",
+          EnumMember = "emem",
+          Constant = "cnst",
+          Struct = "strc",
+          Event = "evnt",
+          Operator = "op",
+          TypeParameter = "type",
+        }
+
+        cmp.setup({
+
+          -- Completion sources (order determines priority)
+          sources = cmp.config.sources({
+            { name = 'nvim_lsp', priority = 1000 },
+            { name = 'ultisnips', priority = 900 },
+            { name = 'buffer', priority = 500, keyword_length = 3 },
+            { name = 'path', priority = 300 },
+          }),
+
+
+          -- Formatting (adds icons and source names)
+          formatting = {
+            format = function(entry, vim_item)
+              -- Shorten kind name and apply gray color
+              vim_item.kind = kind_abbr[vim_item.kind] or vim_item.kind
+              vim_item.kind_hl_group = 'CmpItemKindGray'
+
+              -- Source names
+              vim_item.menu = ({
+                nvim_lsp = "∘lsp",
+                ultisnips = "∘snip",
+                buffer = "∘buf",
+                path = "∘path",
+              })[entry.source.name]
+              return vim_item
+            end
+          },
+        })
+      end
     },
-  
+    {
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        opts = {
+        },
+        keys = {
+            {
+                "<leader>?",
+                function()
+                    require("which-key").show({ global = false })
+                end,
+                desc = "Buffer Local Keymaps (which-key)",
+            },
+        },
+    },
     {
       'scalameta/nvim-metals',
       dependencies = {
@@ -171,35 +265,39 @@ return {
       ft = {'scala', 'sbt', 'java', 'groovy'},
     },
   
-    {
-      'jose-elias-alvarez/null-ls.nvim',
-      dependencies = { 'nvim-lua/plenary.nvim' },
-    },
-  
-    {
-      'VonHeikemen/lsp-zero.nvim',
-      dependencies = {
-        'neovim/nvim-lspconfig',
-        'williamboman/mason.nvim',
-        'williamboman/mason-lspconfig.nvim',
-        'L3MON4D3/LuaSnip',
-      },
-    },
-  
     -- DAP related plugins
     'mfussenegger/nvim-dap',
     'nvim-telescope/telescope-dap.nvim',
     {
       'nvim-treesitter/nvim-treesitter',
       build = ':TSUpdate',
-    },
-    {'mfussenegger/nvim-dap-python',
-    dependencies = {
-        'nvim-lua/plenary.nvim',
-    },
-    ft = {'python', 'py', 'ipy'}, },
-    { dir = '~/.fzf'},
-    {'junegunn/fzf.vim',
+  },
+  {
+      'mfussenegger/nvim-dap-python',
+      dependencies = {
+          'nvim-lua/plenary.nvim',
+      },
+      ft = {'python', 'py', 'ipy'}, 
+  },
+  {
+      dir = '~/.fzf',
+      build = function()
+        -- To build: Run :Lazy build .fzf
+        -- Check if fzf is already installed
+        local fzf_path = vim.fn.expand('~/.fzf')
+        local fzf_bin = fzf_path .. '/bin/fzf'
+
+        if vim.fn.isdirectory(fzf_path) == 0 or vim.fn.executable(fzf_bin) == 0 then
+          print("FZF not found, installing...")
+          vim.fn.system('git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf')
+          vim.fn.system('~/.fzf/install --all --no-bash --no-fish')
+        else
+          print("FZF already installed")
+        end
+      end
+  },
+  {
+      'junegunn/fzf.vim',
       cmd = { 'FZF', 'FzFiles', 'FzGFiles', 'FzHistory', 'FzBuffers', 'FzRg', 'FzLines', 'FzBLines' },
       init = function()
           -- FZF mappings
@@ -221,6 +319,37 @@ return {
       end
   },
   {'sindrets/diffview.nvim'},
-
+  {'SirVer/ultisnips'},
+  {'honza/vim-snippets'},
+  {
+      "coder/claudecode.nvim",
+      cmd = {'ClaudeCode', 'ClaudeCodeFocus', 'ClaudeCodeSend'},
+      dependencies = { "folke/snacks.nvim" },
+      opts = {
+          terminal_cmd = "/opt/homebrew/bin/claude",
+      },
+      config = true,
+      keys = {
+          -- Your keymaps here
+          { "<leader>a", nil, desc = "AI/Claude Code" },
+          { "<leader>ac", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
+          { "<leader>af", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
+          { "<leader>ar", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
+          { "<leader>aC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
+          { "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
+          { "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
+          { "<leader>as", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
+          {
+              "<leader>as",
+              "<cmd>ClaudeCodeTreeAdd<cr>",
+              desc = "Add file",
+              ft = { "NvimTree", "neo-tree", "oil", "minifiles", "netrw" },
+          },
+          -- Diff management
+          { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
+          { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
+      },
+  },
+  { dir = '~/.vim/bundle/myBundle' },
 
   } 
