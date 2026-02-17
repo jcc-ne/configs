@@ -265,6 +265,21 @@ return {
       ft = {'scala', 'sbt', 'java', 'groovy'},
     },
   
+    -- {
+    --   'jose-elias-alvarez/null-ls.nvim',
+    --   dependencies = { 'nvim-lua/plenary.nvim' },
+    -- },
+  
+    {
+      'VonHeikemen/lsp-zero.nvim',
+      dependencies = {
+        'neovim/nvim-lspconfig',
+        'williamboman/mason.nvim',
+        'williamboman/mason-lspconfig.nvim',
+        'L3MON4D3/LuaSnip',
+      },
+    },
+  
     -- DAP related plugins
     'mfussenegger/nvim-dap',
     'nvim-telescope/telescope-dap.nvim',
