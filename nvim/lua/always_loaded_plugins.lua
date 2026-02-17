@@ -1,6 +1,6 @@
 return {
   'scrooloose/nerdcommenter',
-  { 'tpope/vim-fugitive', cmd = {'G', 'Git', 'GBlame', 'GBrowse'} },
+  { 'tpope/vim-fugitive', cmd = {'G', 'Git', 'GBlame', 'GBrowse', 'Gvdiffsplit'} },
   'tpope/vim-rhubarb',
   'lifepillar/vim-solarized8',
   {'vim-scripts/YankRing.vim',

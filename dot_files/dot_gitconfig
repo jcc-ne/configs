@@ -62,9 +62,11 @@
     diffFilter = delta --color-only
 
 [delta]
+	syntax-theme = GitHub
     ; syntax-theme= Solarized (Light)
     ; syntax-theme= Solarized (Dark)
-    ; syntax-theme= GitHub
+	; syntax-theme = GitHub
     side-by-side=true
     navigate=true
-	syntax-theme = Solarized (dark)
+	dark = false
+	light = true
