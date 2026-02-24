@@ -64,11 +64,11 @@ fi
 
 seg_tokens=""
 [ -n "$total_in" ] && [ -n "$total_out" ] && \
-  seg_tokens="\n${BLUE}${ICON_TOKEN}(i/o) Σ $(fmtk "$total_in")/$(fmtk "$total_out")${R}"
+    seg_tokens="\n${BLUE}${ICON_TOKEN} $(fmtk "$total_in") ↑ / $(fmtk "$total_out") ↓${R}"
 
 seg_cur=""
 [ -n "$current_in" ] && [ -n "$current_out" ] && \
-  seg_cur=" ${BLUE}▸ $(fmtk "$current_in")/$(fmtk "$current_out")${R}"
+    seg_cur=" ${BLUE}(+$(fmtk "$current_in") ↑ / +$(fmtk "$current_out") ↓)${R}"
 
 seg_cache=""
 cr=""; cw=""
@@ -77,6 +77,9 @@ cr=""; cw=""
 cache_parts="${cr:+$cr}${cr:+${cw:+/}}${cw:+$cw}"
 [ -n "$cache_parts" ] && seg_cache="${DIM} | ${ICON_CACHE} ${cache_parts}${R}"
 
-printf "%b%b%b%b%b%b%b%b%b" \
+# Current time
+seg_time="${SEP}${DIM}$(date '+%H:%M:%S')${R}"
+
+printf "%b%b%b%b%b%b%b%b%b%b" \
   "${YELLOW}${ICON_PROJ} ${proj_name}${R}" "$seg_cwd" "$SEP" "${GREEN}${model}${R}" \
-  "$seg_git" "$seg_ctx" "$seg_tokens" "$seg_cur" "$seg_cache"
+  "$seg_git" "$seg_ctx" "$seg_tokens" "$seg_cur" "$seg_cache" "$seg_time"
