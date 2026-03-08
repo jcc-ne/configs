@@ -281,6 +281,7 @@ return {
     },
   
     -- DAP related plugins
+    'williamboman/mason.nvim',
     'mfussenegger/nvim-dap',
     'nvim-telescope/telescope-dap.nvim',
     {

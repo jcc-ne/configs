@@ -291,3 +291,5 @@ AWS_PROFILE=$AWS_PROFILE
 
 # fnm (Node version manager)
 eval "$(fnm env --use-on-cd --shell zsh)"
+
+alias duckdb='rlwrap --always-readline duckdb'
