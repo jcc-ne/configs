@@ -341,7 +341,7 @@ return {
       cmd = {'ClaudeCode', 'ClaudeCodeFocus', 'ClaudeCodeSend'},
       dependencies = { "folke/snacks.nvim" },
       opts = {
-          terminal_cmd = "/opt/homebrew/bin/claude",
+          terminal_cmd = "claude",
       },
       config = true,
       keys = {
