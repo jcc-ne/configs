@@ -18,10 +18,13 @@ echo current PLATFORM: $(check_platform)
 
 if [ $(check_platform) = "OSX" ];then
    brew install neovim
-   pip install neovim
 elif [ $(check_platform) = "LINUX" ];then
    sudo apt install neovim
 fi
+
+uv venv ~/.venv/nvim --python 3.12
+uv pip install --python ~/.venv/nvim neovim
+cp $DIR/sitecustomize.py ~/.venv/nvim/lib/python3.12/site-packages/sitecustomize.py
 
 mkdir -v -p ~/.cache/dein
 mkdir -v -p ~/.config/nvim
