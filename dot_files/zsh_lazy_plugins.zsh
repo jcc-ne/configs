@@ -1,24 +1,30 @@
-# Lazy-load heavy oh-my-zsh plugins on first use
+# Lazy-load heavy tool completions on first use (standalone, no oh-my-zsh)
+
 kubectl() {
   unfunction kubectl
-  source $ZSH/plugins/kubectl/kubectl.plugin.zsh
+  source <(command kubectl completion zsh)
   kubectl "$@"
 }
 
 helm() {
   unfunction helm
-  source $ZSH/plugins/helm/helm.plugin.zsh
+  source <(command helm completion zsh)
   helm "$@"
 }
 
 docker() {
   unfunction docker
-  source $ZSH/plugins/docker/docker.plugin.zsh
+  if [[ -f /opt/homebrew/share/zsh/site-functions/_docker ]]; then
+    fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+    autoload -Uz compinit && compinit -C
+  fi
   docker "$@"
 }
 
 gcloud() {
   unfunction gcloud
-  source $ZSH/plugins/gcloud/gcloud.plugin.zsh
+  if [[ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]]; then
+    source "$HOME/google-cloud-sdk/completion.zsh.inc"
+  fi
   gcloud "$@"
 }

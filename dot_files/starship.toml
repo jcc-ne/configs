@@ -1,0 +1,135 @@
+# Starship prompt config — lean style matching p10k lean
+# Transparent backgrounds, colored text only, 2-line, sparse
+# Requires a Nerd Font
+
+add_newline = true
+
+format = """
+$os\
+$directory\
+$git_branch\
+$git_status\
+$git_state\
+$fill\
+$direnv\
+$python\
+$nodejs\
+$aws\
+$cmd_duration\
+$time\
+$line_break\
+$docker_context\
+$kubernetes\
+$character"""
+
+right_format = ''
+
+[fill]
+symbol = ' '
+
+[os]
+disabled = false
+style = 'bold'
+format = '[$symbol ]($style)'
+
+[os.symbols]
+Macos = ''
+
+[directory]
+truncation_length = 3
+truncate_to_repo = false
+style = 'bold 39'
+read_only_style = '31'
+format = '[ $path]($style)[$read_only]($read_only_style) '
+
+[git_branch]
+symbol = '  '
+style = '108'
+format = '[](green)[$symbol$branch(:$remote_branch)]($style)'
+
+[git_status]
+format = '([ $all_status$ahead_behind]($style))'
+style = '108'
+ahead = '[⇡$count](108)'
+behind = '[⇣$count](108)'
+diverged = '[⇣${behind_count}⇡${ahead_count}](108)'
+conflicted = '[~$count](196)'
+staged = '[ $count](178)'
+modified = ' [ $count](178)'
+untracked = ' [ $count](39)'
+stashed = '[ $count](108)'
+
+[git_state]
+style = '196'
+
+[docker_context]
+symbol = ' '
+style = '37'
+format = '[$symbol$context]($style) '
+
+[kubernetes]
+disabled = false
+symbol = '✱ '
+style = '134'
+format = '[$symbol$context]($style) '
+
+[[kubernetes.contexts]]
+context_pattern = 'gke_(.*)_(.*)_(.*)'
+context_alias = '$3'
+
+# [[kubernetes.contexts]]
+# context_pattern = 'gke_data-staging-gl_us-central1_datastagingvpc'
+# context_alias = 'datastagingvpc'
+
+[[kubernetes.contexts]]
+context_pattern = 'arn:aws:eks:*:*:cluster/*'
+context_alias = '$1'
+
+[python]
+symbol = ''
+style = '30'
+# format = '[$symbol $pyenv_prefix($version )(\($virtualenv\))]($style) '
+format = '[$symbol $pyenv_prefix($virtualenv)]($style) '
+
+[nodejs]
+symbol = '󰎙'
+style = '70'
+format = '[$symbol($version)]($style) '
+
+[aws]
+symbol = ' '
+style = '208'
+format = '[$symbol$profile]($style) '
+
+[cmd_duration]
+min_time = 3_000
+style = '101'
+format = '[$duration]($style) '
+
+[direnv]
+disabled = true
+style = '178'
+format = '[$loaded]($style) '
+allowed_msg = ''
+loaded_msg = ' direnv'
+unloaded_msg = ''
+not_allowed_msg = ' direnv!'
+
+[time]
+disabled = false
+time_format = '%H:%M:%S'
+style = '66'
+format = '[ $time]($style) '
+
+[character]
+success_symbol = '[❯](145)'
+error_symbol = '[❯](196)'
+vimcmd_symbol = '[❮](145)'
+
+[gcloud]
+disabled = true
+
+[ruby]
+symbol = ' '
+style = '168'
+format = '[$symbol($version)]($style) '

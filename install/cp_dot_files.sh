@@ -17,5 +17,7 @@ ln -sv $PWD/dot_zshrc ~/.zshrc
 ln -sv $PWD/dot_vimrc ~/.vimrc
 ln -sv $PWD/dot_nvimrc ~/.nvimrc
 ln -sv $PWD/dot_gitconfig ~/.gitconfig
+mkdir -p ~/.config
+ln -sv $PWD/starship.toml ~/.config/starship.toml
 
 cd $my_cwd
