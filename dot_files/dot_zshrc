@@ -1,4 +1,17 @@
 # zmodload zsh/zprof
+
+# --- Prompt: set prompt='starship' or prompt='powerlevel10k' ---
+# p10k variant: classic, rainbow, lean, terse
+MY_PROMPT="${MY_PROMPT:-powerlevel10k}"
+p10k_variant="${p10k_variant:-lean}"
+
+# p10k instant prompt (must be near top, before any console output)
+if [[ "$MY_PROMPT" == "powerlevel10k" ]]; then
+  if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+  fi
+fi
+
 source $HOME/.bashrc
 source $HOME/.zprofile
 
@@ -142,5 +155,12 @@ eval "$(fnm env --use-on-cd --shell zsh)"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-# --- Starship prompt (replaces Powerlevel10k) ---
-eval "$(starship init zsh)"
+# --- Prompt switcher functions ---
+source $HOME/configs/dot_files/zsh_prompt_switcher.zsh
+
+if [[ "$MY_PROMPT" == "powerlevel10k" ]]; then
+  source "$HOME/.config/powerlevel10k/powerlevel10k.zsh-theme"
+  source "$HOME/configs/dot_files/p10k_configs/dot_p10k_${p10k_variant}.zsh"
+else
+  eval "$(starship init zsh)"
+fi
