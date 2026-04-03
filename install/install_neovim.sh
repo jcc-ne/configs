@@ -26,11 +26,7 @@ uv venv ~/.venv/nvim --python 3.12
 uv pip install --python ~/.venv/nvim neovim
 cp $DIR/sitecustomize.py ~/.venv/nvim/lib/python3.12/site-packages/sitecustomize.py
 
-mkdir -v -p ~/.cache/dein
 mkdir -v -p ~/.config/nvim
-ln -s ~/.nvimrc ~/.config/nvim/init.vim
-curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
-# For example, we just use `~/.cache/dein` as installation directory
-sh ./installer.sh ~/.cache/dein
+ln -sf ~/.nvimrc ~/.config/nvim/init.vim
 
 cd $my_cwd
