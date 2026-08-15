@@ -19,7 +19,6 @@ tnoremap <c-l> <C-\><C-n><c-l>
 inoremap <c-space> <c-x><c-n>
 
 
-set t_Co=tmux-256color
 let g:solarized_termcolors=256
 set autochdir
 
@@ -70,10 +69,8 @@ if $VIMCOLORSCHEME != ""
     colorscheme $VIMCOLORSCHEME
 else
     if hostname == "Janines-iMac" || hostname == "blackbox"
+        " gruvbox ships in ~/.vim/bundle/myBundle/colors/
         colorscheme gruvbox
-        " -- fix slow issue
-        let g:jedi#popup_on_dot = 0 " (default: 1)
-       autocmd FileType python call jedi#configure_call_signatures()
     else
         colorscheme solarized8
     endif
@@ -124,7 +121,8 @@ let g:UltiSnipsEditSplit="vertical"
 " -- slimux setup
 map <Leader>s :SlimuxREPLSendLine<CR>
 vmap <Leader>s :SlimuxREPLSendSelection<CR>
-map <Leader>a :SlimuxShellLast<CR>
+" <Leader>a is the claudecode.nvim prefix, so SlimuxShellLast moved to <Leader><Leader>a
+map <Leader><Leader>a :SlimuxShellLast<CR>
 map <Leader>k :SlimuxSendKeysLast<CR>
 
 " -  yankring 
@@ -153,9 +151,6 @@ au BufEnter *.md set shiftwidth=4
 nnoremap <leader>w<leader>w :VimwikiMakeDiaryNote<CR>
 nnoremap <leader>wg :VimwikiGenerateTags<CR>
 nnoremap <leader>wt :VimwikiRebuildTags<CR>
-
-" -- nerdtree
-nnoremap <F2> :NERDTreeToggle<CR>
 
 " -- undotree
 " nnoremap <F5> :UndotreeToggle<CR>
