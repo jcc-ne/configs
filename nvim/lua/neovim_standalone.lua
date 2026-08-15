@@ -96,6 +96,32 @@ return {
                 return hl
             end
 
+            -- Colour for the thin dividers: a step from the bar background
+            -- toward its foreground. At 0.35 that lands on a dark grey in the
+            -- dark theme and a light grey in the light one, so the chevrons
+            -- read as rules rather than as text. Raise for more contrast.
+            local SEP_MIX = 0.35
+
+            local function blend(from_rgb, to_rgb, amount)
+                local function ch(rgb, shift)
+                    return math.floor(rgb / shift) % 256
+                end
+                local out = 0
+                for _, shift in ipairs({ 65536, 256, 1 }) do
+                    local a, b = ch(from_rgb, shift), ch(to_rgb, shift)
+                    local v = math.floor(a + (b - a) * amount + 0.5)
+                    out = out + math.max(0, math.min(255, v)) * shift
+                end
+                return out
+            end
+
+            -- Divider colour for a given segment background.
+            local function sep_fg(bg)
+                local sl = hl_of('StatusLine')
+                if bg == nil or sl.fg == nil then return sl.fg end
+                return blend(bg, sl.fg, SEP_MIX)
+            end
+
             -- One background across the whole bar.
             --
             -- Solid powerline arrows only make sense between segments that
@@ -188,8 +214,13 @@ return {
                 local name = 'MiniStatuslinePL' .. dir .. from .. to
                 local glyph
                 if from_bg == to_bg then
+                    -- Muted, not the segment's own foreground. Using the fg
+                    -- made each chevron as bright as the text beside it (in
+                    -- solarized dark, Devinfo's #839496), so the dividers
+                    -- competed with the content. blend() keeps them a step
+                    -- above the bar background: visible, but clearly a rule.
                     glyph = dir == 'L' and LEFT_THIN or RIGHT_THIN
-                    vim.api.nvim_set_hl(0, name, { fg = hl_of(from).fg, bg = from_bg })
+                    vim.api.nvim_set_hl(0, name, { fg = sep_fg(from_bg), bg = from_bg })
                 else
                     glyph = dir == 'L' and LEFT or RIGHT
                     vim.api.nvim_set_hl(0, name, {
