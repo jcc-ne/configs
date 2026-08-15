@@ -146,7 +146,7 @@ SENTRY_HOST=$SENTRY_HOST
 AWS_PROFILE=$AWS_PROFILE
 
 # fnm (Node version manager)
-eval "$(fnm env --use-on-cd --shell zsh)"
+# eval "$(fnm env --use-on-cd --shell zsh)"
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "/Users/janine.cheng/.bun/_bun"

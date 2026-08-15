@@ -1,7 +1,6 @@
 -- Plugins that are only loaded when not in VSCode
 return {
     {'jcc-ne/vim-template', branch = 'dev'},
-    {'nvim-treesitter/nvim-treesitter-textobjects', ft = 'python'},
     {'christoomey/vim-tmux-navigator'},
     {'astral-sh/ruff', ft='python'},
     {'python-mode/python-mode', 
@@ -284,8 +283,21 @@ return {
     'mfussenegger/nvim-dap',
     'nvim-telescope/telescope-dap.nvim',
     {
-      'nvim-treesitter/nvim-treesitter',
-      build = ':TSUpdate',
+    'nvim-treesitter/nvim-treesitter',
+    build = ':TSUpdate',
+    config = function()
+      -- Move nvim-treesitter to end of rtp so neovim 0.12's bundled queries
+      -- take precedence over nvim-treesitter's (avoids range nil crash on markdown etc.)
+      local ts_path = vim.fn.stdpath('data') .. '/lazy/nvim-treesitter'
+      vim.opt.rtp:remove(ts_path)
+      vim.opt.rtp:append(ts_path)
+
+      require('nvim-treesitter.configs').setup({
+        ensure_installed = { 'python' },
+        highlight = { enable = false },
+        indent = { enable = false },
+      })
+    end,
   },
   {
       'mfussenegger/nvim-dap-python',
