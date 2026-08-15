@@ -2,10 +2,13 @@
 " grn, gra, grr, gri, grt, grx, gO, K, [d, ]d, [q, ]q, Y, <C-L>, <C-W>d) before
 " reading this file, and mapclear wipes all of them.
 let mapleader = ","
-" let g:python3_host_prog="~/.pyenv/versions/anaconda3-2022.05/bin/python"
-" let g:python_host_prog='~/anaconda3/bin/python'
-let g:python3_host_prog = expand('~/.venv/nvim/bin/python')
-let g:python_host_skip_check = 1
+" No plugin needs the python3 remote host any more (UltiSnips and deoplete
+" were the last two), so provider lookup is disabled outright -- it costs a
+" subprocess spawn at startup otherwise.
+let g:loaded_python3_provider = 0
+let g:loaded_ruby_provider = 0
+let g:loaded_perl_provider = 0
+let g:loaded_node_provider = 0
 " set guioptions=M
 inoremap kj <esc>
 vnoremap kj <esc>
@@ -103,18 +106,8 @@ syntax enable
 lua require('neovim_standalone')
 
 " ------- snippet -------------
-
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<c-K>"
-" let g:UltiSnipsSnippetsDir="~/.vim/bundle/myBundle/UltiSnips"
-" let g:UltiSnipsSnippetDirectories="~/.config/nvim/UltiSnips"  " configs/install/setup_ultisnips_dir.sh to config the dir
-" let g:UltiSnipsSnippetsDir="~/.config/nvim/UltiSnips"  " configs/install/setup_ultisnips_dir.sh to config the dir
-let g:UltiSnipsListSnippets="<c-tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
+" Snippets are mini.snippets now; sources live in nvim/snippets/*.json and
+" the <c-K>/<c-b>/<c-z> triggers are configured in nvim/lua/neovim_standalone.lua.
 
 " -- slimux setup
 map <Leader>s :SlimuxREPLSendLine<CR>

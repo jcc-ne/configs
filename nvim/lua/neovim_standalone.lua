@@ -80,6 +80,26 @@ return {
             vim.keymap.set('n', '<F3>', function() require('mini.diff').toggle_overlay(0) end,
                 { desc = 'Toggle diff overlay' })
 
+            -- ---- snippets (was UltiSnips + vim-snippets) ---------------
+            -- Your snippets live in nvim/snippets/*.json (converted from
+            -- UltiSnips_local); friendly-snippets supplies the general
+            -- library that honza/vim-snippets used to.
+            local snippets = require('mini.snippets')
+            snippets.setup({
+                snippets = {
+                    snippets.gen_loader.from_file(
+                        vim.fn.stdpath('config') .. '/snippets/global.json'),
+                    snippets.gen_loader.from_lang(),
+                },
+                -- UltiSnips triggers kept: <c-K> expand, <c-b>/<c-z> jump.
+                mappings = {
+                    expand = '<C-k>',
+                    jump_next = '<C-b>',
+                    jump_prev = '<C-z>',
+                    stop = '<C-c>',
+                },
+            })
+
             -- ---- key hints (was which-key.nvim) ------------------------
             local clue = require('mini.clue')
             clue.setup({
@@ -216,8 +236,10 @@ return {
       end
   },
   {'sindrets/diffview.nvim'},
-  {'SirVer/ultisnips'},
-  {'honza/vim-snippets'},
+  -- UltiSnips + honza/vim-snippets removed. UltiSnips needed the python3
+  -- remote host; mini.snippets is pure Lua. friendly-snippets is the
+  -- LSP-format equivalent of honza's library (data only, no code).
+  {'rafamadriz/friendly-snippets'},
   {
       "coder/claudecode.nvim",
       cmd = {'ClaudeCode', 'ClaudeCodeFocus', 'ClaudeCodeSend'},

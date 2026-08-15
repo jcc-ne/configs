@@ -1,0 +1,17 @@
+{
+  "TaskWarrior": {
+    "body": [
+      "== Today | +next ==",
+      ""
+    ],
+    "description": "TaskWarrior",
+    "prefix": "TW"
+  },
+  "Today": {
+    "body": [
+      "=== Today Tasks | (+today -COMPLETED or +OVERDUE or +due:today or +due:tomorrow ) ==="
+    ],
+    "description": "Today",
+    "prefix": "TT"
+  }
+}
