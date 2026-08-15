@@ -3,39 +3,9 @@ return {
     {'jcc-ne/vim-template', branch = 'dev'},
     {'christoomey/vim-tmux-navigator'},
     {'astral-sh/ruff', ft='python'},
-    {'python-mode/python-mode', 
-     ft = {'python', 'py', 'ipy'},
-     init = function()
-        -- Create the python augroup
-        vim.api.nvim_create_autocmd("FileType", {
-            pattern = "python",
-            group = "python_group",
-            callback = function()
-                vim.cmd('filetype plugin indent on')
-                vim.cmd('syntax on')
-                
-                -- Python-mode settings
-                vim.g.pymode_folding = 1
-                vim.g.pymode_folding_regex = '^\\s*\\%(class\\|def\\|async\\s\\+def\\|if\\|for\\)'
-                vim.g.pymode_rope = 0
-                vim.g.pymode_doc = 1
-                vim.g.pymode_doc_key = 'K'
-                vim.g.pymode_run_key = 'R'
-                vim.g.pymode_lint = 0
-                -- vim.g.pymode_lint_checker = "pyflakes, pep8"
-                -- vim.g.pymode_lint_ignore = {"E501", "E712"}
-                -- vim.g.pymode_lint_write = 1
-                vim.g.pymode_syntax = 1
-                vim.g.pymode_syntax_all = 1
-                vim.g.pymode_syntax_indent_errors = vim.g.pymode_syntax_all
-                vim.g.pymode_syntax_space_errors = vim.g.pymode_syntax_all
-                vim.g.pymode_breakpoint = 0
-                vim.g.pymode_run = 0
-            end
-        })
-     end
-    },
-    {'Konfekt/FastFold', ft = 'python'},
+    -- python-mode and FastFold removed: linting is handled by ruff + pylsp
+    -- (pymode_lint was already 0), and folding now comes from treesitter's
+    -- incremental foldexpr, which is what FastFold existed to work around.
     {'vimwiki/vimwiki', cmd = 'VimwikiMakeDiaryNote',
       init = function()
         -- Vimwiki configuration
@@ -86,56 +56,9 @@ return {
         }
      end
     },
-    {'deoplete-plugins/deoplete-jedi', 
-     ft = 'python',
-     init = function()
-        vim.api.nvim_create_autocmd("FileType", {
-            pattern = "python",
-            group = "python_group",
-            callback = function()
-                -- Jedi settings
-                vim.g.jedi_goto_assignments_command = "<leader>g"
-                vim.g.jedi_goto_definitions_command = "<leader>d"
-                vim.g.jedi_documentation_command = "K"
-                vim.g.jedi_show_call_signatures = "1"
-                vim.g.jedi_goto_stubs_command = "<leader><leader>s"
-                vim.g.jedi_popup_on_dot = 0
-                vim.g.jedi_completions_enabled = 0  -- use deoplete-jedi instead
-            end
-        })
-     end
-    },
-    {'Shougo/deoplete.nvim',
-     ft = 'python',
-     config = function()
-        -- Deoplete global settings
-        vim.g['deoplete#enable_at_startup'] = 1
-        vim.g['deoplete#sources#jedi#ignore_errors'] = true
-
-        -- Function to set up keymaps for a Python buffer
-        local function setup_deoplete_keymaps(bufnr)
-            vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>D', ':call deoplete#disable()<CR>',
-                {noremap = true, silent = true})
-            vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>E', ':call deoplete#enable()<CR>',
-                {noremap = true, silent = true})
-        end
-
-        -- Set keymaps for current buffer (the one that triggered the load)
-        setup_deoplete_keymaps(0)
-
-        -- Create augroup to prevent duplicate autocmds on reload
-        local deoplete_group = vim.api.nvim_create_augroup("deoplete_keymaps", { clear = true })
-
-        -- Set up autocmd for future Python buffers
-        vim.api.nvim_create_autocmd("FileType", {
-            pattern = "python",
-            group = deoplete_group,
-            callback = function(ev)
-                setup_deoplete_keymaps(ev.buf)
-            end
-        })
-     end
-    },
+    -- deoplete.nvim + deoplete-jedi removed: unmaintained, required the
+    -- python3 remote-plugin host, and raced nvim-cmp and pylsp on the same
+    -- buffers. Completion is now Neovim's built-in (see neovim_settings.lua).
     {
         'vim-airline/vim-airline',
         init = function()
@@ -155,7 +78,9 @@ return {
     {'majutsushi/tagbar', cmd = 'TagbarToggle'},
     {'lvht/tagbar-markdown', ft = 'markdown'},
     'mattn/calendar-vim',
-    'nvim-telescope/telescope.nvim',
+    -- telescope.nvim + telescope-dap removed: fzf.vim is the finder in use, and
+    -- the only real consumer was the DAP pickers in dbg/python.lua, which now
+    -- use nvim-dap's own dap.ui.widgets.
     {
         "iamcco/markdown-preview.nvim",
         cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
@@ -165,81 +90,9 @@ return {
         end,
         ft = { "markdown" },
     },
-    {
-      'hrsh7th/nvim-cmp',
-      event = 'InsertEnter',  -- Load when entering insert mode
-      dependencies = {
-        'hrsh7th/cmp-nvim-lsp',     -- LSP completion
-        'hrsh7th/cmp-buffer',       -- Buffer completion
-        'hrsh7th/cmp-path',         -- Path completion
-        'quangnguyen30192/cmp-nvim-ultisnips',  -- UltiSnips completion
-      },
-      config = function()
-        local cmp = require('cmp')
-
-        -- Set up gray highlight for kind
-        vim.api.nvim_set_hl(0, 'CmpItemKindGray', { fg = '#808080', bg = 'NONE' })
-
-        -- Mapping for shortened kind names
-        local kind_abbr = {
-          Text = "text",
-          Method = "meth",
-          Function = "func",
-          Constructor = "cnst",
-          Field = "fld",
-          Variable = "var",
-          Class = "cls",
-          Interface = "intf",
-          Module = "mod",
-          Property = "prop",
-          Unit = "unit",
-          Value = "val",
-          Enum = "enum",
-          Keyword = "keyw",
-          Snippet = "snip",
-          Color = "color",
-          File = "file",
-          Reference = "ref",
-          Folder = "dir",
-          EnumMember = "emem",
-          Constant = "cnst",
-          Struct = "strc",
-          Event = "evnt",
-          Operator = "op",
-          TypeParameter = "type",
-        }
-
-        cmp.setup({
-
-          -- Completion sources (order determines priority)
-          sources = cmp.config.sources({
-            { name = 'nvim_lsp', priority = 1000 },
-            { name = 'ultisnips', priority = 900 },
-            { name = 'buffer', priority = 500, keyword_length = 3 },
-            { name = 'path', priority = 300 },
-          }),
-
-
-          -- Formatting (adds icons and source names)
-          formatting = {
-            format = function(entry, vim_item)
-              -- Shorten kind name and apply gray color
-              vim_item.kind = kind_abbr[vim_item.kind] or vim_item.kind
-              vim_item.kind_hl_group = 'CmpItemKindGray'
-
-              -- Source names
-              vim_item.menu = ({
-                nvim_lsp = "∘lsp",
-                ultisnips = "∘snip",
-                buffer = "∘buf",
-                path = "∘path",
-              })[entry.source.name]
-              return vim_item
-            end
-          },
-        })
-      end
-    },
+    -- nvim-cmp + cmp-nvim-lsp/cmp-buffer/cmp-path/cmp-nvim-ultisnips removed:
+    -- Neovim 0.12 ships autotriggered completion via the 'autocomplete' option
+    -- and vim.lsp.completion. Configured in neovim_settings.lua.
     {
         "folke/which-key.nvim",
         event = "VeryLazy",
@@ -269,34 +122,25 @@ return {
     --   dependencies = { 'nvim-lua/plenary.nvim' },
     -- },
   
-    {
-      'VonHeikemen/lsp-zero.nvim',
-      dependencies = {
-        'neovim/nvim-lspconfig',
-        'williamboman/mason.nvim',
-        'williamboman/mason-lspconfig.nvim',
-        'L3MON4D3/LuaSnip',
-      },
-    },
-  
+    -- lsp-zero.nvim and LuaSnip removed: servers are configured directly with
+    -- vim.lsp.config/vim.lsp.enable in neovim_settings.lua, and nothing
+    -- referenced LuaSnip. nvim-lspconfig stays -- it supplies the cmd and
+    -- root_markers for ruff/pylsp/gopls that those calls merge on top of.
+    'neovim/nvim-lspconfig',
+    'williamboman/mason.nvim',
+    'williamboman/mason-lspconfig.nvim',
+
     -- DAP related plugins
     'mfussenegger/nvim-dap',
-    'nvim-telescope/telescope-dap.nvim',
     {
+    -- On the `main` branch nvim-treesitter is just a parser installer, so the
+    -- old rtp-reordering hack against 0.12's bundled queries is unnecessary.
+    -- Highlighting stays off (as before); the parsers are here for foldexpr.
     'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
     build = ':TSUpdate',
     config = function()
-      -- Move nvim-treesitter to end of rtp so neovim 0.12's bundled queries
-      -- take precedence over nvim-treesitter's (avoids range nil crash on markdown etc.)
-      local ts_path = vim.fn.stdpath('data') .. '/lazy/nvim-treesitter'
-      vim.opt.rtp:remove(ts_path)
-      vim.opt.rtp:append(ts_path)
-
-      require('nvim-treesitter.configs').setup({
-        ensure_installed = { 'python' },
-        highlight = { enable = false },
-        indent = { enable = false },
-      })
+      require('nvim-treesitter').install({ 'python' })
     end,
   },
   {

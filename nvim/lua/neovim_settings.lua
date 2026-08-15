@@ -36,8 +36,8 @@ metals_config.settings = {
   gradleScript="/Users/janine/gradlew",
   -- gradleScript="/opt/homebrew/bin/gradle",
 }
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+-- Built-in completion advertises its own capabilities; no cmp_nvim_lsp needed.
+metals_config.capabilities = vim.lsp.protocol.make_client_capabilities()
 -- Debug settings if you're using nvim-dap
 local dap = require("dap")
 
@@ -178,3 +178,43 @@ vim.lsp.config('gopls', {
     filetypes = { "go" }
 })
 vim.lsp.enable('gopls')
+
+-------------------------------------------------------------------------------
+-- Built-in completion (replaces nvim-cmp + cmp-* sources)
+--
+-- Neovim 0.12 added the 'autocomplete' option, which is the piece that makes
+-- the built-in popup usable without a plugin. 'fuzzy' gives cmp-like matching,
+-- 'noselect' keeps <CR> from committing an entry you did not pick.
+-------------------------------------------------------------------------------
+vim.o.autocomplete = true
+vim.o.completeopt = 'menu,menuone,popup,fuzzy,noselect'
+vim.o.pumheight = 12
+
+api.nvim_create_autocmd('LspAttach', {
+  group = api.nvim_create_augroup('builtin_completion', { clear = true }),
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client and client:supports_method('textDocument/completion') then
+      vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, { autotrigger = true })
+    end
+  end,
+})
+
+-------------------------------------------------------------------------------
+-- Treesitter folding (replaces python-mode's regex folding + FastFold)
+--
+-- foldexpr parses on its own, so this does not turn on treesitter
+-- highlighting -- that stays off, as it was before.
+-- markdown/markdown_inline parsers ship with 0.12; python is installed by
+-- nvim-treesitter (see neovim_standalone.lua).
+-------------------------------------------------------------------------------
+api.nvim_create_autocmd('FileType', {
+  pattern = { 'python', 'markdown' },
+  group = api.nvim_create_augroup('treesitter_folding', { clear = true }),
+  callback = function()
+    if not pcall(vim.treesitter.get_parser, 0) then return end
+    vim.wo[0][0].foldmethod = 'expr'
+    vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+    vim.wo[0][0].foldlevel = 20
+  end,
+})

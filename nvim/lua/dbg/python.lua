@@ -10,8 +10,6 @@
 require('dap-python').setup()
 require('dap-python').test_runner = 'pytest'
 
-require('telescope').load_extension('dap')
-
 local api = vim.api
 local cmd = vim.cmd
 
@@ -34,12 +32,15 @@ map("n", "<leader>dr", [[<cmd>lua require"dap".repl.toggle()<CR>]])
 map('n', '<leader>dro', '<cmd>lua require"dap".repl.open()<CR>') 
 map('n', '<leader>drl', '<cmd>lua require"dap".repl.run_last()<CR>') 
 
--- telescope-dap
-map('n', '<leader>dcc', '<cmd>lua require"telescope".extensions.dap.commands{}<CR>')
-map('n', '<leader>dco', '<cmd>lua require"telescope".extensions.dap.configurations{}<CR>')
-map('n', '<leader>dlb', '<cmd>lua require"telescope".extensions.dap.list_breakpoints{}<CR>')
-map('n', '<leader>dv', '<cmd>lua require"telescope".extensions.dap.variables{}<CR>')
-map('n', '<leader>df', '<cmd>lua require"telescope".extensions.dap.frames{}<CR>')
+-- These were telescope-dap pickers. nvim-dap ships equivalents of its own, so
+-- telescope + telescope-dap are no longer needed just for the debugger UI.
+-- dap.continue() already prompts with vim.ui.select when no session is running,
+-- which is what the old <leader>dco configurations picker did.
+map('n', '<leader>dco', '<cmd>lua require"dap".continue()<CR>')
+map('n', '<leader>dlb', '<cmd>lua require"dap".list_breakpoints(); vim.cmd("copen")<CR>')
+map('n', '<leader>dv', '<cmd>lua local w = require"dap.ui.widgets"; w.centered_float(w.scopes)<CR>')
+map('n', '<leader>df', '<cmd>lua local w = require"dap.ui.widgets"; w.centered_float(w.frames)<CR>')
+map('n', '<leader>dcc', '<cmd>lua local w = require"dap.ui.widgets"; w.centered_float(w.threads)<CR>')
 
 
 -- additional step in methods

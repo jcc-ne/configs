@@ -16,10 +16,14 @@ set -e
 
 echo current PLATFORM: $(check_platform)
 
+# tree-sitter-cli is required by nvim-treesitter's `main` branch to compile
+# parsers (the python parser, used for foldexpr). Neovim 0.12 bundles
+# c/lua/markdown/markdown_inline/query/vim/vimdoc already.
 if [ $(check_platform) = "OSX" ];then
-   brew install neovim
+   brew install neovim tree-sitter-cli
 elif [ $(check_platform) = "LINUX" ];then
    sudo apt install neovim
+   cargo install tree-sitter-cli || echo "WARN: install tree-sitter-cli manually"
 fi
 
 uv venv ~/.venv/nvim --python 3.12

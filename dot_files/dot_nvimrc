@@ -1,4 +1,6 @@
-mapclear
+" NOTE: do NOT `mapclear` here. Neovim installs its default mappings (gc, gcc,
+" grn, gra, grr, gri, grt, grx, gO, K, [d, ]d, [q, ]q, Y, <C-L>, <C-W>d) before
+" reading this file, and mapclear wipes all of them.
 let mapleader = ","
 " let g:python3_host_prog="~/.pyenv/versions/anaconda3-2022.05/bin/python"
 " let g:python_host_prog='~/anaconda3/bin/python'
@@ -95,12 +97,8 @@ filetype plugin indent on
 syntax enable
 
 
-nmap zuz <Plug>(FastFoldUpdate)
-let g:fastfold_savehook = 1
-let g:fastfold_force = 1
-" -- to be faster, set the fastfold update commands to blank
-let g:fastfold_fold_command_suffixes =  []  
-let g:fastfold_fold_movement_commands = []
+" FastFold removed -- treesitter foldexpr is incremental, which is the problem
+" FastFold existed to work around. See nvim/lua/neovim_settings.lua.
 
 lua require('neovim_standalone')
 
@@ -129,13 +127,6 @@ map <Leader>k :SlimuxSendKeysLast<CR>
 map <Leader><space> :YRShow <CR>
 let g:yankring_replace_n_pkey="<leader>p"
 
-" - map ctrl-p back to ctrl-p
-let g:ctrlp_map = '<c-p>'
-"let g:ctrlp_cmd = 'CtrlPMixed'
-let g:ctrlp_cmd = 'CtrlPBuffer'
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|(\.(swp|ico|git|svn|pyc))'
-
-
 " - expandtab for some filetypes
 autocmd FileType wiki,vimwiki,unix set expandtab
 autocmd FileType wiki,vimwiki,unix set tabstop=4
@@ -154,10 +145,6 @@ nnoremap <leader>wt :VimwikiRebuildTags<CR>
 
 " -- undotree
 " nnoremap <F5> :UndotreeToggle<CR>
-
-" -- nerdcommenter
-let NERDSpaceDelims=1
-autocmd FileType python let NERDSpaceDelims=0
 
 " -- gitgutter
 nnoremap <F3> :GitGutterBufferToggle<CR>
