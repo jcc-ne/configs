@@ -193,6 +193,16 @@ return {
                 return result
             end
 
+            -- Must come before statusline.setup(). section_fileinfo() calls
+            -- H.ensure_get_icon() on every redraw; with no _G.MiniIcons it
+            -- falls through to pcall(require, 'nvim-web-devicons'), which is
+            -- not installed. Failed requires are not cached in package.loaded,
+            -- so that re-searched the whole package.path on every cursor move
+            -- -- 381us of a ~450us redraw. Setting mini.icons up removes it.
+            require('mini.icons').setup()
+            -- Other plugins (diffview) look for nvim-web-devicons by name.
+            MiniIcons.mock_nvim_web_devicons()
+
             statusline.setup({
                 use_icons = true,
                 content = {
