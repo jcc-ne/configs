@@ -59,20 +59,60 @@ return {
     -- deoplete.nvim + deoplete-jedi removed: unmaintained, required the
     -- python3 remote-plugin host, and raced nvim-cmp and pylsp on the same
     -- buffers. Completion is now Neovim's built-in (see neovim_settings.lua).
+    -- mini.nvim replaces vim-airline + vim-airline-themes (statusline),
+    -- vim-gitgutter (diff), and which-key.nvim (clue). One repo, four modules.
     {
-        'vim-airline/vim-airline',
-        init = function()
-            vim.g.airline_powerline_fonts = 1
-            vim.g["airline#extensions#hunks#enabled"] = 1
-            -- vim.g.airline_theme = 'base16'
-            -- vim.g.airline_theme = 'deus'
-            -- vim.g.airline_theme = 'monochrome'
-            vim.g.airline_theme = 'silver'
-            -- vim.g.airline_theme = 'nord_minimal'
+        'echasnovski/mini.nvim',
+        version = false,
+        config = function()
+            -- ---- statusline (was vim-airline) --------------------------
+            -- Shows branch + diff summary (fed by mini.diff below),
+            -- diagnostics, filename, fileinfo and location, like airline did.
+            require('mini.statusline').setup({ use_icons = true })
+
+            -- ---- diff signs (was vim-gitgutter) ------------------------
+            require('mini.diff').setup({
+                view = { style = 'sign', signs = { add = '+', change = '~', delete = '-' } },
+            })
+            -- gitgutter's <F3> was GitGutterBufferToggle. mini.diff's overlay
+            -- is the more useful toggle: it shows the actual reference text
+            -- inline rather than just the sign column.
+            vim.keymap.set('n', '<F3>', function() require('mini.diff').toggle_overlay(0) end,
+                { desc = 'Toggle diff overlay' })
+
+            -- ---- key hints (was which-key.nvim) ------------------------
+            local clue = require('mini.clue')
+            clue.setup({
+                triggers = {
+                    { mode = 'n', keys = '<Leader>' },
+                    { mode = 'x', keys = '<Leader>' },
+                    { mode = 'n', keys = 'g' },
+                    { mode = 'x', keys = 'g' },
+                    { mode = 'n', keys = 'z' },
+                    { mode = 'x', keys = 'z' },
+                    { mode = 'n', keys = '[' },
+                    { mode = 'n', keys = ']' },
+                    { mode = 'n', keys = '"' },
+                    { mode = 'x', keys = '"' },
+                    { mode = 'i', keys = '<C-r>' },
+                    { mode = 'n', keys = '<C-w>' },
+                },
+                clues = {
+                    clue.gen_clues.builtin_completion(),
+                    clue.gen_clues.g(),
+                    clue.gen_clues.marks(),
+                    clue.gen_clues.registers(),
+                    clue.gen_clues.windows(),
+                    clue.gen_clues.z(),
+                    { mode = 'n', keys = '<Leader>a', desc = '+claudecode' },
+                    { mode = 'n', keys = '<Leader>d', desc = '+debug (dap)' },
+                    { mode = 'n', keys = '<Leader>x', desc = '+diagnostics qflist' },
+                    { mode = 'n', keys = '<Leader>w', desc = '+vimwiki' },
+                },
+                window = { delay = 300 },
+            })
         end,
     },
-    'vim-airline/vim-airline-themes',
-    'airblade/vim-gitgutter',
     'epeli/slimux',
     'whiteinge/diffconflicts',
     {'majutsushi/tagbar', cmd = 'TagbarToggle'},
@@ -93,21 +133,7 @@ return {
     -- nvim-cmp + cmp-nvim-lsp/cmp-buffer/cmp-path/cmp-nvim-ultisnips removed:
     -- Neovim 0.12 ships autotriggered completion via the 'autocomplete' option
     -- and vim.lsp.completion. Configured in neovim_settings.lua.
-    {
-        "folke/which-key.nvim",
-        event = "VeryLazy",
-        opts = {
-        },
-        keys = {
-            {
-                "<leader>?",
-                function()
-                    require("which-key").show({ global = false })
-                end,
-                desc = "Buffer Local Keymaps (which-key)",
-            },
-        },
-    },
+    -- which-key.nvim removed -- replaced by mini.clue above.
     {
       'scalameta/nvim-metals',
       dependencies = {

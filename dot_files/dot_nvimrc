@@ -146,10 +146,8 @@ nnoremap <leader>wt :VimwikiRebuildTags<CR>
 " -- undotree
 " nnoremap <F5> :UndotreeToggle<CR>
 
-" -- gitgutter
-nnoremap <F3> :GitGutterBufferToggle<CR>
-let g:gitgutter_override_sign_column_highlight = 1
-highlight clear SignColumn
+" -- diff signs are mini.diff now; <F3> toggles the overlay (see
+" -- nvim/lua/neovim_standalone.lua). No SignColumn override needed.
 
 " -- Tagbar
 nnoremap <F4> :TagbarToggle<CR>
