@@ -131,8 +131,37 @@ vim.diagnostic.config({
 
 
 
--- Configure Python LSP servers
+-------------------------------------------------------------------------------
+-- Python LSP servers
+--
+-- pylsp/ruff are installed in ~/.venv/nvim, which is NOT on PATH, so the
+-- default bare `cmd` ({"pylsp"} / {"ruff","server"}) never resolved and no
+-- client ever attached. Resolve explicitly, preferring a project venv so the
+-- server sees the project's own site-packages.
+-------------------------------------------------------------------------------
+local function py_tool(name)
+    local candidates = {}
+    -- 1. venv active in the environment nvim was launched from
+    if vim.env.VIRTUAL_ENV then
+        table.insert(candidates, vim.env.VIRTUAL_ENV .. '/bin/' .. name)
+    end
+    -- 2. venv in the project root
+    local root = vim.fs.root(0, { '.venv', 'pyproject.toml', '.git' })
+    if root then
+        table.insert(candidates, root .. '/.venv/bin/' .. name)
+    end
+    -- 3. the dedicated nvim tooling venv (see install/install_neovim.sh)
+    table.insert(candidates, vim.fn.expand('~/.venv/nvim/bin/' .. name))
+
+    for _, path in ipairs(candidates) do
+        if vim.fn.executable(path) == 1 then return path end
+    end
+    -- 4. fall back to PATH; may not exist, in which case the client won't start
+    return name
+end
+
 vim.lsp.config('ruff', {
+    cmd = { py_tool('ruff'), 'server' },
     filetypes = { "python" },
     init_options = {
         settings = {
@@ -146,6 +175,7 @@ vim.lsp.config('ruff', {
 vim.lsp.enable('ruff')
 
 vim.lsp.config('pylsp', {
+    cmd = { py_tool('pylsp') },
     filetypes = { "python" },
     settings = {
         pylsp = {

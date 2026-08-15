@@ -49,6 +49,23 @@ These used to be plugins and are now built in — do not re-add them:
 No plugin needs the python3 remote host any more, so all providers are
 disabled in `dot_nvimrc`.
 
+## Python tooling
+
+`~/.venv/nvim` is the python **tooling** venv — it holds pylsp, ruff, mypy and
+pylint. It is not on `PATH`, so `neovim_settings.lua` resolves the server
+binaries out of it explicitly (`py_tool()`), preferring an active or
+project-local venv first. Do not delete this venv; nvim no longer needs a
+python3 provider, but it still needs these servers.
+
+If python completion stops working, check that a client actually attached:
+
+```vim
+:lua =vim.tbl_map(function(c) return c.name end, vim.lsp.get_clients({bufnr=0}))
+```
+
+Empty means the server binary did not resolve — the usual cause is that the
+venv was rebuilt without the tooling. Re-run `install/install_neovim.sh`.
+
 ## Snippets
 
 `snippets/*.json` were converted from `my_patch/myBundle/UltiSnips_local`.
