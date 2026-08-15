@@ -37,8 +37,11 @@ require("lazy").setup({
   ),
 }, {
   defaults = {
-    lazy = false, 
-  }
+    lazy = false,
+  },
+  -- No plugin here needs luarocks. Without this, :checkhealth permanently
+  -- reports a hererocks ERROR that its own output says to ignore.
+  rocks = { enabled = false },
 })
 
 if not vim.g.vscode then
