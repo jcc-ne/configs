@@ -96,43 +96,52 @@ return {
                 return hl
             end
 
-            -- Readable text colour for a given background.
-            local function contrast_on(rgb)
-                local r = math.floor(rgb / 65536) % 256
-                local g = math.floor(rgb / 256) % 256
-                local b = rgb % 256
-                -- Rec. 601 luma
-                return (0.299 * r + 0.587 * g + 0.114 * b) > 140 and 0x000000 or 0xffffff
-            end
-
-            -- Give every mode a solid coloured block.
+            -- One background across the whole bar.
             --
-            -- Most colorschemes (solarized8 included) define only
-            -- MiniStatuslineModeNormal with a real background and tint just
-            -- the foreground for Insert/Visual/Replace/Command, so there is
-            -- nothing for a powerline arrow to separate. Where a mode's
-            -- background is missing or equal to the statusline's, promote its
-            -- foreground to the background and pick a readable fg. Runs on
-            -- ColorScheme so it survives the light/dark switch in dot_nvimrc
-            -- and the per-host gruvbox/solarized choice.
-            local function ensure_mode_colors()
-                local sl_bg = hl_of('StatusLine').bg
+            -- Solid powerline arrows only make sense between segments that
+            -- have DIFFERENT backgrounds -- the arrow is the colour of one
+            -- bleeding into the other. With a single bar colour there is
+            -- nothing to bleed, and a solid arrow renders as an isolated
+            -- coloured wedge, which is the artefact at each end of the bar.
+            --
+            -- So: flatten every segment to StatusLine's background and carry
+            -- the mode's identity in the FOREGROUND instead. A colorscheme
+            -- that gives a mode a real background (solarized: orange in light,
+            -- blue in dark) has that vivid colour promoted to the text colour;
+            -- otherwise its existing fg is kept.
+            --
+            -- sep() compares backgrounds and falls back to thin separators
+            -- when they match, so flattening here is what turns every arrow
+            -- into a thin chevron. Runs on ColorScheme so it survives the
+            -- light/dark switch in dot_nvimrc and the per-host colorscheme.
+            local function flatten_statusline_colors()
+                local sl = hl_of('StatusLine')
+                local sl_bg = sl.bg
+                if sl_bg == nil then return end
+
                 for _, m in ipairs({ 'Normal', 'Insert', 'Visual', 'Replace', 'Command', 'Other' }) do
                     local name = 'MiniStatuslineMode' .. m
                     local h = hl_of(name)
-                    if h.bg == nil or h.bg == sl_bg then
-                        local base = h.fg or sl_bg
-                        if base then
-                            vim.api.nvim_set_hl(0, name,
-                                { fg = contrast_on(base), bg = base, bold = true })
-                        end
+                    -- Prefer the mode's own background: that is the saturated
+                    -- "this is insert mode" colour. Its fg is usually near-white,
+                    -- picked to sit on that background, so it would be unreadable
+                    -- straight on the bar.
+                    local fg = (h.bg ~= nil and h.bg ~= sl_bg) and h.bg or h.fg
+                    vim.api.nvim_set_hl(0, name, { fg = fg, bg = sl_bg, bold = true })
+                end
+
+                for _, s in ipairs({ 'Devinfo', 'Filename', 'Fileinfo', 'Inactive' }) do
+                    local name = 'MiniStatusline' .. s
+                    local h = hl_of(name)
+                    if h.bg ~= sl_bg then
+                        vim.api.nvim_set_hl(0, name, { fg = h.fg or sl.fg, bg = sl_bg })
                     end
                 end
             end
 
             vim.api.nvim_create_autocmd('ColorScheme', {
-                group = vim.api.nvim_create_augroup('statusline_mode_colors', { clear = true }),
-                callback = ensure_mode_colors,
+                group = vim.api.nvim_create_augroup('statusline_flat_colors', { clear = true }),
+                callback = flatten_statusline_colors,
             })
             -- dot_nvimrc sets the colorscheme after this file is sourced, so
             -- also run once everything has settled. Declared before sep_cache
@@ -140,7 +149,7 @@ return {
             local invalidate_sep_cache
             vim.api.nvim_create_autocmd('VimEnter', {
                 callback = function()
-                    ensure_mode_colors()
+                    flatten_statusline_colors()
                     invalidate_sep_cache()
                 end,
             })
