@@ -213,19 +213,42 @@ vim.lsp.enable('gopls')
 -- Built-in completion (replaces nvim-cmp + cmp-* sources)
 --
 -- Neovim 0.12 added the 'autocomplete' option, which is the piece that makes
--- the built-in popup usable without a plugin. 'fuzzy' gives cmp-like matching,
--- 'noselect' keeps <CR> from committing an entry you did not pick.
+-- the built-in popup usable without a plugin.
+--
+-- IMPORTANT: 'autocomplete' collects candidates from 'complete' -- it is
+-- automatic i_CTRL-N, not an LSP mechanism. The default ".,w,b,u,t" is buffers
+-- and tags only, so LSP items never appear without the "o" flag (omnifunc,
+-- which LspAttach points at vim.lsp.omnifunc). The "^N" suffixes cap each
+-- source; LSP gets the largest share.
+--
+-- vim.lsp.completion's own `autotrigger` is deliberately NOT used: it fires
+-- only on the server's triggerCharacters (just "." for pylsp), so it pops at
+-- `os.` and then goes quiet as you keep typing. 'autocomplete' re-queries on
+-- every keystroke, which is the cmp-like behavior we want.
 -------------------------------------------------------------------------------
 vim.o.autocomplete = true
+vim.o.complete = '.^5,w^5,b^5,o^15'
 vim.o.completeopt = 'menu,menuone,popup,fuzzy,noselect'
+vim.o.autocompletedelay = 60
 vim.o.pumheight = 12
+
+-- <Tab>/<S-Tab> walk the popup when it is open, and are literal otherwise.
+vim.keymap.set('i', '<Tab>', function()
+  return vim.fn.pumvisible() == 1 and '<C-n>' or '<Tab>'
+end, { expr = true })
+vim.keymap.set('i', '<S-Tab>', function()
+  return vim.fn.pumvisible() == 1 and '<C-p>' or '<S-Tab>'
+end, { expr = true })
 
 api.nvim_create_autocmd('LspAttach', {
   group = api.nvim_create_augroup('builtin_completion', { clear = true }),
   callback = function(ev)
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
     if client and client:supports_method('textDocument/completion') then
-      vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, { autotrigger = true })
+      -- Not for triggering (see above) -- this is what makes <C-y> apply
+      -- snippet expansion, additionalTextEdits (auto-imports) and the
+      -- completionItem/resolve preview popup.
+      vim.lsp.completion.enable(true, ev.data.client_id, ev.buf)
     end
   end,
 })
