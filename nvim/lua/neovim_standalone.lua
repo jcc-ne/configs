@@ -111,52 +111,59 @@ return {
                 return math.floor(r) * 65536 + math.floor(g) * 256 + math.floor(b)
             end
 
-            -- One background across the whole bar.
+            -- airline's "silver" theme, ported.
             --
-            -- Solid powerline arrows only make sense between segments that
-            -- have DIFFERENT backgrounds -- the arrow is the colour of one
-            -- bleeding into the other. With a single bar colour there is
-            -- nothing to bleed, and a solid arrow renders as an isolated
-            -- coloured wedge, which is the artefact at each end of the bar.
+            -- Taken from vim-airline-themes/autoload/airline/themes/silver.vim
+            -- (the g:airline_theme this config used to set). Worth knowing:
+            -- silver is a FLAT theme. Its three section colours N1/N2/N3 are
+            -- byte-identical -- #414141 on #e1e1e1 -- so it never had per-
+            -- segment backgrounds. Mode is carried purely in the foreground,
+            -- which is why solid powerline wedges never looked right here:
+            -- there are no two backgrounds for an arrow to transition between.
             --
-            -- So: flatten every segment to StatusLine's background and carry
-            -- the mode's identity in the FOREGROUND instead. A colorscheme
-            -- that gives a mode a real background (solarized: orange in light,
-            -- blue in dark) has that vivid colour promoted to the text colour;
-            -- otherwise its existing fg is kept.
-            --
-            -- sep() compares backgrounds and falls back to thin separators
-            -- when they match, so flattening here is what turns every arrow
-            -- into a thin chevron. Runs on ColorScheme so it survives the
-            -- light/dark switch in dot_nvimrc and the per-host colorscheme.
-            local function flatten_statusline_colors()
-                local sl = hl_of('StatusLine')
-                local sl_bg = sl.bg
-                if sl_bg == nil then return end
+            -- Fixed palette, deliberately not derived from the colorscheme.
+            -- airline applied silver regardless of solarized/gruvbox or the
+            -- light/dark switch in dot_nvimrc, so this does too.
+            local SILVER = {
+                bg          = 0xe1e1e1,
+                fg          = 0x414141,
+                modified    = 0xe25000, -- airline_c when the buffer is modified
+                inactive_fg = 0xa1a1a1,
+                inactive_bg = 0xdddddd,
+                mode = {
+                    Normal  = 0x414141,
+                    Insert  = 0x0d935c,
+                    Visual  = 0x0000b3,
+                    Replace = 0xb30000,
+                    Command = 0x414141,
+                    Other   = 0x414141,
+                },
+            }
 
-                for _, m in ipairs({ 'Normal', 'Insert', 'Visual', 'Replace', 'Command', 'Other' }) do
-                    local name = 'MiniStatuslineMode' .. m
-                    local h = hl_of(name)
-                    -- Prefer the mode's own background: that is the saturated
-                    -- "this is insert mode" colour. Its fg is usually near-white,
-                    -- picked to sit on that background, so it would be unreadable
-                    -- straight on the bar.
-                    local fg = (h.bg ~= nil and h.bg ~= sl_bg) and h.bg or h.fg
-                    vim.api.nvim_set_hl(0, name, { fg = fg, bg = sl_bg, bold = true })
+            local function apply_silver_theme()
+                for m, fg in pairs(SILVER.mode) do
+                    vim.api.nvim_set_hl(0, 'MiniStatuslineMode' .. m,
+                        { fg = fg, bg = SILVER.bg, bold = true })
                 end
-
-                for _, s in ipairs({ 'Devinfo', 'Filename', 'Fileinfo', 'Inactive' }) do
-                    local name = 'MiniStatusline' .. s
-                    local h = hl_of(name)
-                    if h.bg ~= sl_bg then
-                        vim.api.nvim_set_hl(0, name, { fg = h.fg or sl.fg, bg = sl_bg })
-                    end
+                for _, s in ipairs({ 'Devinfo', 'Filename', 'Fileinfo' }) do
+                    vim.api.nvim_set_hl(0, 'MiniStatusline' .. s,
+                        { fg = SILVER.fg, bg = SILVER.bg })
                 end
+                -- silver turns the filename orange while the buffer is dirty.
+                vim.api.nvim_set_hl(0, 'MiniStatuslineFilenameModified',
+                    { fg = SILVER.modified, bg = SILVER.bg })
+                vim.api.nvim_set_hl(0, 'MiniStatuslineInactive',
+                    { fg = SILVER.inactive_fg, bg = SILVER.inactive_bg })
+                -- The bar itself, so the %= gap and inactive windows match.
+                vim.api.nvim_set_hl(0, 'StatusLine',   { fg = SILVER.fg, bg = SILVER.bg })
+                vim.api.nvim_set_hl(0, 'StatusLineNC',
+                    { fg = SILVER.inactive_fg, bg = SILVER.inactive_bg })
             end
+            
 
             vim.api.nvim_create_autocmd('ColorScheme', {
-                group = vim.api.nvim_create_augroup('statusline_flat_colors', { clear = true }),
-                callback = flatten_statusline_colors,
+                group = vim.api.nvim_create_augroup('statusline_silver', { clear = true }),
+                callback = apply_silver_theme,
             })
             -- dot_nvimrc sets the colorscheme after this file is sourced, so
             -- also run once everything has settled. Declared before sep_cache
@@ -164,7 +171,7 @@ return {
             local invalidate_sep_cache
             vim.api.nvim_create_autocmd('VimEnter', {
                 callback = function()
-                    flatten_statusline_colors()
+                    apply_silver_theme()
                     invalidate_sep_cache()
                 end,
             })
@@ -262,7 +269,12 @@ return {
                         if devinfo ~= '' then
                             table.insert(left_groups, { hl = 'MiniStatuslineDevinfo', text = devinfo })
                         end
-                        table.insert(left_groups, { hl = 'MiniStatuslineFilename', text = filename })
+                        -- silver tints the filename orange while the buffer is
+                        -- dirty (its airline_c "_modified" palette entry).
+                        local filename_hl = vim.bo.modified
+                            and 'MiniStatuslineFilenameModified'
+                            or 'MiniStatuslineFilename'
+                        table.insert(left_groups, { hl = filename_hl, text = filename })
 
                         local out = {}
                         for i, g in ipairs(left_groups) do
@@ -280,7 +292,9 @@ return {
                         end
                         table.insert(right_groups, { hl = mode_hl, text = location })
 
-                        local prev = 'MiniStatuslineFilename'
+                        -- Same group the middle actually rendered with, so the
+                        -- separator matches when the buffer is modified.
+                        local prev = filename_hl
                         for _, g in ipairs(right_groups) do
                             table.insert(out, sep(prev, g.hl, 'R'))
                             table.insert(out, '%#' .. g.hl .. '# ' .. g.text .. ' ')
