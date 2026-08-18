@@ -2,7 +2,9 @@
 return {
     {'jcc-ne/vim-template', branch = 'dev'},
     {'christoomey/vim-tmux-navigator'},
-    {'astral-sh/ruff', ft='python'},
+    -- astral-sh/ruff removed: that repo is ruff's Rust source tree and ships
+    -- no plugin/ or ftplugin/ files at all, so lazy cloned 208MB and loaded
+    -- nothing. The ruff LSP is resolved by py_tool() in neovim_settings.lua.
     -- python-mode and FastFold removed: linting is handled by ruff + pylsp
     -- (pymode_lint was already 0), and folding now comes from treesitter's
     -- incremental foldexpr, which is what FastFold existed to work around.
@@ -323,7 +325,8 @@ return {
     'whiteinge/diffconflicts',
     {'majutsushi/tagbar', cmd = 'TagbarToggle'},
     {'lvht/tagbar-markdown', ft = 'markdown'},
-    'mattn/calendar-vim',
+    -- calendar-vim removed: no mapping, no command and no vimwiki Calendar
+    -- reference anywhere in the config -- nothing ever invoked it.
     -- telescope.nvim + telescope-dap removed: fzf.vim is the finder in use, and
     -- the only real consumer was the DAP pickers in dbg/python.lua, which now
     -- use nvim-dap's own dap.ui.widgets.
@@ -342,8 +345,9 @@ return {
     -- which-key.nvim removed -- replaced by mini.clue above.
     {
       'scalameta/nvim-metals',
+      -- plenary dropped: neither metals nor dap-python requires it any more
+      -- (it was pulled in for telescope, which is gone).
       dependencies = {
-        'nvim-lua/plenary.nvim',
         'mfussenegger/nvim-dap',
       },
       ft = {'scala', 'sbt', 'java', 'groovy'},
@@ -377,9 +381,6 @@ return {
   },
   {
       'mfussenegger/nvim-dap-python',
-      dependencies = {
-          'nvim-lua/plenary.nvim',
-      },
       ft = {'python', 'py', 'ipy'}, 
   },
   {

@@ -103,7 +103,8 @@ syntax enable
 " FastFold removed -- treesitter foldexpr is incremental, which is the problem
 " FastFold existed to work around. See nvim/lua/neovim_settings.lua.
 
-lua require('neovim_standalone')
+" neovim_standalone is a plugin-spec table that plugins.lua already required,
+" so requiring it here again was a cached no-op.
 
 " ------- snippet -------------
 " Snippets are mini.snippets now; sources live in nvim/snippets/*.json and
