@@ -124,13 +124,11 @@ return {
             -- Fixed palette, deliberately not derived from the colorscheme.
             -- airline applied silver regardless of solarized/gruvbox or the
             -- light/dark switch in dot_nvimrc, so this does too.
-            -- The mode block inverts silver: its colour becomes the BACKGROUND
-            -- and the light bar colour becomes the text. airline's section A is
-            -- defined the other way round (dark text on light), but a solid
-            -- block is what makes this read as powerline -- and it is what
-            -- gives sep() two different backgrounds to draw a solid arrow
-            -- between. Everything right of the mode stays flat silver, so only
-            -- the mode boundaries get solid arrows; the rest stay thin.
+            -- The mode is a foreground colour only, exactly as silver defines
+            -- it -- one background across the entire bar. That means sep()
+            -- never sees two different backgrounds, so every separator is a
+            -- thin chevron; solid wedges are impossible on a flat bar by
+            -- construction, not by choice.
             local SILVER = {
                 bg          = 0xe1e1e1,
                 fg          = 0x414141,
@@ -150,7 +148,7 @@ return {
             local function apply_silver_theme()
                 for m, colour in pairs(SILVER.mode) do
                     vim.api.nvim_set_hl(0, 'MiniStatuslineMode' .. m,
-                        { fg = SILVER.bg, bg = colour, bold = true })
+                        { fg = colour, bg = SILVER.bg, bold = true })
                 end
                 for _, s in ipairs({ 'Devinfo', 'Filename', 'Fileinfo' }) do
                     vim.api.nvim_set_hl(0, 'MiniStatusline' .. s,
