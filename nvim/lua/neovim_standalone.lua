@@ -363,8 +363,12 @@ return {
     -- referenced LuaSnip. nvim-lspconfig stays -- it supplies the cmd and
     -- root_markers for ruff/pylsp/gopls that those calls merge on top of.
     'neovim/nvim-lspconfig',
-    'williamboman/mason.nvim',
-    'williamboman/mason-lspconfig.nvim',
+    -- mason.nvim + mason-lspconfig.nvim removed. mason-lspconfig v2
+    -- auto-enables every installed server, and this machine's mason prefix
+    -- still held five 2022-era packages (antlersls, bash-language-server,
+    -- marksman, prosemd-lsp, typescript-language-server) that were starting
+    -- on their filetypes without appearing anywhere in this config. The one
+    -- server actually configured here, gopls, is on PATH already.
 
     -- DAP related plugins
     'mfussenegger/nvim-dap',

@@ -87,8 +87,6 @@ api.nvim_create_autocmd("FileType", {
 -- local lsp = require('lsp-zero')
 -- lsp.preset('recommended')
 -- lsp.setup()
-require("mason").setup()
-require("mason-lspconfig").setup()
 
 -- local null_ls = require('null-ls')
 -- local diagnostics = null_ls.builtins.diagnostics
@@ -204,6 +202,11 @@ api.nvim_create_autocmd("FileType", {
 })
 
 -- Configure Go LSP
+--
+-- No explicit cmd: nvim-lspconfig's default {"gopls"} off PATH is right for a
+-- normal Go install, where GOPATH/bin is on PATH. Unlike the python servers
+-- (which live in a venv that deliberately is not on PATH), there is nothing
+-- here to resolve around.
 vim.lsp.config('gopls', {
     filetypes = { "go" }
 })
