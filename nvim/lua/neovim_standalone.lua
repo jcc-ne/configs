@@ -321,7 +321,16 @@ return {
             })
         end,
     },
-    'epeli/slimux',
+    -- slimux sourced ~22ms of vimscript at every startup for what is four
+    -- mappings over `tmux send-keys`. Every entry point is a command, so
+    -- deferring costs nothing.
+    {'epeli/slimux',
+      cmd = {'SlimuxREPLSendLine', 'SlimuxREPLSendSelection', 'SlimuxREPLSendParagraph',
+             'SlimuxREPLSendBuffer', 'SlimuxREPLConfigure',
+             'SlimuxShellRun', 'SlimuxShellPrompt', 'SlimuxShellLast', 'SlimuxShellConfigure',
+             'SlimuxSendKeys', 'SlimuxSendKeysPrompt', 'SlimuxSendKeysLast',
+             'SlimuxSendKeysConfigure', 'SlimuxGlobalConfigure'},
+    },
     'whiteinge/diffconflicts',
     {'majutsushi/tagbar', cmd = 'TagbarToggle'},
     {'lvht/tagbar-markdown', ft = 'markdown'},
