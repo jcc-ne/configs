@@ -430,9 +430,12 @@ return {
   {
       "coder/claudecode.nvim",
       cmd = {'ClaudeCode', 'ClaudeCodeFocus', 'ClaudeCodeSend'},
-      dependencies = { "folke/snacks.nvim" },
+      -- snacks.nvim dropped (33MB) -- claudecode ships its own "native"
+      -- terminal provider next to the snacks one, and the snacks window was
+      -- the only thing the whole framework was pulled in for.
       opts = {
           terminal_cmd = "claude",
+          terminal = { provider = "native" },
       },
       config = true,
       keys = {
