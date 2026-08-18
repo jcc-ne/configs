@@ -145,97 +145,45 @@ return {
                 },
             }
 
+            -- The mode colour is the WHOLE bar's background, not just the mode
+            -- block's, so every segment group needs a per-mode variant. Naming:
+            -- SilverBar<Mode> for normal text, ...Mode for the mode label,
+            -- ...Dim for separators, ...Mod for a dirty buffer.
+            local TEXT = 0xe1e1e1
             local function apply_silver_theme()
-                for m, colour in pairs(SILVER.mode) do
-                    vim.api.nvim_set_hl(0, 'MiniStatuslineMode' .. m,
-                        { fg = colour, bg = SILVER.bg, bold = true })
+                for m, bg in pairs(SILVER.mode) do
+                    vim.api.nvim_set_hl(0, 'SilverBar' .. m,     { fg = TEXT, bg = bg })
+                    vim.api.nvim_set_hl(0, 'SilverBarMode' .. m, { fg = TEXT, bg = bg, bold = true })
+                    -- Separators sit between segments that now share a
+                    -- background, so they are always thin. Blend the text
+                    -- colour toward the bar so the divider stays quiet.
+                    vim.api.nvim_set_hl(0, 'SilverBarDim' .. m,  { fg = mute(TEXT, bg), bg = bg })
+                    -- silver's dirty-buffer accent, kept on every bar colour.
+                    vim.api.nvim_set_hl(0, 'SilverBarMod' .. m,
+                        { fg = SILVER.modified, bg = bg, bold = true })
                 end
-                for _, s in ipairs({ 'Devinfo', 'Filename', 'Fileinfo' }) do
-                    vim.api.nvim_set_hl(0, 'MiniStatusline' .. s,
-                        { fg = SILVER.fg, bg = SILVER.bg })
-                end
-                -- silver turns the filename orange while the buffer is dirty.
-                vim.api.nvim_set_hl(0, 'MiniStatuslineFilenameModified',
-                    { fg = SILVER.modified, bg = SILVER.bg })
+                -- Inactive windows: same family, dimmed, so splits do not
+                -- flip to a different bar colour entirely.
                 vim.api.nvim_set_hl(0, 'MiniStatuslineInactive',
-                    { fg = SILVER.inactive_fg, bg = SILVER.inactive_bg })
-                -- The bar itself, so the %= gap and inactive windows match.
-                vim.api.nvim_set_hl(0, 'StatusLine',   { fg = SILVER.fg, bg = SILVER.bg })
+                    { fg = SILVER.inactive_fg, bg = SILVER.mode.Normal })
+                vim.api.nvim_set_hl(0, 'StatusLine',
+                    { fg = TEXT, bg = SILVER.mode.Normal })
                 vim.api.nvim_set_hl(0, 'StatusLineNC',
-                    { fg = SILVER.inactive_fg, bg = SILVER.inactive_bg })
+                    { fg = SILVER.inactive_fg, bg = SILVER.mode.Normal })
             end
-            
 
             vim.api.nvim_create_autocmd('ColorScheme', {
                 group = vim.api.nvim_create_augroup('statusline_silver', { clear = true }),
                 callback = apply_silver_theme,
             })
             -- dot_nvimrc sets the colorscheme after this file is sourced, so
-            -- also run once everything has settled. Declared before sep_cache
-            -- exists, hence the forward-declared invalidator.
-            local invalidate_sep_cache
-            vim.api.nvim_create_autocmd('VimEnter', {
-                callback = function()
-                    apply_silver_theme()
-                    invalidate_sep_cache()
-                end,
-            })
+            -- also run once everything has settled.
+            vim.api.nvim_create_autocmd('VimEnter', { callback = apply_silver_theme })
 
-            -- Define a separator group between two segments and return the
-            -- statusline escape that activates it.
-            --
-            -- Colorschemes often give adjacent segments the SAME background
-            -- (solarized makes Devinfo/Filename/Fileinfo all identical). A
-            -- solid arrow there would be fg == bg, i.e. invisible, so fall
-            -- back to a thin separator in the segment's own foreground --
-            -- which is exactly what airline did.
-            --
-            -- The statusline re-renders on every cursor move, so the result is
-            -- memoized: the colours only change when the colorscheme does, and
-            -- the mode is already part of the cache key (the mode highlight
-            -- group is named per mode).
-            --
-            -- Measured: the four separators cost 11.6us/redraw uncached, so
-            -- this is a small win. The real cost in this statusline is
-            -- MiniStatusline.section_fileinfo() at ~340us of a ~370us redraw
-            -- (its icon/filetype lookup) -- that is upstream, not from here.
-            local sep_cache = {}
-            invalidate_sep_cache = function() sep_cache = {} end
-            vim.api.nvim_create_autocmd('ColorScheme', {
-                group = vim.api.nvim_create_augroup('statusline_powerline', { clear = true }),
-                callback = invalidate_sep_cache,
-            })
-
-            local function sep(from, to, dir)
-                local key = dir .. from .. to
-                local cached = sep_cache[key]
-                if cached then return cached end
-
-                local from_bg, to_bg = hl_of(from).bg, hl_of(to).bg
-                local name = 'MiniStatuslinePL' .. dir .. from .. to
-                local glyph
-                if from_bg == to_bg then
-                    glyph = dir == 'L' and LEFT_THIN or RIGHT_THIN
-                    -- Draw every chevron in the same muted grey, derived from
-                    -- the BAR's foreground rather than the adjacent segment's.
-                    -- Inheriting the segment fg made the separator after the
-                    -- mode render in the bright mode colour (orange/blue), so
-                    -- the divider read louder than the text it divides -- and
-                    -- it changed colour as you switched modes. Blending the
-                    -- bar's own fg toward its bg gives one neutral divider:
-                    -- dark grey on the dark theme, light grey on the light one.
-                    vim.api.nvim_set_hl(0, name, { fg = mute(hl_of('StatusLine').fg, from_bg), bg = from_bg })
-                else
-                    glyph = dir == 'L' and LEFT or RIGHT
-                    vim.api.nvim_set_hl(0, name, {
-                        fg = dir == 'L' and from_bg or to_bg,
-                        bg = dir == 'L' and to_bg or from_bg,
-                    })
-                end
-                local result = '%#' .. name .. '#' .. glyph
-                sep_cache[key] = result
-                return result
-            end
+            -- No sep() helper any more. It existed to pick solid vs thin by
+            -- comparing two segment backgrounds; with one background across
+            -- the whole bar there is nothing to compare, so separators are
+            -- always the thin glyph in SilverBarDim<Mode>.
 
             -- Must come before statusline.setup(). section_fileinfo() calls
             -- H.ensure_get_icon() on every redraw; with no _G.MiniIcons it
@@ -268,43 +216,40 @@ return {
                             vim.tbl_filter(function(s) return s ~= '' and s ~= nil end,
                                 { search, fileinfo }), ' ')
 
-                        -- Left half: mode > devinfo > filename, skipping any
-                        -- empty segment so no stray arrows are left behind.
-                        local left_groups = { { hl = mode_hl, text = mode } }
-                        if devinfo ~= '' then
-                            table.insert(left_groups, { hl = 'MiniStatuslineDevinfo', text = devinfo })
-                        end
-                        -- silver tints the filename orange while the buffer is
-                        -- dirty (its airline_c "_modified" palette entry).
-                        local filename_hl = vim.bo.modified
-                            and 'MiniStatuslineFilenameModified'
-                            or 'MiniStatuslineFilename'
-                        table.insert(left_groups, { hl = filename_hl, text = filename })
+                        -- Every group is per-mode, so the whole bar shares one
+                        -- background. section_mode returns e.g.
+                        -- "MiniStatuslineModeInsert"; take the suffix.
+                        local m = mode_hl:gsub('^MiniStatuslineMode', '')
+                        if SILVER.mode[m] == nil then m = 'Other' end
+                        local BAR  = 'SilverBar' .. m
+                        local DIM  = 'SilverBarDim' .. m
+                        local MODE = 'SilverBarMode' .. m
+                        -- silver tints the filename while the buffer is dirty.
+                        local NAME = vim.bo.modified and ('SilverBarMod' .. m) or BAR
 
-                        local out = {}
-                        for i, g in ipairs(left_groups) do
-                            table.insert(out, '%#' .. g.hl .. '# ' .. g.text .. ' ')
-                            local nxt = left_groups[i + 1]
-                            if nxt then table.insert(out, sep(g.hl, nxt.hl, 'L')) end
+                        local thinL = '%#' .. DIM .. '#' .. LEFT_THIN
+                        local thinR = '%#' .. DIM .. '#' .. RIGHT_THIN
+
+                        -- Left half: mode > devinfo > filename, skipping any
+                        -- empty segment so no stray separators are left behind.
+                        local out = { '%#' .. MODE .. '# ' .. mode .. ' ' }
+                        if devinfo ~= '' then
+                            table.insert(out, thinL)
+                            table.insert(out, '%#' .. BAR .. '# ' .. devinfo .. ' ')
                         end
+                        table.insert(out, thinL)
+                        table.insert(out, '%#' .. NAME .. '# ' .. filename .. ' ')
+
                         -- Filename group stretches to fill the middle.
                         table.insert(out, '%=')
 
-                        -- Right half mirrors it, arrows pointing back inwards.
-                        local right_groups = {}
+                        -- Right half mirrors it, chevrons pointing back inwards.
                         if right ~= '' then
-                            table.insert(right_groups, { hl = 'MiniStatuslineFileinfo', text = right })
+                            table.insert(out, thinR)
+                            table.insert(out, '%#' .. BAR .. '# ' .. right .. ' ')
                         end
-                        table.insert(right_groups, { hl = mode_hl, text = location })
-
-                        -- Same group the middle actually rendered with, so the
-                        -- separator matches when the buffer is modified.
-                        local prev = filename_hl
-                        for _, g in ipairs(right_groups) do
-                            table.insert(out, sep(prev, g.hl, 'R'))
-                            table.insert(out, '%#' .. g.hl .. '# ' .. g.text .. ' ')
-                            prev = g.hl
-                        end
+                        table.insert(out, thinR)
+                        table.insert(out, '%#' .. MODE .. '# ' .. location .. ' ')
 
                         return table.concat(out)
                     end,
