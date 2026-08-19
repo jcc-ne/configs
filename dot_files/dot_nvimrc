@@ -39,13 +39,16 @@ nnoremap <space> $
 vnoremap <space> $
 
 " toggle spell
-set spell spelllang=en_us
+" NOTE: set spelllang only -- do NOT `set spell` here. Enabling spell loads the
+" en_us spellfile (~3.4ms) and the `set nospell` below immediately turned it
+" back off again, so that cost bought nothing. <leader><leader>s still toggles.
+set spelllang=en_us
 
 " hi SpellBad cterm=underline ctermfg=black ctermbg=219
 nnoremap <leader><leader>s :set spell!<CR>
 nnoremap <leader><leader>p :set paste!<CR>
 nnoremap <leader>p "+p
-" start with no spell
+" start with no spell (this is the default; kept explicit for clarity)
 set nospell
 
 " Use <leader>i to toggle display of whitespace
@@ -64,7 +67,10 @@ endif
 
 lua require('plugins')
 
-let hostname=substitute(system('hostname -s'), "\n", "", "")
+" Short hostname, used just below to pick a colorscheme. os_gethostname()
+" reads it in-process; system('hostname -s') forked a subprocess for it and
+" cost ~8ms of every startup.
+let hostname = split(luaeval('vim.uv.os_gethostname()'), '\.')[0]
 " echo hostname
 
 " ---- adjust background
