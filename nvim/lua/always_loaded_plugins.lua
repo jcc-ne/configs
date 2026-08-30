@@ -22,5 +22,6 @@ return {
     end
   },
   -- ctrlP removed: it was bound to <c-p> for buffers only, which :FzBuffers
-  -- (<leader>b) already covers. fzf.vim is the one finder in use.
+  -- already covers. fzf.vim is the one finder in use, and <c-p> is mapped to
+  -- :FzBuffers in neovim_standalone.lua so the key still works.
 }

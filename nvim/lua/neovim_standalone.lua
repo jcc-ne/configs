@@ -423,6 +423,10 @@ return {
           vim.keymap.set('n', '<leader>f', ':FzGFiles<CR>')
           vim.keymap.set('n', '<leader>h', ':FzHistory<CR>')
           vim.keymap.set('n', '<leader>b', ':FzBuffers<CR>')
+          -- ctrlP's <c-p> was g:ctrlp_cmd = 'CtrlPBuffer', so it maps to the
+          -- same picker here. Swap to :FzGFiles for the more conventional
+          -- ctrl-p-is-a-file-finder behaviour.
+          vim.keymap.set('n', '<C-p>', ':FzBuffers<CR>')
           vim.keymap.set('n', '<leader>r', ':FzRg<CR>')
           vim.keymap.set('n', '<leader>l', ':FzLines<CR>')
           vim.keymap.set('n', '<leader><leader>l', ':FzBLines<CR>')
