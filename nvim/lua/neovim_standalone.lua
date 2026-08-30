@@ -415,7 +415,87 @@ return {
   },
   {
       'junegunn/fzf.vim',
-      cmd = { 'FZF', 'FzFiles', 'FzGFiles', 'FzHistory', 'FzBuffers', 'FzRg', 'FzLines', 'FzBLines' },
+      cmd = { 'FZF', 'FzFiles', 'FzGFiles', 'FzHistory', 'FzBuffers', 'FzRg', 'FzLines',
+              'FzBLines', 'FzMixed' },
+      -- :FzMixed is ctrlP's <c-p> prompt: one picker whose source can be
+      -- swapped in place, the way ctrlP's <c-f>/<c-b> cycled buffers -> MRU ->
+      -- files. fzf.vim has no such command (each mode is its own :Fz* call),
+      -- but fzf itself can do it with reload+change-prompt, so this is a
+      -- wrapper over fzf#run rather than a new plugin.
+      --
+      -- Every mode yields a plain path, so one sink covers all three: :edit on
+      -- an already-open file just switches to that buffer.
+      config = function()
+          local function write_list(lines)
+              local f = vim.fn.tempname()
+              vim.fn.writefile(lines, f)
+              -- tempname() lives in Neovim's tempdir, which is removed on
+              -- exit, so these need no explicit cleanup.
+              return f
+          end
+
+          local function mixed()
+              -- Buffers, most-recently-used first -- that ordering is the
+              -- point of the mode, and 'lastused' is what :FzBuffers sorts on.
+              -- The current buffer is dropped: <c-p> is for going somewhere
+              -- else. It still gets marked seen below so the MRU mode does not
+              -- list it back.
+              local cur = vim.api.nvim_get_current_buf()
+              local bufs = vim.tbl_filter(function(b)
+                  return b.listed == 1 and b.name ~= '' and vim.fn.filereadable(b.name) == 1
+              end, vim.fn.getbufinfo({ buflisted = 1 }))
+              -- lastused has one-second resolution, so buffers opened in the
+              -- same second tie; bufnr breaks it, keeping the order stable.
+              table.sort(bufs, function(a, b)
+                  if a.lastused ~= b.lastused then return a.lastused > b.lastused end
+                  return a.bufnr > b.bufnr
+              end)
+
+              local seen, buf_paths = {}, {}
+              for _, b in ipairs(bufs) do
+                  local rel = vim.fn.fnamemodify(b.name, ':.')
+                  if not seen[rel] then
+                      seen[rel] = true
+                      if b.bufnr ~= cur then table.insert(buf_paths, rel) end
+                  end
+              end
+
+              -- MRU: v:oldfiles minus anything already open, so switching from
+              -- the buffer mode never shows the same entry twice.
+              local mru = {}
+              for _, f in ipairs(vim.v.oldfiles) do
+                  local rel = vim.fn.fnamemodify(f, ':.')
+                  if not seen[rel] and vim.fn.filereadable(f) == 1 then
+                      seen[rel] = true
+                      table.insert(mru, rel)
+                  end
+              end
+
+              local buf_file = write_list(buf_paths)
+              local mru_file = write_list(vim.list_extend(vim.list_slice(buf_paths), mru))
+              local files_cmd = vim.env.FZF_DEFAULT_COMMAND
+                  or (vim.fn.executable('rg') == 1
+                      and 'rg --files --hidden --glob "!.git/*"'
+                      or 'find . -type f -not -path "*/.git/*"')
+
+              vim.fn['fzf#run'](vim.fn['fzf#wrap']('mixed', {
+                  source = buf_paths,
+                  options = {
+                      '--prompt', 'buf> ',
+                      '--multi',
+                      '--header', 'C-b buffers  C-r recent  C-f files',
+                      -- These three shadow fzf's own C-b/C-f cursor motions,
+                      -- exactly as ctrlP shadowed them for the same purpose.
+                      '--bind', 'ctrl-b:change-prompt(buf> )+reload(cat ' .. buf_file .. ')',
+                      '--bind', 'ctrl-r:change-prompt(mru> )+reload(cat ' .. mru_file .. ')',
+                      '--bind', 'ctrl-f:change-prompt(files> )+reload(' .. files_cmd .. ')',
+                  },
+              }))
+          end
+
+          vim.api.nvim_create_user_command('FzMixed', mixed,
+              { desc = 'fzf: buffers/MRU/files in one prompt (C-b/C-r/C-f)' })
+      end,
       init = function()
           -- FZF mappings
           vim.g.fzf_command_prefix = 'Fz'
@@ -423,10 +503,9 @@ return {
           vim.keymap.set('n', '<leader>f', ':FzGFiles<CR>')
           vim.keymap.set('n', '<leader>h', ':FzHistory<CR>')
           vim.keymap.set('n', '<leader>b', ':FzBuffers<CR>')
-          -- ctrlP's <c-p> was g:ctrlp_cmd = 'CtrlPBuffer', so it maps to the
-          -- same picker here. Swap to :FzGFiles for the more conventional
-          -- ctrl-p-is-a-file-finder behaviour.
-          vim.keymap.set('n', '<C-p>', ':FzBuffers<CR>')
+          -- ctrlP's <c-p>: opens on buffers (g:ctrlp_cmd was 'CtrlPBuffer'),
+          -- then C-b/C-r/C-f swap the source in place. See :FzMixed in config.
+          vim.keymap.set('n', '<C-p>', ':FzMixed<CR>')
           vim.keymap.set('n', '<leader>r', ':FzRg<CR>')
           vim.keymap.set('n', '<leader>l', ':FzLines<CR>')
           vim.keymap.set('n', '<leader><leader>l', ':FzBLines<CR>')
