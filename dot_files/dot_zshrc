@@ -72,9 +72,11 @@ fi
 
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
-# Inside tmux, let tmux set TERM (tmux-256color); overriding it here makes
-# TUIs use xterm terminfo through tmux and corrupts repaints/scrollback.
-if [[ -z $TMUX ]]; then
+# Let the terminal declare TERM itself: Ghostty ships xterm-ghostty terminfo,
+# and inside tmux, tmux sets tmux-256color. Overriding it broke repaints and
+# hid Ghostty from tmux's terminal-features. Fall back only when the advertised
+# terminfo isn't installed (e.g. ssh to a host without Ghostty's terminfo).
+if [[ -z $TMUX ]] && ! infocmp "$TERM" >/dev/null 2>&1; then
   export TERM="xterm-256color"
 fi
 
