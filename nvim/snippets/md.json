@@ -1,0 +1,11 @@
+{
+  "TaskWarrior": {
+    "body": [
+      "== Today | project:today ==",
+      "== Aurima | project:aurima ==",
+      "== Datum | project:datum =="
+    ],
+    "description": "TaskWarrior",
+    "prefix": "TW"
+  }
+}

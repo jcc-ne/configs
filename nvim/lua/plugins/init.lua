@@ -8,7 +8,7 @@
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
   vim.fn.system({
     "git",
     "clone",
@@ -37,8 +37,11 @@ require("lazy").setup({
   ),
 }, {
   defaults = {
-    lazy = false, 
-  }
+    lazy = false,
+  },
+  -- No plugin here needs luarocks. Without this, :checkhealth permanently
+  -- reports a hererocks ERROR that its own output says to ignore.
+  rocks = { enabled = false },
 })
 
 if not vim.g.vscode then

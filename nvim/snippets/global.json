@@ -1,0 +1,319 @@
+{
+  " main ": {
+    "body": [
+      "if __name__ == \"__main__\":"
+    ],
+    "description": " main ",
+    "prefix": "__main__"
+  },
+  "ISO format datetime": {
+    "body": [
+      "$CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE $CURRENT_HOUR:$CURRENT_MINUTE:$CURRENT_SECOND"
+    ],
+    "description": "ISO format datetime",
+    "prefix": "diso"
+  },
+  "Lorem Ipsum - 50 Words": {
+    "body": [
+      "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod",
+      "tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At",
+      "vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,",
+      "no sea takimata sanctus est Lorem ipsum dolor sit amet."
+    ],
+    "description": "Lorem Ipsum - 50 Words",
+    "prefix": "lorem"
+  },
+  "YYYY-MM-DD": {
+    "body": [
+      "$CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE"
+    ],
+    "description": "YYYY-MM-DD",
+    "prefix": "date"
+  },
+  "a": {
+    "body": [
+      "<a href=\"$1\"${2: class=\"${3:link}\"}>",
+      "    $0",
+      "</a>"
+    ],
+    "prefix": "a"
+  },
+  "argparse": {
+    "body": [
+      "    import argparse",
+      "    parser = argparse.ArgumentParser()",
+      "    parser.add_argument('-t', '--train_set', nargs='+', default=[],",
+      "                        help=\"other pairs dataframe for training\")",
+      "    subparser = parser.add_subparsers(",
+      "        dest=\"subcommand\",",
+      "        help=\"subcommand: predict or train\")",
+      "",
+      "    parser_train = subparser.add_parser('train', help=\"call train api\")",
+      "    parser_train.add_argument('json_data_file',",
+      "                              help=\"ansible data in json format\")",
+      "    parser_train.add_argument('-q', '--quiet', action=\"store_true\",",
+      "                              default=False, help=\"only print output\")",
+      "",
+      "    args = parser.parse_args()"
+    ],
+    "prefix": "argparse"
+  },
+  "ax": {
+    "body": [
+      "    #  fig, axes = plt.subplots(nrows=2, ncols=4)",
+      "     fig = plt.figure()",
+      "     ax = fig.add_subplot(121)"
+    ],
+    "prefix": "ax"
+  },
+  "cmap": {
+    "body": [
+      "    m = plt.cm.ScalarMappable(cmap=CMAP)",
+      "    m.set_array(w_abs / max_)",
+      "    cbaxes = fig.add_axes([0.90, 0.1, 0.03, 0.8])",
+      "    cb = plt.colorbar(m, cax=cbaxes, use_gridspec=True)",
+      "    cb.outline.set_visible(False)"
+    ],
+    "prefix": "cmap"
+  },
+  "envrc": {
+    "body": [
+      "THIS_DIR=\"$(dirname \"${BASH_SOURCE[0]}\")\"",
+      "export $(grep -v '^\\s*#' \"${THIS_DIR}/env/.env.local\" | grep -v '^$' | xargs)"
+    ],
+    "prefix": "envrc"
+  },
+  "envrc_uv": {
+    "body": [
+      "source ../.envrc",
+      "source ~/.fn_layout_uv_pyenv.zsh",
+      "layout_uv_pyenv"
+    ],
+    "prefix": "envrc_uv"
+  },
+  "ipython_mp4": {
+    "body": [
+      "import io",
+      "import base64",
+      "from IPython.display import HTML",
+      "",
+      "video = io.open(\"{}.mp4\".format(MODEL_NAME), 'r+b').read()",
+      "encoded = base64.b64encode(video)",
+      "HTML(data='''<video alt=\"test\" width=\"850\" controls>",
+      "                <source src=\"data:video/mp4;base64,{0}\" type=\"video/mp4\" />",
+      "                             </video>'''.format(encoded.decode('ascii')))"
+    ],
+    "prefix": "ipython_mp4"
+  },
+  "logging": {
+    "body": [
+      "import logging",
+      "import sys",
+      "logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)",
+      "logger = logging.getLogger()"
+    ],
+    "prefix": "logging"
+  },
+  "makefile": {
+    "body": [
+      "",
+      ".PHONY: help",
+      "",
+      "rootdir = $(realpath .)",
+      "",
+      ".ONESHELL:",
+      "",
+      "help:  ## show this help.",
+      "    @echo \"Common commands are located in arcane/Makefile\\n\"",
+      "    @egrep -h '\\s##\\s' $(MAKEFILE_LIST) | awk 'BEGIN {FS = \":.*?## \"}; {printf \"\\033[36m  %-30s\\033[0m %s\\n\", $\\$1, $\\$2}'",
+      "",
+      "prompt:  ## command stops with a promt",
+      "    @read -p \"(hit any key to continue.  Ctrl-C to abort)\""
+    ],
+    "prefix": "makefile"
+  },
+  "mp4": {
+    "body": [
+      "",
+      "import matplotlib.animation as animation",
+      "",
+      "FFMpegWriter = animation.writers['ffmpeg']",
+      "metadata = dict(title='{}'.format(MODEL_NAME), artist='aurima',",
+      "                comment='movies of vis data after classifier detection')",
+      "                writer = FFMpegWriter(fps=4, metadata=metadata)",
+      "                fig = plt.figure(figsize=IMAGE_SIZE)",
+      "writer.setup(fig, \"{}.mp4\".format(MODEL_NAME), 100)",
+      "",
+      "for i, image_np in enumerate(images):",
+      "    vis_util.visualize_boxes_and_labels_on_image_array(",
+      "                    image_np,",
+      "                    np.squeeze(boxes_n[i]),",
+      "                    np.squeeze(classes_n[i]).astype(np.int32),",
+      "                    np.squeeze(scores_n[i]),",
+      "                    category_index,",
+      "                    use_normalized_coordinates=True,",
+      "                    line_thickness=4)",
+      "    plt.imshow(image_np)",
+      "    writer.grab_frame()",
+      "writer.finish()"
+    ],
+    "prefix": "mp4"
+  },
+  "notify": {
+    "body": [
+      "[Unit]",
+      "Description=thermal cam capture",
+      "After=redis.service",
+      "",
+      "[Service]",
+      "Type=notify",
+      "NotifyAccess=all",
+      "Restart=always",
+      "ExecStart=/home/pi/aripi/labs/vitalsign_pkg/scripts/run_lepton_capture.py",
+      "WatchdogSec=5s",
+      "StartLimitInterval=20s",
+      "RestartSec=5",
+      "StartLimitBurst=20",
+      "StartLimitAction=reboot-force",
+      "",
+      "[Install]",
+      "WantedBy=default.target"
+    ],
+    "prefix": "notify"
+  },
+  "plt": {
+    "body": [
+      "     import matplotlib.pyplot as plt",
+      "     import matplotlib",
+      "     matplotlib.rcParams.update({'font.size': 8})"
+    ],
+    "prefix": "plt"
+  },
+  "plt3d": {
+    "body": [
+      "     from mpl_toolkits.mplot3d import Axes3D",
+      "     fig = plt.figure()",
+      "     ax2 = fig.add_subplot(111, projection='3d')",
+      "     im = ax2.imshow(data, cmap=plt.cm.jet, vmax=data.max(), interpolation='nearest')",
+      "     fig.colorbar(im)",
+      "",
+      "     x_res = 10",
+      "     y_res = 10",
+      "     xx, yy = np.meshgrid(np.linspace(0,1,x_res+1), np.linspace(0,1,y_res+1))",
+      "     X = xx",
+      "     Y = yy",
+      "     Z = np.ones((x_res + 1, y_res + 1))",
+      "     data = np.reshape(range(16), (4, 4)",
+      "     ax2.plot_surface(X, Y, Z, rstride=1, cstride=1,",
+      "                cmap=plt.cm.jet,",
+      "                facecolors=plt.cm.jet(data), shade=False)",
+      ""
+    ],
+    "prefix": "plt3d"
+  },
+  "pyflakes": {
+    "body": [
+      "  #noqa"
+    ],
+    "prefix": "pyflakes"
+  },
+  "reqparse": {
+    "body": [
+      "from flask_restful import Resource, reqparse, inputs",
+      "    def __init__(self):",
+      "        self.reqparse = reqparse.RequestParser()",
+      "        self.reqparse.add_argument('data', type=str,",
+      "                                   required=True,",
+      "                                   help='need input data',",
+      "                                   location='values')",
+      "        self.reqparse.add_argument('reload_model', type=inputs.boolean,",
+      "                                   action=\"store_true\",",
+      "                                   required=False,",
+      "                                   default=False,",
+      "                                   help='need input data',",
+      "                                   location='values')"
+    ],
+    "prefix": "reqparse"
+  },
+  "subprocess": {
+    "body": [
+      "    import subprocess",
+      "    # output = subprocess.check_output([\"\", \"\"])",
+      "    proc = subprocess.Popen([\"$1\", \"$2\"], stdout=subprocess.PIPE, shell=True)",
+      "    (out, err) = proc.communicate()"
+    ],
+    "prefix": "subprocess"
+  },
+  "super": {
+    "body": [
+      "    super(HogFeatSKImage, self).__init__(img)"
+    ],
+    "prefix": "super"
+  },
+  "train_test": {
+    "body": [
+      "        X_train, X_test, y_train, y_test = train_test_split(X, y)"
+    ],
+    "prefix": "train_test"
+  },
+  "unittest": {
+    "body": [
+      "import _add_test_path  # noqa",
+      "import unittest",
+      "import snapshottest",
+      "",
+      "class TestCase(snapshottest.TestCase):",
+      "    @classmethod",
+      "    def setUpClass(cls):",
+      "        super(TestCase, cls).setUpClass()",
+      "",
+      "    def setUp(self):",
+      "        pass",
+      "    def test_np_equal(self):",
+      "        self.assertTrue(",
+      "            np.equal(",
+      "                np.array([1,2,3]),",
+      "                np.array([1,3])",
+      "            ).all()",
+      "            )",
+      "    def test_snapshot(self):",
+      "        d = [1, 2, 3]",
+      "        self.assertMatchSnapshot(d)",
+      "",
+      "    def test_snapshot_nparray(self):",
+      "        import numpy as np",
+      "        d = np.array([1, 2, 3])",
+      "        self.assertMatchSnapshotNPArray(d)",
+      "",
+      "    def test_snapshot_dataframe(self):",
+      "        import pandas as pd",
+      "        df = pd.DataFrame({'b': [3, 2, 3, 4]})",
+      "        self.assertMatchSnapshotDataFrame(df)",
+      "",
+      "    #  @unittest.skip(\"demonstrating skipping\")",
+      "    def test_skipped(self):",
+      "        self.assertEqual(1, 2)",
+      "    def tearDown(self):",
+      "        pass",
+      "if __name__ == \"__main__\":",
+      "    try:",
+      "        if __IPYTHON__:",
+      "            suite = unittest.TestLoader().loadTestsFromTestCase(",
+      "                    TestCase)",
+      "            unittest.TextTestRunner(verbosity=2).run(suite)",
+      "    except NameError:",
+      "        unittest.main()"
+    ],
+    "prefix": "unittest"
+  },
+  "version": {
+    "body": [
+      "   import sys",
+      "",
+      "   sys.version_info[0] < 3:",
+      "      def next(iter):",
+      "         return iter.next()"
+    ],
+    "prefix": "version"
+  }
+}

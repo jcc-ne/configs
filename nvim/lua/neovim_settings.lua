@@ -36,8 +36,8 @@ metals_config.settings = {
   gradleScript="/Users/janine/gradlew",
   -- gradleScript="/opt/homebrew/bin/gradle",
 }
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+-- Built-in completion advertises its own capabilities; no cmp_nvim_lsp needed.
+metals_config.capabilities = vim.lsp.protocol.make_client_capabilities()
 -- Debug settings if you're using nvim-dap
 local dap = require("dap")
 
@@ -87,8 +87,6 @@ api.nvim_create_autocmd("FileType", {
 -- local lsp = require('lsp-zero')
 -- lsp.preset('recommended')
 -- lsp.setup()
-require("mason").setup()
-require("mason-lspconfig").setup()
 
 -- local null_ls = require('null-ls')
 -- local diagnostics = null_ls.builtins.diagnostics
@@ -131,8 +129,37 @@ vim.diagnostic.config({
 
 
 
--- Configure Python LSP servers
+-------------------------------------------------------------------------------
+-- Python LSP servers
+--
+-- pylsp/ruff are installed in ~/.venv/nvim, which is NOT on PATH, so the
+-- default bare `cmd` ({"pylsp"} / {"ruff","server"}) never resolved and no
+-- client ever attached. Resolve explicitly, preferring a project venv so the
+-- server sees the project's own site-packages.
+-------------------------------------------------------------------------------
+local function py_tool(name)
+    local candidates = {}
+    -- 1. venv active in the environment nvim was launched from
+    if vim.env.VIRTUAL_ENV then
+        table.insert(candidates, vim.env.VIRTUAL_ENV .. '/bin/' .. name)
+    end
+    -- 2. venv in the project root
+    local root = vim.fs.root(0, { '.venv', 'pyproject.toml', '.git' })
+    if root then
+        table.insert(candidates, root .. '/.venv/bin/' .. name)
+    end
+    -- 3. the dedicated nvim tooling venv (see install/install_neovim.sh)
+    table.insert(candidates, vim.fn.expand('~/.venv/nvim/bin/' .. name))
+
+    for _, path in ipairs(candidates) do
+        if vim.fn.executable(path) == 1 then return path end
+    end
+    -- 4. fall back to PATH; may not exist, in which case the client won't start
+    return name
+end
+
 vim.lsp.config('ruff', {
+    cmd = { py_tool('ruff'), 'server' },
     filetypes = { "python" },
     init_options = {
         settings = {
@@ -146,6 +173,7 @@ vim.lsp.config('ruff', {
 vim.lsp.enable('ruff')
 
 vim.lsp.config('pylsp', {
+    cmd = { py_tool('pylsp') },
     filetypes = { "python" },
     settings = {
         pylsp = {
@@ -174,7 +202,75 @@ api.nvim_create_autocmd("FileType", {
 })
 
 -- Configure Go LSP
+--
+-- No explicit cmd: nvim-lspconfig's default {"gopls"} off PATH is right for a
+-- normal Go install, where GOPATH/bin is on PATH. Unlike the python servers
+-- (which live in a venv that deliberately is not on PATH), there is nothing
+-- here to resolve around.
 vim.lsp.config('gopls', {
     filetypes = { "go" }
 })
 vim.lsp.enable('gopls')
+
+-------------------------------------------------------------------------------
+-- Built-in completion (replaces nvim-cmp + cmp-* sources)
+--
+-- Neovim 0.12 added the 'autocomplete' option, which is the piece that makes
+-- the built-in popup usable without a plugin.
+--
+-- IMPORTANT: 'autocomplete' collects candidates from 'complete' -- it is
+-- automatic i_CTRL-N, not an LSP mechanism. The default ".,w,b,u,t" is buffers
+-- and tags only, so LSP items never appear without the "o" flag (omnifunc,
+-- which LspAttach points at vim.lsp.omnifunc). The "^N" suffixes cap each
+-- source; LSP gets the largest share.
+--
+-- vim.lsp.completion's own `autotrigger` is deliberately NOT used: it fires
+-- only on the server's triggerCharacters (just "." for pylsp), so it pops at
+-- `os.` and then goes quiet as you keep typing. 'autocomplete' re-queries on
+-- every keystroke, which is the cmp-like behavior we want.
+-------------------------------------------------------------------------------
+vim.o.autocomplete = true
+vim.o.complete = '.^5,w^5,b^5,o^15'
+vim.o.completeopt = 'menu,menuone,popup,fuzzy,noselect'
+vim.o.autocompletedelay = 60
+vim.o.pumheight = 12
+
+-- <Tab>/<S-Tab> walk the popup when it is open, and are literal otherwise.
+vim.keymap.set('i', '<Tab>', function()
+  return vim.fn.pumvisible() == 1 and '<C-n>' or '<Tab>'
+end, { expr = true })
+vim.keymap.set('i', '<S-Tab>', function()
+  return vim.fn.pumvisible() == 1 and '<C-p>' or '<S-Tab>'
+end, { expr = true })
+
+api.nvim_create_autocmd('LspAttach', {
+  group = api.nvim_create_augroup('builtin_completion', { clear = true }),
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client and client:supports_method('textDocument/completion') then
+      -- Not for triggering (see above) -- this is what makes <C-y> apply
+      -- snippet expansion, additionalTextEdits (auto-imports) and the
+      -- completionItem/resolve preview popup.
+      vim.lsp.completion.enable(true, ev.data.client_id, ev.buf)
+    end
+  end,
+})
+
+-------------------------------------------------------------------------------
+-- Treesitter folding (replaces python-mode's regex folding + FastFold)
+--
+-- foldexpr parses on its own, so this does not turn on treesitter
+-- highlighting -- that stays off, as it was before.
+-- markdown/markdown_inline parsers ship with 0.12; python is installed by
+-- nvim-treesitter (see neovim_standalone.lua).
+-------------------------------------------------------------------------------
+api.nvim_create_autocmd('FileType', {
+  pattern = { 'python', 'markdown' },
+  group = api.nvim_create_augroup('treesitter_folding', { clear = true }),
+  callback = function()
+    if not pcall(vim.treesitter.get_parser, 0) then return end
+    vim.wo[0][0].foldmethod = 'expr'
+    vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+    vim.wo[0][0].foldlevel = 20
+  end,
+})

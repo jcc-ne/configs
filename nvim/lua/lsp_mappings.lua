@@ -16,7 +16,7 @@ local cmd = vim.cmd
 
 -- LSP mappings
 map("n", "<space>h", "<cmd>lua vim.diagnostic.hide()<CR>")
-map("n", "<space>hh", "<cmd>lua vim.diagnostic.disable()<CR>")
+map("n", "<space>hh", "<cmd>lua vim.diagnostic.enable(false)<CR>")
 map("n", "<space>s", "<cmd>lua vim.diagnostic.show()<CR>")
 map("n", "<space>ss", "<cmd>lua vim.diagnostic.enable()<CR>")
 map("n", "<space>e", "<cmd>lua vim.diagnostic.open_float()<CR>")
@@ -74,10 +74,12 @@ else
     map("n", "gd", "<cmd>lua vim.lsp.buf.declaration()<CR>")
 end
 
+-- Neovim 0.12 already provides these as defaults, so they are not remapped here:
+--   K   hover          grn rename        gra code action    grr references
+--   gri implementation grt type def      grx codelens       gO  document symbol
+-- NOTE: do NOT map "gr" directly -- it shadows the whole gr* prefix above.
 map("n", ",g", "<cmd>lua vim.lsp.buf.definition()<CR>")
-map("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>")
 map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>")
-map("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>")
 map("n", "gds", "<cmd>lua vim.lsp.buf.document_symbol()<CR>")
 map("n", "gws", "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>")
 map("n", "<leader>cl", [[<cmd>lua vim.lsp.codelens.run()<CR>]])
@@ -86,9 +88,9 @@ map("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>")
 map("n", "<leader>fm", "<cmd>lua vim.lsp.buf.format()<CR>")
 map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>")
 map("n", "<leader>ws", '<cmd>lua require"metals".hover_worksheet()<CR>')
-map("n", "<leader>aa", [[<cmd>lua vim.diagnostic.setqflist()<CR>]]) -- all workspace diagnostics
-map("n", "<leader>ae", [[<cmd>lua vim.diagnostic.setqflist({severity = "E"})<CR>]]) -- all workspace errors
-map("n", "<leader>aw", [[<cmd>lua vim.diagnostic.setqflist({severity = "W"})<CR>]]) -- all workspace warnings
+-- NOTE: moved off the <leader>a prefix, which claudecode.nvim owns.
+map("n", "<leader>xa", [[<cmd>lua vim.diagnostic.setqflist()<CR>]]) -- all workspace diagnostics
+map("n", "<leader>xe", [[<cmd>lua vim.diagnostic.setqflist({severity = "E"})<CR>]]) -- all workspace errors
+map("n", "<leader>xw", [[<cmd>lua vim.diagnostic.setqflist({severity = "W"})<CR>]]) -- all workspace warnings
 map("n", "<leader>d", "<cmd>lua vim.diagnostic.setloclist()<CR>") -- buffer diagnostics only
-map("n", "[d", "<cmd>lua vim.diagnostic.goto_prev { wrap = false }<CR>")
-map("n", "]d", "<cmd>lua vim.diagnostic.goto_next { wrap = false }<CR>")
+-- [d / ]d are Neovim 0.12 defaults (vim.diagnostic.jump); no mapping needed.

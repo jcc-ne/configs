@@ -1,0 +1,109 @@
+{
+  "DIR": {
+    "body": [
+      "DIR=\\$(dirname \\$(python -c 'import os,sys;print(os.path.realpath(sys.argv[1]))' \\$0))",
+      "my_cwd=\\$PWD",
+      "",
+      "if [ ! \\$DIR = \\$PWD ]; then",
+      "   echo \"need to execute the script from \\$DIR\"",
+      "   echo \"*** moving to working directory *** \"",
+      "   echo",
+      "   cd \\$DIR",
+      "fi",
+      "cd \\$my_cwd"
+    ],
+    "prefix": "DIR"
+  },
+  "IP": {
+    "body": [
+      "   WRAPPER_API_IPADDR=$(docker inspect $WRAPPER_API_CID| grep IPAddress | tail -n1 | awk '{print $2}' | sed -e 's/\"//g' -e 's/,//g')"
+    ],
+    "prefix": "IP"
+  },
+  "ROS_DISTRO": {
+    "body": [
+      "if [ -z $ROS_DISTRO ]; then",
+      "   runpython=rospython",
+      "   sandbox=$SANDBOX_ROS",
+      "else",
+      "   runpython=python",
+      "   sandbox=$SANDBOX",
+      "fi"
+    ],
+    "prefix": "ROS_DISTRO"
+  },
+  "check": {
+    "body": [
+      "function check_error () {",
+      "   set +x",
+      "   if [ $1 -eq 0 ]; then",
+      "      echo \"\"",
+      "      set -x",
+      "      return 0",
+      "   else",
+      "      echo \"--- exit with error  ---\"",
+      "      exit 1",
+      "   fi",
+      "}"
+    ],
+    "prefix": "check"
+  },
+  "confirm": {
+    "body": [
+      "",
+      "if [ $PROD ];then",
+      "    POSTGRES_HOST=\"<...:postgres-main>\"",
+      "else",
+      "    POSTGRES_HOST=\"<...:postgres-main-development>\"",
+      "fi",
+      "",
+      "if [ $POSTGRES_HOST == \"<...:postgres-main>\" ]; then ",
+      "    confirm_migration_in_prod() {",
+      "        read -p \"we are running migration scrips in prod $POSTGRES_HOST.  To confirm: type 'production': \" input",
+      "        if [ $input != 'production' ];then",
+      "            confirm_migration_in_prod",
+      "        fi",
+      "    }",
+      "    confirm_migration_in_prod",
+      "fi",
+      ""
+    ],
+    "prefix": "confirm"
+  },
+  "getopt": {
+    "body": [
+      "# A POSIX variable",
+      "OPTIND=1         # Reset in case getopts has been used previously in the shell.",
+      "",
+      "# Initialize our own variables:",
+      "output_file=\"\"",
+      "verbose=0",
+      "",
+      "while getopts \"h?vf:\" opt; do",
+      "    case \"$opt\" in",
+      "    h|\\?)",
+      "        show_help",
+      "        exit 0",
+      "        ;;",
+      "    v)  verbose=1",
+      "        ;;",
+      "    f)  output_file=$OPTARG",
+      "        ;;",
+      "    esac",
+      "done",
+      "",
+      "shift $((OPTIND-1))",
+      "",
+      "[ \"\\${1:-}\" = \"--\" ] && shift",
+      "",
+      "echo \"verbose=$verbose, output_file='$output_file', Leftovers: $@\""
+    ],
+    "prefix": "getopt"
+  },
+  "source_venv": {
+    "body": [
+      "source_env_if_exists .venv/bin/activate"
+    ],
+    "prefix": "source_venv"
+  }
+}
