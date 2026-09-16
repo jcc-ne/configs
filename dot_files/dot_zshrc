@@ -52,6 +52,9 @@ eval "$(zoxide init zsh)"
 # --- Lazy-load heavy plugins (kubectl, helm, docker, gcloud) ---
 source $HOME/configs/dot_files/zsh_lazy_plugins.zsh
 
+# --- git worktree navigation (gwt) ---
+source $HOME/configs/dot_files/zsh_worktree.zsh
+
 # --- Aliases ---
 alias zshconfig="vim ~/.zshrc"
 alias dm="docker-machine"
