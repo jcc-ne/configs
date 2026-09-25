@@ -15,7 +15,8 @@ eval "$(echo "$input" | jq -r '
   "cache_read=\(.context_window.current_usage.cache_read_input_tokens // "")",
   "cache_write=\(.context_window.current_usage.cache_creation_input_tokens // "")",
   "ctx_window_size=\(.context_window.context_window_size // "")",
-  "ctx_used_pct=\(.context_window.used_percentage // "")"
+  "ctx_used_pct=\(.context_window.used_percentage // "")",
+  "session_cost=\(.session.total_cost_usd // .cost_usd // "")"
 ' | sed 's/"/\\"/g; s/=\(.*\)/="\1"/')"
 
 # Powerline separators (U+E0B0, U+E0B1 as raw UTF-8 bytes)
@@ -35,6 +36,7 @@ BG_GREEN="\033[48;5;237m"     # Segment 4 (Model): Dark gray bg
 BG_YELLOW="\033[48;5;136m"    # Not used
 BG_MAGENTA="\033[48;5;234m"   # Segment 5 (Context): Dark near-black bg
 BG_CYAN="\033[48;5;234m"      # Segment 3 (Git): Dark near-black bg
+BG_COST="\033[48;5;236m"      # Segment cost: slightly lighter dark gray
 BG_GRAY="\033[48;5;238m"      # Segment 6 (Time): Medium-dark gray bg
 BG_DARK_GRAY="\033[48;5;234m" # Segment 2 (Path): Dark near-black bg
 # Foreground colors for separators
@@ -43,6 +45,7 @@ FG_GREEN="\033[38;5;237m"     # Separator after model segment
 FG_YELLOW="\033[38;5;252m"    # Light gray (for segment 5 text)
 FG_MAGENTA="\033[38;5;234m"   # Separator after context segment
 FG_CYAN="\033[38;5;234m"      # Dark near-black (separator after segment 3)
+FG_COST="\033[38;5;236m"      # Separator after cost segment
 FG_GRAY="\033[38;5;238m"      # Separator after time segment (final)
 FG_DARK_GRAY="\033[38;5;234m" # Dark near-black (for segment 2 separator)
 
@@ -52,7 +55,8 @@ ICON_CWD=$(printf '\xf3\xb0\x9d\xb0')   # 󰝰
 ICON_GIT=$(printf '\xef\x84\xa6')       #
 ICON_CTX=$(printf '\xef\x80\xbe')       #
 ICON_TOKEN=$(printf '\xee\xb7\xa8')     #
-ICON_CACHE=$(printf '\xef\x92\x9b')     #
+ICON_CACHE=$(printf '\xef\x87\x80')     #
+ICON_COST=$(printf '\xef\x85\x95')      #
 ICON_TIME=$(printf '\xef\x80\x97')      #
 
 # Format token count with k suffix
@@ -73,7 +77,7 @@ git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1 && \
 proj_name=$(basename "${project_dir:-$cwd}")
 
 # Current time
-current_time=$(date '+%H:%M:%S')
+current_time=$(date '+%m/%d %H:%M:%S')
 
 # --- Build Powerline segments ---
 output=""
@@ -130,8 +134,32 @@ else
   prev_bg="GREEN"
 fi
 
+# Segment cost: compute if not provided by JSON
+if [ -z "$session_cost" ] && [ -n "$total_in" ] && [ -n "$total_out" ]; then
+  session_cost=$(awk -v i="$total_in" -v o="$total_out" \
+    -v cr="${cache_read:-0}" -v cw="${cache_write:-0}" \
+    'BEGIN { printf "%.4f", (i/1000000)*3 + (o/1000000)*15 + (cr/1000000)*0.3 + (cw/1000000)*3.75 }')
+fi
+if [ -n "$session_cost" ]; then
+  cost_display=$(awk -v c="$session_cost" 'BEGIN {
+    if (c+0 < 0.001) printf "<$0.01"
+    else if (c+0 < 1) printf "$%.3f", c
+    else printf "$%.2f", c
+  }')
+  # Separator: fg = context bg (234) or model bg (237)
+  if [ "$prev_bg" = "MAGENTA" ]; then
+    output="${output}\033[38;5;234m${BG_COST}${SEP_RIGHT}${R}"
+  else
+    output="${output}\033[38;5;237m${BG_COST}${SEP_RIGHT}${R}"
+  fi
+  output="${output}${BG_COST}${FG_WHITE} ${ICON_COST} ${cost_display} ${R}"
+  prev_bg="COST"
+fi
+
 # Segment 6: Time (medium-dark gray bg)
-if [ "$prev_bg" = "MAGENTA" ]; then
+if [ "$prev_bg" = "COST" ]; then
+  output="${output}${FG_COST}${BG_GRAY}${SEP_RIGHT}${R}"
+elif [ "$prev_bg" = "MAGENTA" ]; then
   output="${output}\033[38;5;234m${BG_GRAY}${SEP_RIGHT}${R}"
 else
   output="${output}\033[38;5;237m${BG_GRAY}${SEP_RIGHT}${R}"
