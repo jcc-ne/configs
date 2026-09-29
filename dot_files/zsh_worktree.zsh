@@ -48,3 +48,36 @@ _gwt() { compadd -a -- "${(@f)$(_gwt_list | cut -f1)}" }
 if (( $+functions[compdef] )); then
   compdef _gwt gwt
 fi
+
+# gwtrm [branch] - remove the worktree at <branch>, then delete the branch.
+#                  No argument: pick one with fzf. The main worktree is never offered.
+#                  Uses safe `git worktree remove` / `git branch -d`: dirty worktrees
+#                  and unmerged branches are refused, not force-deleted.
+gwtrm() {
+  git rev-parse --git-dir >/dev/null 2>&1 || { print -u2 "gwtrm: not a git repository"; return 1 }
+
+  local main line branch target
+  main=$(_gwt_list | head -1 | cut -f2)
+  if [[ -n $1 ]]; then
+    line=$(_gwt_list | tail -n +2 | awk -F'\t' -v b="$1" '$1 == b { print; exit }')
+    [[ -n $line ]] || { print -u2 "gwtrm: no removable worktree at '$1'"; return 1 }
+  else
+    (( $+commands[fzf] )) || { print -u2 "gwtrm: usage: gwtrm <branch>"; return 1 }
+    line=$(_gwt_list | tail -n +2 | fzf --height 40% --reverse --delimiter='\t' \
+                                        --with-nth=1,2 --prompt='remove worktree> ')
+    [[ -n $line ]] || return 130
+  fi
+  branch=${line%%$'\t'*} target=${line#*$'\t'}
+
+  # Can't remove the worktree we're standing in.
+  [[ $PWD/ == $target/* ]] && cd -- "$main"
+
+  git worktree remove -- "$target" || return
+  [[ $branch == "(detached)" ]] || git branch -d -- "$branch" ||
+    print -u2 "gwtrm: branch kept; force delete with: git branch -D $branch"
+}
+
+_gwtrm() { compadd -a -- "${(@f)$(_gwt_list | tail -n +2 | cut -f1)}" }
+if (( $+functions[compdef] )); then
+  compdef _gwtrm gwtrm
+fi
