@@ -479,7 +479,10 @@ return {
                       and 'rg --files --hidden --glob "!.git/*"'
                       or 'find . -type f -not -path "*/.git/*"')
 
-              vim.fn['fzf#run'](vim.fn['fzf#wrap']('mixed', {
+              -- fzf#wrap's sink is a dict function bound to `self`; a Lua
+              -- round-trip drops that binding (E718 on select), so the
+              -- run(wrap()) call has to stay in Vimscript.
+              vim.g.fzf_mixed_spec = {
                   source = buf_paths,
                   options = {
                       '--prompt', 'buf> ',
@@ -491,7 +494,8 @@ return {
                       '--bind', 'ctrl-r:change-prompt(mru> )+reload(cat ' .. mru_file .. ')',
                       '--bind', 'ctrl-f:change-prompt(files> )+reload(' .. files_cmd .. ')',
                   },
-              }))
+              }
+              vim.cmd('call fzf#run(fzf#wrap("mixed", g:fzf_mixed_spec)) | unlet g:fzf_mixed_spec')
           end
 
           vim.api.nvim_create_user_command('FzMixed', mixed,
